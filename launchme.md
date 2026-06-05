@@ -143,6 +143,15 @@ python manage.py collectstatic --noinput
 
 - **Site loads but is unstyled** → the `/static/` mapping is wrong, or you didn't
   run `collectstatic`. Re-check step 7 and re-run step 4, then Reload.
+- **Product images broken on the shop / home pages but fine on product detail**
+  → stale thumbnail cache. The listing/home cards use sorl-thumbnail (the
+  `media/cache/` thumbnails are gitignored). Clear the cache so they regenerate:
+  ```bash
+  workon pier-paddock && python manage.py thumbnail clear
+  ```
+  Then **Reload** and load the shop page once (the thumbnails are built on first
+  request). The product-detail page uses the original images, which is why it
+  works either way.
 - **Broken product images** → the `/media/` mapping is wrong; it must point to
   `/home/USERNAME/pier-paddock/media`.
 - **CSRF "Forbidden" on login / add-to-cart / checkout** → make sure
