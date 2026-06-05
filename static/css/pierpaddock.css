@@ -77,8 +77,12 @@ a:hover { color: var(--pp-gold); }
 .main-menu nav ul li ul.sub-menu-width { background:#fff; box-shadow:0 10px 30px rgba(0,0,0,.12); border-top:2px solid var(--pp-gold); }
 .main-menu nav ul li ul.sub-menu-width li a { color:#5b554c !important; text-transform:none; letter-spacing:0; }
 .main-menu nav ul li ul.sub-menu-width li a:hover { color: var(--pp-gold-dark) !important; }
-.header-right-flex .same-style > a { color: #1a1a1a; }
-.header-right-flex .same-style > a:hover { color: var(--pp-gold-dark); }
+/* Desktop header sits on white → dark icons. */
+.header-large-device .header-right-flex .same-style > a { color: #1a1a1a; }
+.header-large-device .header-right-flex .same-style > a:hover { color: var(--pp-gold-dark); }
+/* Mobile header has a dark (#262626) background → light icons (search, cart, menu). */
+.header-small-device .header-right-flex .same-style > a { color: #fff; }
+.header-small-device .header-right-flex .same-style > a:hover { color: var(--pp-gold); }
 .header-right-flex .mini-cart-items { background: var(--pp-gold-dark); color:#fff; }
 .header-top.bg-main2 { background: var(--pp-ink); }
 .header-top .free-delivery h4,
