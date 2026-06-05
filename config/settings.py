@@ -15,10 +15,31 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # ---------------------------------------------------------------------------
 # Core
+#
+# These are env-overridable so the same code runs locally and on a host such as
+# PythonAnywhere. Defaults are demo-friendly (DEBUG on, permissive hosts); set
+# the DJANGO_* environment variables (e.g. in the PythonAnywhere WSGI file) to
+# harden for a shared demo. See launchme.md.
 # ---------------------------------------------------------------------------
-SECRET_KEY = "demo-insecure-secret-key-not-for-production-pier-and-paddock"
-DEBUG = True
-ALLOWED_HOSTS = ["*"]
+def _env_bool(name, default):
+    return os.environ.get(name, str(default)).strip().lower() in ("1", "true", "yes", "on")
+
+
+SECRET_KEY = os.environ.get(
+    "DJANGO_SECRET_KEY",
+    "demo-insecure-secret-key-not-for-production-pier-and-paddock",
+)
+DEBUG = _env_bool("DJANGO_DEBUG", True)
+ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "*").split(",")
+
+# Required for POST forms (login, add-to-cart, checkout) to pass CSRF when served
+# over HTTPS with DEBUG=False — e.g. https://<username>.pythonanywhere.com.
+CSRF_TRUSTED_ORIGINS = os.environ.get(
+    "DJANGO_CSRF_TRUSTED_ORIGINS", "https://*.pythonanywhere.com"
+).split(",")
+
+# PythonAnywhere (and most PaaS) terminate TLS at a proxy and forward this header.
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 SITE_ID = 1
 ROOT_URLCONF = "config.urls"
