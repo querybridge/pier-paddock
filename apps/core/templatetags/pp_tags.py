@@ -4,6 +4,25 @@ from django import template
 
 register = template.Library()
 
+
+@register.simple_tag(takes_context=True)
+def query_toggle(context, **kwargs):
+    """Build a querystring from the CURRENT request, with the given facet(s)
+    set — preserving every other active filter so facets are additive. If a
+    facet already equals the requested value (or the value is empty), it's
+    removed (toggle off / clear). 'page' is always dropped."""
+    request = context.get("request")
+    params = request.GET.copy()
+    for key, value in kwargs.items():
+        value = "" if value is None else str(value)
+        if not value or params.get(key) == value:
+            params.pop(key, None)
+        else:
+            params[key] = value
+    params.pop("page", None)
+    encoded = params.urlencode()
+    return ("?" + encoded) if encoded else request.path
+
 # Order in which watch specs appear on the product detail page.
 SPEC_ORDER = [
     "brand", "model", "reference", "case_material", "case_size",

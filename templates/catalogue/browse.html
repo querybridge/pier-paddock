@@ -16,10 +16,10 @@
             <div class="pp-filter-block">
                 <h4>Brand</h4>
                 <ul>
-                    <li {% if not selected.brand %}class="active"{% endif %}><a href="{% url 'shop:browse' %}">All Brands</a></li>
+                    <li {% if not selected.brand %}class="active"{% endif %}><a href="{% query_toggle brand='' %}">All Brands</a></li>
                     {% for b in brands %}
                     <li {% if selected.brand == b.slug %}class="active"{% endif %}>
-                        <a href="{% url 'shop:browse' %}?brand={{ b.slug }}">{{ b.name }}</a>
+                        <a href="{% query_toggle brand=b.slug %}">{{ b.name }}</a>
                     </li>
                     {% endfor %}
                 </ul>
@@ -30,7 +30,7 @@
                 <ul>
                     {% for c in collections %}
                     <li {% if selected.collection == c.slug %}class="active"{% endif %}>
-                        <a href="{% url 'shop:browse' %}?collection={{ c.slug }}">{{ c.name }}</a>
+                        <a href="{% query_toggle collection=c.slug %}">{{ c.name }}</a>
                     </li>
                     {% endfor %}
                 </ul>
@@ -56,7 +56,7 @@
             <ul>
                 {% for m in materials %}
                 <li {% if selected.material == m %}class="active"{% endif %}>
-                    <a href="{% url 'shop:browse' %}?material={{ m|urlencode }}{% if selected.brand %}&brand={{ selected.brand }}{% endif %}">{{ m }}</a>
+                    <a href="{% query_toggle material=m %}">{{ m }}</a>
                 </li>
                 {% endfor %}
             </ul>
@@ -67,7 +67,7 @@
             <ul>
                 {% for c in conditions %}
                 <li {% if selected.condition == c %}class="active"{% endif %}>
-                    <a href="{% url 'shop:browse' %}?condition={{ c|urlencode }}{% if selected.brand %}&brand={{ selected.brand }}{% endif %}">{{ c }}</a>
+                    <a href="{% query_toggle condition=c %}">{{ c }}</a>
                 </li>
                 {% endfor %}
             </ul>
