@@ -1,0 +1,49 @@
+{% extends "oscar/layout.html" %}
+
+{% block title %}Contact — {{ BRAND_NAME }}{% endblock %}
+{% block headertext %}Contact Us{% endblock %}
+{% block breadcrumbs %}<li>Contact</li>{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-5 col-12 mb-4">
+        <h3 style="font-family:Georgia,serif;">Speak with our concierge</h3>
+        <p class="pp-muted">Questions about a specific reference, sizing, or availability? Our team is
+            here to help. Every enquiry is handled personally.</p>
+        <ul style="list-style:none;padding:0;margin-top:24px;">
+            <li class="mb-3"><i class="fa fa-envelope text-gold"></i>&nbsp; concierge@pierandpaddock.example</li>
+            <li class="mb-3"><i class="fa fa-phone text-gold"></i>&nbsp; +1 (000) 123-4567</li>
+            <li class="mb-3"><i class="fa fa-clock-o text-gold"></i>&nbsp; Mon–Sat, 9am–6pm ET</li>
+            <li class="mb-3"><i class="fa fa-shield text-gold"></i>&nbsp; Authenticated, fully insured &amp; signature-required</li>
+        </ul>
+    </div>
+    <div class="col-lg-7 col-12">
+        <div class="pp-form-card">
+            <h3>Send a message</h3>
+            {% if messages %}{% for m in messages %}<div class="alert {{ m.tags }}">{{ m }}</div>{% endfor %}{% endif %}
+            <form method="post" action="{% url 'pages:contact' %}">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-md-6 form-group">
+                        <label>Name</label>
+                        <input type="text" name="name" required value="{{ form.name.value|default:'' }}">
+                    </div>
+                    <div class="col-md-6 form-group">
+                        <label>Email</label>
+                        <input type="email" name="email" required value="{{ form.email.value|default:'' }}">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Subject</label>
+                    <input type="text" name="subject" value="{{ form.subject.value|default:'' }}">
+                </div>
+                <div class="form-group">
+                    <label>Message</label>
+                    <textarea name="message" rows="5" required>{{ form.message.value|default:'' }}</textarea>
+                </div>
+                <button type="submit" class="pp-btn">Send Message</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

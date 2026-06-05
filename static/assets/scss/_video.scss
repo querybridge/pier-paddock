@@ -1,0 +1,101 @@
+/*-------- 7. Video style ---------*/
+
+.youtube-video-height {
+    height: 610px !important;
+    padding: 0 !important;
+    @media #{$xl-layout} {
+        height: 500px !important;
+    }
+    @media #{$lg-layout} {
+        height: 500px !important;
+    }
+    @media #{$md-layout} {
+        height: 450px !important;
+    }
+    @media #{$xs-layout} {
+        height: 300px !important;
+    }
+}
+
+.video-wrap {
+    position: relative;
+    .video-content {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%) translateX(-50%);
+        left: 50%;
+        z-index: 9;
+        h2 {
+            font-size: 120px;
+            color: #fff;
+            font-weight: bold;
+            border: 15px solid #fff;
+            line-height: 1;
+            padding: 53px 50px 53px;
+            margin: 0;
+            @media #{$lg-layout} {
+                padding: 40px 50px 40px;
+                font-size: 100px;
+            }
+            @media #{$md-layout} {
+                padding: 30px 50px 30px;
+                font-size: 100px;
+            }
+            @media #{$xs-layout} {
+                font-size: 40px;
+                padding: 25px 30px 24px;
+            }
+        }
+    }
+}
+.cake-video-ptb {
+    padding: 352px 0 352px;
+    @media #{$xl-layout} {
+        padding: 200px 0 200px;
+    }
+    @media #{$lg-layout} {
+        padding: 220px 0 180px;
+    }
+    @media #{$md-layout} {
+        padding: 200px 0 160px;
+    }
+    @media #{$xs-layout} {
+        padding: 130px 0 100px;
+    }
+}
+
+@-webkit-keyframes border-jump {
+    0% {
+        -webkit-transform: translateX(-50%) translateY(-50%) translateZ(0) scale(1);
+        transform: translateX(-50%) translateY(-50%) translateZ(0) scale(1);
+        opacity: 1;
+        border-radius: 100%;
+    }
+    100% {
+        -webkit-transform: translateX(-50%) translateY(-50%) translateZ(0) scale(1.5);
+        transform: translateX(-50%) translateY(-50%) translateZ(0) scale(1.5);
+        opacity: 0;
+        border-radius: 100%;
+    }
+}
+
+@keyframes border-jump {
+    0% {
+        -webkit-transform: translateX(-50%) translateY(-50%) translateZ(0) scale(1);
+        transform: translateX(-50%) translateY(-50%) translateZ(0) scale(1);
+        opacity: 1;
+        border-radius: 100%;
+    }
+    100% {
+        -webkit-transform: translateX(-50%) translateY(-50%) translateZ(0) scale(1.5);
+        transform: translateX(-50%) translateY(-50%) translateZ(0) scale(1.5);
+        opacity: 0;
+        border-radius: 100%;
+    }
+}
+
+
+
+
+
+

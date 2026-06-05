@@ -1,0 +1,176 @@
+{% extends "oscar/layout.html" %}
+{% load pp_tags %}
+{% load vault_tags %}
+{% load thumbnail %}
+
+{% block title %}The Vault — {{ BRAND_NAME }}{% endblock %}
+{% block headertext %}The Vault{% endblock %}
+{% block breadcrumbs %}<li>Vault</li>{% endblock %}
+
+{% block content %}
+<p class="pp-muted mb-40" style="margin-top:-20px;">Track the value of the watches you own and the ones you're watching.
+    Your collection, viewed as an investment.</p>
+
+{% if not owned and not watching %}
+    <div class="pp-empty">
+        <i class="fa fa-lock"></i>
+        <h3>Your Vault is empty</h3>
+        <p class="pp-muted">Save watches to your Vault to track their market value over time. Buy with us
+            and we'll record what you paid so you can watch your investment grow.</p>
+        <a class="pp-btn" href="{% url 'shop:browse' %}">Browse the Collection</a>
+    </div>
+{% else %}
+
+    {# ---------- Portfolio summary (owned) ---------- #}
+    {% if owned %}
+    <div class="row pp-vault-summary mb-40">
+        <div class="col-md-4 col-12"><div class="pp-vault-stat">
+            <span class="pp-vault-stat-label">Total Invested</span>
+            <span class="pp-vault-stat-value">{{ total_cost|money }}</span>
+        </div></div>
+        <div class="col-md-4 col-12"><div class="pp-vault-stat">
+            <span class="pp-vault-stat-label">Current Value</span>
+            <span class="pp-vault-stat-value">{{ total_value|money }}</span>
+        </div></div>
+        <div class="col-md-4 col-12"><div class="pp-vault-stat">
+            <span class="pp-vault-stat-label">Total Change</span>
+            <span class="pp-vault-stat-value {% if total_gain >= 0 %}pp-up{% else %}pp-down{% endif %}">
+                {% if total_gain >= 0 %}+{% endif %}{{ total_gain|money }}
+                {% if total_pct is not None %}<small>({% if total_gain >= 0 %}+{% endif %}{{ total_pct|floatformat:1 }}%)</small>{% endif %}
+            </span>
+        </div></div>
+    </div>
+
+    <h3 class="pp-vault-heading">Owned</h3>
+    <div class="pp-compare-wrap mb-40">
+        <table class="pp-vault-table">
+            <thead><tr>
+                <th>Watch</th><th class="text-right">Purchase Price</th><th class="text-right">Acquired</th>
+                <th class="text-right">Latest Value</th><th class="text-right">Change</th><th></th>
+            </tr></thead>
+            <tbody>
+            {% for item in owned %}{% with p=item.product %}
+                <tr>
+                    <td><div class="pp-vault-watch">
+                        {% with img=p.primary_image %}{% thumbnail img.original "70x70" padding=True as t %}<a href="{{ p.get_absolute_url }}"><img src="{{ t.url }}" alt=""></a>{% endthumbnail %}{% endwith %}
+                        <div><span class="pp-brand">{{ p|attr:"brand" }}</span>
+                            <a class="pp-vault-name" href="{{ p.get_absolute_url }}">{{ p|attr:"model" }}</a>
+                            <div class="pp-muted" style="font-size:12px;">Ref. {{ p|attr:"reference" }}</div></div>
+                    </div></td>
+                    <td class="text-right">{{ item.purchase_price|money }}</td>
+                    <td class="text-right pp-muted">{{ item.purchase_date|date:"M Y"|default:"—" }}</td>
+                    <td class="text-right">{{ item.latest_value|money }}</td>
+                    <td class="text-right {% if item.gain >= 0 %}pp-up{% else %}pp-down{% endif %}">
+                        {% if item.gain >= 0 %}+{% endif %}{{ item.gain|money }}<br>
+                        <small>{% if item.gain >= 0 %}+{% endif %}{{ item.gain_pct|floatformat:1 }}%</small>
+                    </td>
+                    <td class="text-right"><a class="pp-vault-x" href="{% url 'vault:remove' pk=p.id %}" title="Remove"><i class="ti-close"></i></a></td>
+                </tr>
+            {% endwith %}{% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+
+    {# ---------- Watching ---------- #}
+    {% if watching %}
+    <h3 class="pp-vault-heading">Watching</h3>
+    <div class="pp-compare-wrap">
+        <table class="pp-vault-table">
+            <thead><tr>
+                <th>Watch</th><th class="text-right">Listed Price</th><th class="text-right">Latest Value</th><th></th>
+            </tr></thead>
+            <tbody>
+            {% for item in watching %}{% with p=item.product %}
+                <tr>
+                    <td><div class="pp-vault-watch">
+                        {% with img=p.primary_image %}{% thumbnail img.original "70x70" padding=True as t %}<a href="{{ p.get_absolute_url }}"><img src="{{ t.url }}" alt=""></a>{% endthumbnail %}{% endwith %}
+                        <div><span class="pp-brand">{{ p|attr:"brand" }}</span>
+                            <a class="pp-vault-name" href="{{ p.get_absolute_url }}">{{ p|attr:"model" }}</a>
+                            <div class="pp-muted" style="font-size:12px;">Ref. {{ p|attr:"reference" }}</div></div>
+                    </div></td>
+                    <td class="text-right pp-muted">{% with sr=p.stockrecords.first %}{% if sr %}{{ sr.price|money }}{% endif %}{% endwith %}</td>
+                    <td class="text-right">{{ p|market_value|money|default:"—" }}</td>
+                    <td class="text-right pp-vault-actions">
+                        <a class="pp-btn pp-btn--outline pp-btn--sm" href="{{ p.get_absolute_url }}">View</a>
+                        {% with sr=p.stockrecords.first %}
+                        {% if sr and sr.num_in_stock >= 1 %}
+                        <form method="post" action="{% url 'basket:add' pk=p.id %}" class="pp-vault-cart-form">
+                            {% csrf_token %}<input type="hidden" name="quantity" value="1">
+                            <button type="submit" class="pp-btn pp-btn--gold pp-btn--sm">Add to Cart</button>
+                        </form>
+                        {% endif %}
+                        {% endwith %}
+                        <a class="pp-btn pp-btn--sm pp-mark-owned" href="#" data-id="{{ p.id }}" data-listed="{% with sr=p.stockrecords.first %}{% if sr %}{{ sr.price|floatformat:'0' }}{% endif %}{% endwith %}" data-name="{{ p|attr:'brand' }} {{ p|attr:'model' }}">Mark as Owned</a>
+                        <a class="pp-vault-x" href="{% url 'vault:remove' pk=p.id %}" title="Remove"><i class="ti-close"></i></a>
+                    </td>
+                </tr>
+            {% endwith %}{% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+
+{% endif %}
+
+{# ---------- Add-to-owned modal (P&P styled) ---------- #}
+<div id="pp-vault-modal" class="pp-modal" aria-hidden="true">
+    <div class="pp-modal-backdrop"></div>
+    <div class="pp-modal-card" role="dialog" aria-modal="true" aria-labelledby="pp-modal-title">
+        <a href="#" class="pp-modal-close" aria-label="Close">&times;</a>
+        <span class="pp-modal-eyebrow">Add to Your Vault</span>
+        <h3 class="pp-modal-title" id="pp-modal-title">Record Your Purchase</h3>
+        <p class="pp-muted pp-modal-watch" id="pp-modal-watch"></p>
+        <label for="pp-modal-price">What did you pay? (USD)</label>
+        <div class="pp-modal-input">
+            <span>$</span>
+            <input type="number" id="pp-modal-price" min="0" step="100" inputmode="numeric">
+        </div>
+        <p class="pp-muted" style="font-size:12px;margin-top:10px;">We'll track this watch's market value against what you paid, so you can see it as an investment.</p>
+        <div class="pp-modal-actions">
+            <a href="#" class="pp-btn pp-btn--outline" id="pp-modal-cancel">Cancel</a>
+            <a href="#" class="pp-btn" id="pp-modal-confirm">Add to Owned</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extrascripts %}
+<script>
+(function () {
+    var modal = document.getElementById("pp-vault-modal");
+    if (!modal) { return; }
+    var priceInput = document.getElementById("pp-modal-price");
+    var watchEl = document.getElementById("pp-modal-watch");
+    var confirmBtn = document.getElementById("pp-modal-confirm");
+    var currentId = null;
+
+    function open(id, listed, name) {
+        currentId = id;
+        priceInput.value = listed || "";
+        watchEl.textContent = name || "";
+        modal.classList.add("open");
+        document.body.style.overflow = "hidden";
+        setTimeout(function () { priceInput.focus(); priceInput.select(); }, 50);
+    }
+    function close() { modal.classList.remove("open"); document.body.style.overflow = ""; }
+    function confirm() {
+        var v = ("" + priceInput.value).replace(/[^0-9.]/g, "");
+        window.location = "/vault/own/" + currentId + "/" + (v ? "?price=" + encodeURIComponent(v) : "");
+    }
+
+    Array.prototype.forEach.call(document.querySelectorAll(".pp-mark-owned"), function (b) {
+        b.addEventListener("click", function (e) {
+            e.preventDefault();
+            open(this.getAttribute("data-id"), this.getAttribute("data-listed"), this.getAttribute("data-name"));
+        });
+    });
+    modal.querySelector(".pp-modal-backdrop").addEventListener("click", close);
+    modal.querySelector(".pp-modal-close").addEventListener("click", function (e) { e.preventDefault(); close(); });
+    document.getElementById("pp-modal-cancel").addEventListener("click", function (e) { e.preventDefault(); close(); });
+    confirmBtn.addEventListener("click", function (e) { e.preventDefault(); confirm(); });
+    priceInput.addEventListener("keyup", function (e) { if (e.key === "Enter") { confirm(); } });
+    document.addEventListener("keyup", function (e) { if (e.key === "Escape") { close(); } });
+})();
+</script>
+{% endblock %}

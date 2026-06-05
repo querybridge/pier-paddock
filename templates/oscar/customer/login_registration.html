@@ -1,0 +1,38 @@
+{% extends "oscar/layout.html" %}
+{% load i18n %}
+
+{% block title %}Login or Register — {{ BRAND_NAME }}{% endblock %}
+{% block headertext %}Account{% endblock %}
+{% block breadcrumbs %}<li>Login / Register</li>{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-6 col-12 mb-4 login_form">
+        <div class="pp-form-card">
+            <h3>Log In</h3>
+            <p class="pp-muted">Welcome back. Sign in to view your orders and wishlist.</p>
+            <form id="login_form" action="{{ request.get_full_path }}" method="post">
+                <h4 style="display:none;">Login</h4>
+                {% csrf_token %}
+                {% include "oscar/partials/form_fields.html" with form=login_form %}
+                <p><a href="{% url 'password-reset' %}" class="text-gold">I've forgotten my password</a></p>
+                <button name="login_submit" type="submit" value="Log In" class="pp-btn">Log In</button>
+            </form>
+            <div class="pp-demo-notice mt-3" style="font-size:13px;">
+                <strong>Demo account:</strong> {{ DEMO_USER_EMAIL|default:"demo@example.com" }} / Demo1234!
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6 col-12 mb-4 register_form">
+        <div class="pp-form-card">
+            <h3>Register</h3>
+            <p class="pp-muted">Create an account to save pieces to your wishlist and track orders.</p>
+            <form id="register_form" action="{{ request.get_full_path }}" method="post">
+                {% csrf_token %}
+                {% include "oscar/partials/form_fields.html" with form=registration_form %}
+                <button name="registration_submit" type="submit" value="Register" class="pp-btn">Register</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

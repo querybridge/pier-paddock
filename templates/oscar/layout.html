@@ -1,0 +1,33 @@
+{% extends "oscar/base.html" %}
+{% load i18n %}
+
+{% block layout %}
+    {% include "oscar/partials/_header.html" %}
+
+    {% block content_wrapper %}
+        {% block page_banner %}
+            <div class="breadcrumb-area pp-page-banner bg-img {% block banner_bg_class %}{% endblock %}" style="background-color:#1a1a1a;">
+                <div class="container">
+                    <div class="breadcrumb-content text-center">
+                        <h2>{% block banner_title %}{% block headertext %}{% endblock %}{% endblock %}</h2>
+                        <ul>
+                            <li><a href="{% url 'home' %}">Home</a></li>
+                            {% block breadcrumbs %}{% endblock %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        {% endblock %}
+
+        <div class="container pp-page-content">
+            {% include "oscar/partials/alert_messages.html" %}
+            {% block subnavigation %}{% endblock %}
+            <div class="content">
+                {% block subheader %}{% endblock subheader %}
+                <div id="content_inner">{% block content %}{% endblock %}</div>
+            </div>
+        </div>
+    {% endblock %}
+
+    {% include "oscar/partials/_footer.html" %}
+{% endblock %}

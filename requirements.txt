@@ -1,0 +1,8 @@
+# Pinned to the versions used to build the demo.
+Django==5.2.15
+django-oscar==4.1
+sorl-thumbnail==13.0.0
+Pillow==12.2.0
+pycountry==26.2.16
+# (django-oscar pulls in haystack, treebeard, widget-tweaks, django-tables2,
+#  factory-boy, phonenumbers, purl, babel, extra-views automatically.)

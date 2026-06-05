@@ -1,0 +1,85 @@
+{% extends "oscar/layout.html" %}
+{% load pp_tags %}
+{% load thumbnail %}
+
+{% block title %}Compare Watches — {{ BRAND_NAME }}{% endblock %}
+{% block headertext %}Compare Watches{% endblock %}
+{% block breadcrumbs %}<li>Compare</li>{% endblock %}
+
+{% block content %}
+{% if compare_products %}
+<p class="pp-muted mb-40">Comparing {{ compare_products|length }} of {{ max_compare }} watches. Specifications are listed side by side below.</p>
+
+<div class="pp-compare-wrap">
+    <table class="pp-compare-table">
+        <thead>
+            <tr>
+                <th class="pp-compare-label"></th>
+                {% for p in compare_products %}
+                <th class="pp-compare-col">
+                    <a class="pp-compare-img" href="{{ p.get_absolute_url }}">
+                        {% with img=p.primary_image %}
+                            {% thumbnail img.original "240x240" padding=True as t %}<img src="{{ t.url }}" alt="{{ p.title }}">{% endthumbnail %}
+                        {% endwith %}
+                    </a>
+                    <div class="pp-brand">{{ p|attr:"brand" }}</div>
+                    <a class="pp-compare-name" href="{{ p.get_absolute_url }}">{{ p|attr:"model" }}</a>
+                    <div class="pp-compare-price">
+                        {% with sr=p.stockrecords.first %}{% if sr %}{{ sr.price|money }}{% else %}&mdash;{% endif %}{% endwith %}
+                    </div>
+                    <a class="pp-compare-remove" href="{% url 'compare:remove' pk=p.id %}"><i class="ti-close"></i> Remove</a>
+                </th>
+                {% endfor %}
+                {% if can_add_more %}
+                <th class="pp-compare-col pp-compare-empty">
+                    <a class="pp-compare-choose" href="{% url 'shop:browse' %}">
+                        <span class="pp-compare-plus">+</span>
+                        <span>Choose another selection</span>
+                    </a>
+                </th>
+                {% endif %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in compare_rows %}
+            <tr>
+                <th class="pp-compare-label">{{ row.label }}</th>
+                {% for v in row.values %}<td>{{ v|default:"—" }}</td>{% endfor %}
+                {% if can_add_more %}<td class="pp-compare-empty"></td>{% endif %}
+            </tr>
+            {% endfor %}
+            <tr>
+                <th class="pp-compare-label"></th>
+                {% for p in compare_products %}
+                <td>
+                    {% with sr=p.stockrecords.first %}
+                    {% if sr and sr.num_in_stock >= 1 %}
+                    <form method="post" action="{% url 'basket:add' pk=p.id %}">{% csrf_token %}<input type="hidden" name="quantity" value="1">
+                        <button type="submit" class="pp-btn" style="width:100%;">Add to Cart</button>
+                    </form>
+                    {% else %}
+                    <a class="pp-btn pp-btn--outline" style="width:100%;" href="{{ p.get_absolute_url }}">View</a>
+                    {% endif %}
+                    {% endwith %}
+                </td>
+                {% endfor %}
+                {% if can_add_more %}<td class="pp-compare-empty"></td>{% endif %}
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="text-center mt-40">
+    <a class="pp-btn pp-btn--outline" href="{% url 'shop:browse' %}">Continue Browsing</a>
+    <a class="pp-btn pp-btn--outline" href="{% url 'compare:clear' %}">Clear Comparison</a>
+</div>
+
+{% else %}
+<div class="pp-empty">
+    <i class="ti-reload"></i>
+    <h3>No watches to compare yet</h3>
+    <p class="pp-muted">Add up to {{ max_compare }} watches from any product page (the <strong>Compare</strong> action) to see their specifications side by side.</p>
+    <a class="pp-btn" href="{% url 'shop:browse' %}">Browse the Collection</a>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,40 @@
+{% load pp_tags %}
+{% load thumbnail %}
+{% with sr=product.stockrecords.first img=product.primary_image %}
+<div class="pp-product-card">
+    {% if not sr or sr.num_in_stock < 1 %}
+        <span class="pp-badge pp-badge--sold">Sold</span>
+    {% elif product.attribute_values.exists %}
+        {% with cond=product|attr:"condition" %}
+            {% if cond and cond != "New" %}<span class="pp-badge pp-badge--gold">{{ cond }}</span>{% endif %}
+        {% endwith %}
+    {% endif %}
+    <a class="pp-product-img" href="{{ product.get_absolute_url }}">
+        {% if img %}
+            {% thumbnail img.original "400x400" padding=True as thumb %}
+                <img src="{{ thumb.url }}" alt="{{ product.title }}">
+            {% empty %}
+                <img src="{{ img.original.url }}" alt="{{ product.title }}">
+            {% endthumbnail %}
+        {% endif %}
+    </a>
+    <div class="pp-product-body">
+        <div class="pp-brand">{{ product|attr:"brand" }}</div>
+        <h3 class="pp-title"><a href="{{ product.get_absolute_url }}">{{ product|attr:"model" }}</a></h3>
+        <div class="pp-ref">Ref. {{ product|attr:"reference" }}</div>
+        <div class="pp-price">{% if sr %}{{ sr.price|money }}{% else %}&mdash;{% endif %}</div>
+        <div class="pp-actions">
+            {% if sr and sr.num_in_stock >= 1 %}
+            <form action="{% url 'basket:add' pk=product.id %}" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="quantity" value="1">
+                <button type="submit" class="pp-btn">Add to Cart</button>
+            </form>
+            {% else %}
+            <a class="pp-btn pp-btn--outline disabled" href="{{ product.get_absolute_url }}">View</a>
+            {% endif %}
+            <a class="pp-icon-btn" title="Add to wishlist" href="{% url 'customer:wishlists-add-product' product_pk=product.id %}"><i class="ti-heart"></i></a>
+        </div>
+    </div>
+</div>
+{% endwith %}

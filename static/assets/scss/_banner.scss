@@ -1,0 +1,404 @@
+/*-------- 6. Banner style ---------*/
+
+.banner-wrap {
+    position: relative;
+    a {
+        img {
+            width: 100%;
+        }
+    }
+    .banner-btn-position {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        right: 230px;
+        @media #{$xl-layout} {
+            right: 150px;
+        }
+        @media #{$lg-layout} {
+            right: 80px;
+        }
+        @media #{$md-layout} {
+            right: 50px;
+        }
+        @media #{$xs-layout} {
+            right: 15px;
+        }
+    }
+}
+
+.btn-style-1 {
+    a {
+        font-size: 16px;
+        color: #1b1b1b;
+        display: inline-block;
+        background-color: #fff;
+        line-height: 1;
+        padding: 22px 37px 26px;
+        z-index: 2;
+        position: relative;
+    }
+}
+
+@media #{$md-layout} {
+    .banner-wrap {
+        .btn-style-1 {
+            a {
+                padding: 12px 15px 12px;
+            } 
+        } 
+    }
+}
+@media #{$xs-layout} {
+    .banner-wrap {
+        .btn-style-1 {
+            a {
+                font-size: 12px;
+                padding: 5px 11px 7px;
+            } 
+        } 
+    }
+}
+
+.banner-wrap {
+    .banner-img {
+        position: relative;
+        overflow: hidden;
+        a {
+            display: block;
+            img {
+                width: 100%;
+                transform: scale(1);
+                transition: all.3s ease 0s;
+            }
+        }
+        .banner-badge {
+            position: absolute;
+            top: 27px;
+            right: 70px;
+            span {
+                display: inline-block;
+                color: #fff;
+                background-color: $theme-color-main;
+                height: 62px;
+                width: 62px;
+                line-height: 62px;
+                text-align: center;
+                letter-spacing: 1.11px;
+                border-radius: 100%;
+            }
+        }
+    }
+    .banner-position-1 {
+        position: absolute;
+        left: 40px;
+        top: 50%;
+        transform: translateY(-50%);
+        @media #{$lg-layout} {
+            left: 20px;
+        }
+        @media #{$xs-layout} {
+            left: 20px;
+        }
+    }
+    .banner-position-2 {
+        position: absolute;
+        text-align: center;
+        left: 0;
+        right: 0;
+        text-align: center;
+        bottom: 44px;
+    }
+    .banner-content-1 { 
+        h5 {
+            color: #fff;
+            margin: 0 0 5px; 
+        }
+        h2 {
+            font-size: 32px;
+            margin: 0;
+            font-weight: 500;
+            &.yellow {
+                color: #ffe30b;
+            }
+            &.lightblue {
+                color: #d4fff8;
+            }
+        }
+        span {
+            color: #ff6e21;
+            margin: 0px 0 10px;
+            display: block;
+            font-weight: 500;
+        }
+    }
+    .banner-content-2 {
+        h2 {
+            font-size: 18px;
+            color: #1b1b1b;
+            margin: 0;
+            font-weight: 500;
+            a {
+                color: #1b1b1b;
+                &:hover {
+                    color: #444;
+                }
+            }
+        }
+    }
+    &:hover {
+        .banner-img {
+            a {
+                img {
+                    transform: scale(1.2);
+                }
+            }
+        }
+    }
+}
+
+.banner-gradient-area {
+    background: radial-gradient(circle, #58259A, #000000);
+}
+
+.bg-parallex-image {
+    background: transparent url("../images/banner/cms-parallex.jpg") no-repeat fixed center center;
+}
+
+.banner-zoom-wrap {
+    overflow: hidden;
+    position: relative;
+    transition: all 0.3s ease 0s;
+    margin-right: 50px;
+    @media #{$xs-layout} {
+        margin-right: 0px;
+    }
+    a {
+        img {
+            display: block;
+            transition: all 0.5s ease-out 0s;
+            width: 100%;
+            &:last-child {
+                left: 0;
+                opacity: 0;
+                position: absolute;
+                top: 0;
+                transform: scale(1.5);
+                visibility: hidden;
+            }
+        }
+    }
+    &:hover .zoom-img img {
+        opacity: 1;
+        transform: scale(1);
+        visibility: visible;
+    }
+}
+
+.banner-zoom-content {
+    margin-right: -33px;
+    margin-left: 95px;
+    @media #{$xl-layout} {
+        margin-right: 0px;
+    }
+    @media #{$lg-layout} {
+        margin-right: 0px;
+        margin-left: 0px;
+    }
+    @media #{$md-layout} {
+        margin-right: 0px;
+        margin-left: 0px;
+    }
+    @media #{$xs-layout} {
+        margin-right: 0px;
+        margin-left: 0px;
+        margin-top: 20px;
+        text-align: center;
+    }
+    h2 {
+        font-size: 44px;
+        font-weight: 600;
+        color: #fff;
+        line-height: 53px;
+        margin: 0 0 70px;
+        @media #{$xl-layout} {
+            margin: 0 0 50px;
+            font-size: 36px;
+        }
+        @media #{$lg-layout} {
+            margin: 0 0 30px;
+            font-size: 36px;
+        }
+        @media #{$md-layout} {
+            margin: 0 0 30px;
+            font-size: 27px;
+            line-height: 42px;
+        }
+        @media #{$xs-layout} {
+            margin: 0 0 20px;
+            font-size: 23px;
+            line-height: 40px;
+        }
+    }
+}
+
+.btn-style-5 {
+    a {
+        display: inline-block;
+        font-size: 16px;
+        line-height: 1;
+        z-index: 9;
+        &.bs5-white-text {
+            color: #fff;
+        }
+        &.bs5-ptb-1 {
+            padding: 22px 47px 24px;
+            @media #{$lg-layout} {
+                padding: 18px 37px 20px;
+            }
+            @media #{$md-layout} {
+                padding: 18px 37px 20px;
+            }
+            @media #{$xs-layout} {
+                padding: 16px 35px 18px;
+            }
+        }
+    }
+}
+
+.banner-bg-content-2 {
+    position: relative;
+    z-index: 9;
+    h2 {
+        font-size: 66px;
+        font-weight: bold;
+        font-style: italic;
+        margin: 0;
+        line-height: 1;
+        color: #fff;
+        font-family: $font-title; 
+        @media #{$xx-layout} {
+            font-size: 60px;
+        }
+        @media #{$xl-layout} {
+            font-size: 50px;
+        }
+        @media #{$lg-layout} {
+            font-size: 46px;
+        }
+        @media #{$md-layout} {
+            font-size: 38px;
+        }
+        @media #{$xs-layout} {
+            font-size: 28px;
+            line-height: 40px;
+        }
+    }
+    h3 {
+        font-size: 46px;
+        font-weight: bold;
+        font-style: italic;
+        margin: 56px 0 26px;
+        line-height: 1;
+        color: #fff;
+        font-family: $font-title;
+        @media #{$xx-layout} {
+            margin: 40px 0 26px;
+            font-size: 40px;
+        }
+        @media #{$xl-layout} {
+            margin: 40px 0 26px;
+            font-size: 40px;
+        }
+        @media #{$lg-layout} {
+            margin: 40px 0 26px;
+            font-size: 35px;
+        }
+        @media #{$md-layout} {
+            margin: 25px 0 26px;
+            font-size: 30px;
+        }
+        @media #{$xs-layout} {
+            margin: 10px 0 26px;
+            font-size: 23px;
+        }
+    }
+}
+
+.default-overlay {
+    &.hamdmade-bg-overly {
+        &:before {
+            background-color: #1b1b1b;
+            opacity: .3;
+        }
+    }
+}
+
+.hamdmade-bg-area {
+    padding: 265px 0 275px;
+    @media #{$xx-layout} {
+        padding: 165px 0 175px;
+    }
+    @media #{$xl-layout} {
+        padding: 165px 0 175px;
+    }
+    @media #{$lg-layout} {
+        padding: 150px 0 160px;
+    }
+    @media #{$md-layout} {
+        padding: 130px 0 140px;
+    }
+    @media #{$xs-layout} {
+        padding: 80px 0 90px;
+    }
+}
+
+.banner-offer-wrap {
+    padding-left: 525px;
+    position: relative;
+    @media #{$xl-layout} {
+        padding-left: 325px;
+    }
+    @media #{$lg-layout} {
+        padding-left: 200px;
+    }
+    @media #{$md-layout} {
+        padding-left: 0px;
+    }
+    @media #{$xs-layout} {
+        padding-left: 0px;
+    }
+    img {
+        width: 100%;
+    }
+}
+
+.grid-sizer {
+    width: 25%;
+}
+
+@media #{$md-layout} {
+    .banner-area {
+        &.pb-85 {
+            padding-bottom: 35px;
+        }
+    }
+    .book-banner-bg {
+        background-position: 22%;
+    }
+}
+@media #{$xs-layout} {
+    .banner-area {
+        &.pb-85 {
+            padding-bottom: 12px;
+        }
+    }
+    .book-banner-bg {
+        background-position: 30%;
+    }
+}
+
+
+
+
+

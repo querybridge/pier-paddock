@@ -1,0 +1,123 @@
+{% extends "oscar/layout.html" %}
+{% load pp_tags %}
+{% load i18n %}
+{% load purchase_info_tags %}
+
+{% block title %}{{ product.title }} — {{ BRAND_NAME }}{% endblock %}
+{% block banner_title %}{{ product|attr:"brand" }}{% endblock %}
+{% block breadcrumbs %}
+    <li><a href="{% url 'shop:browse' %}">Shop</a></li>
+    <li><a href="{% url 'shop:browse' %}?brand={{ product.categories.first.slug }}">{{ product|attr:"brand" }}</a></li>
+{% endblock %}
+
+{% block content %}
+{% purchase_info_for_product request product as session %}
+{% with sr=product.stockrecords.first %}
+<div class="row product_page">
+    {# ------------- Gallery ------------- #}
+    <div class="col-lg-6 col-12">
+        <div class="pp-gallery">
+            <div class="pp-gallery-main" style="background:#f7f4ef;border:1px solid #ece7dd;border-radius:3px;padding:20px;text-align:center;">
+                {% with first=product.primary_image %}
+                <img id="pp-main-image" src="{{ first.original.url }}" alt="{{ product.title }}" style="max-width:100%;">
+                {% endwith %}
+            </div>
+            <div class="pp-gallery-thumbs" style="display:flex;gap:12px;margin-top:14px;">
+                {% for image in product.images.all %}
+                <a href="#" class="pp-thumb" onclick="document.getElementById('pp-main-image').src='{{ image.original.url }}';return false;"
+                   style="flex:1;border:1px solid #ece7dd;border-radius:3px;padding:8px;background:#f7f4ef;">
+                    <img src="{{ image.original.url }}" alt="" style="width:100%;">
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    {# ------------- Main info ------------- #}
+    <div class="col-lg-6 col-12 product_main">
+        {% if user.is_staff %}
+            <a class="float-right pp-muted" href="{% url 'dashboard:catalogue-product' pk=product.id %}"><small><i class="fa fa-pencil"></i> Edit</small></a>
+        {% endif %}
+        <div class="pp-brand" style="letter-spacing:2px;color:#a8863a;text-transform:uppercase;">{{ product|attr:"brand" }}</div>
+        <h1 style="font-family:Georgia,serif;font-size:34px;margin:8px 0;">{{ product|attr:"model" }}</h1>
+        <div class="pp-ref pp-muted">Reference {{ product|attr:"reference" }}</div>
+        <div class="pp-ref pp-muted">{% if sr %}{{ sr.price|money }}{% else %}&mdash;{% endif %} · {{ session.availability.message }}</div>
+
+        <div class="pp-detail-badges" style="margin-top:14px;">
+            <span class="pp-chip">{{ product|attr:"condition" }}</span>
+            <span class="pp-chip">{{ product|attr:"box_papers" }}</span>
+            <span class="pp-chip">{{ product|attr:"year" }}</span>
+            {% if sr and sr.num_in_stock < 1 %}<span class="pp-chip" style="background:#8a1c1c;color:#fff;">Sold</span>{% endif %}
+        </div>
+
+        <hr>
+        {% block product_basket_form %}
+            {% include "oscar/catalogue/partials/add_to_basket_form.html" %}
+        {% endblock %}
+
+        <div class="pp-shipping-note">
+            <i class="fa fa-truck text-gold"></i>&nbsp; Insured, signature-required shipping.
+            Overnight, fully insured and authenticated.
+        </div>
+    </div>
+</div>
+
+{# ------------- Specifications ------------- #}
+<div class="pp-section-title" style="text-align:left;margin-top:50px;">
+    <h2 style="font-size:26px;">Specifications</h2>
+</div>
+<div class="row">
+    <div class="col-lg-7 col-12">
+        <table class="pp-spec-table">
+            {% for label, value in product|product_specs %}
+            <tr><th>{{ label }}</th><td>{{ value }}</td></tr>
+            {% endfor %}
+        </table>
+    </div>
+    <div class="col-lg-5 col-12">
+        {% if product.description %}
+        <h4 style="font-family:Georgia,serif;">About this piece</h4>
+        <p class="pp-muted">{{ product.description }}</p>
+        {% endif %}
+    </div>
+</div>
+
+{# ------------- Reviews ------------- #}
+{% if product.num_approved_reviews %}
+<div class="pp-section-title" style="text-align:left;margin-top:50px;">
+    <h2 style="font-size:26px;">Customer Reviews</h2>
+</div>
+<div class="row">
+    {% for review in product.reviews.approved.all|slice:":3" %}
+    <div class="col-lg-4 col-12 mb-4">
+        <div class="pp-form-card" style="height:100%;">
+            <div class="text-gold" style="margin-bottom:10px;">
+                {% for i in "12345" %}{% if forloop.counter <= review.score %}<i class="fa fa-star"></i>{% else %}<i class="fa fa-star-o"></i>{% endif %}{% endfor %}
+            </div>
+            <h5 style="font-family:Georgia,serif;">{{ review.title }}</h5>
+            <p class="pp-muted">{{ review.body }}</p>
+            <div class="pp-brand">— {{ review.name }}</div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+{# ------------- You may also like ------------- #}
+{% with related=product|related_products %}
+{% if related %}
+<div class="pp-section-title" style="margin-top:60px;">
+    <span>More to explore</span>
+    <h2>You May Also Like</h2>
+</div>
+<div class="row">
+    {% for product in related %}
+    <div class="col-lg-3 col-sm-6 col-12 mb-40">
+        {% include "partials/_product_wrap.html" %}
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+{% endwith %}
+{% endwith %}
+{% endblock %}

@@ -1,0 +1,297 @@
+/*-------- 24. Cart style ---------*/
+
+
+.cart-main-area {
+    @media #{$xs-layout}{
+        &.pb-100 {
+            padding-bottom: 60px;
+        }
+    }
+}
+h3.cart-page-title {
+    font-size: 20px;
+    font-weight: 500;
+    margin: 0 0 15px;
+}
+
+.cart-table-content {
+    table {
+        thead > tr {
+            th {
+                border-top: medium none;
+                font-size: 12px;                
+                vertical-align: middle; 
+                white-space: nowrap;
+                color: $theme-color-main;
+                font-weight: bold;
+                text-transform: uppercase;
+                padding: 25px 0 25px 0;
+                background-color: $theme-color-main2;
+                @media #{$lg-layout}{
+                    padding: 25px 0 25px 0;
+                }
+                @media #{$xs-layout}{
+                    padding: 20px 0 20px 0;
+                    text-transform: capitalize;
+                }
+            }
+        }
+        tbody > tr {
+            td {
+                font-size: 14px;
+                padding: 24px 0px;
+                @media #{$xs-layout}{
+                    padding: 24px 0px;
+                    text-align: center;
+                }
+            }
+            td.product-remove {
+                width: 40px;
+                a {
+                    color: #2f2f2f;
+                    &:hover {
+                        color: $theme-color-main;
+                    }
+                }
+            }
+            td.product-img {
+                width: 130px;
+            }
+            td.product-name1 {
+                width: 260px;               
+                @media #{$md-layout}{
+                    width: 250px;
+                }
+                @media #{$xs-layout}{
+                    width: 200px;
+                    padding-left: 10px;
+                    padding-right: 10px;
+                }
+                a {
+                    font-size: 12px;
+                    color: #2f2f2f;
+                    &:hover {
+                        color: $theme-color-main;
+                    }
+                }
+            }
+            td.product-price {
+                width: 100px;
+                span {
+                    color: #2f2f2f;
+                    font-size: 14px;
+                }
+            }
+            td.cart-quality {
+                width: 187px;
+
+            }
+            td.product-total {
+                width: 70px;
+                span {
+                    font-weight: bold;
+                    color: #2f2f2f;
+                    font-size: 14px;
+                }
+            }
+            td.product-wishlist-cart {
+                width: 100px;
+                > a {
+                    background-color: #232323;
+                    color: #fff;
+                    font-size: 11px;
+                    line-height: 1;
+                    padding: 7px 8px;
+                    text-transform: capitalize;
+                    &:hover {
+                        background-color: $theme-color-main2;
+                    }
+                    @media #{$ms2-layout}{
+                        padding: 7px 3px;
+                    }
+                }
+            }
+        }
+    }
+}
+.cart-shiping-update-wrapper {
+    display: flex;
+    justify-content: space-between;
+    border-top: 1px solid #CDCDCD;  
+    @media #{$xs-layout}{
+        display: block;
+    }
+    .discount-code {
+        position: relative;
+        flex: 0 0 50%;
+        input {
+            padding: 0 10px 0 0;
+            border: none;
+            height: 36px;
+            font-size: 12px;
+            color: #2f2f2f;
+            background-color: transparent;
+            border-bottom: 1px solid #D8D8D8;
+        }
+        button {
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            border: none;
+            padding: 0;
+            background-color: transparent;
+            font-weight: bold;
+            font-size: 14px;
+            color: #2f2f2f;
+            transition: all .3s ease 0s;
+            &:hover {
+                color: $theme-color-main;
+            }
+
+        }
+    }
+    .cart-clear {
+        a {
+            display: inline-block;
+            margin: 8px 0 0 20px;
+            color: #8A8A8A;
+            &:first-child {
+                margin: 8px 0 0 0px;
+            }
+            &:hover {
+                color: $theme-color-main;
+            }
+            &.update-cart {
+                font-weight: bold;
+                font-size: 14px;
+                color: #2f2f2f;
+                &:hover {
+                    color: $theme-color-main;
+                }
+            }
+        }
+        @media #{$xs-layout}{
+            margin-top: 10px;
+        }
+    }
+}
+
+.grand-total-wrap {
+    padding: 50px;
+    @media #{$md-layout}{
+        margin-top: 40px;
+    }
+    @media #{$xs-layout}{
+        margin-top: 40px;
+    }
+    h4 {
+        font-weight: 900;
+        font-size: 20px;
+        margin: 0;
+        color:$theme-color-main;
+    }
+    .grand-total-content {
+        padding: 48px 0 50px;
+        > ul {
+            > li {
+                font-weight: bold;
+                padding-bottom: 33px;
+                font-size: 14px;
+                color: #1D1D1D;
+                display: flex;
+                justify-content: space-between;
+                &:last-child {
+                    border-top: 1px solid #DBDBDB;
+                    padding-top: 15px;
+                    padding-bottom: 0px;
+                }
+                > ul {
+                    > li {
+                        display: flex;
+                        font-size: 12px;
+                        color: #777;
+                        margin: 0 0 5px;
+                        font-weight: 400;
+                        align-items: center;
+                        &:last-child {
+                            margin: 0 0 0;
+                        }
+                        input {
+                            width: auto;
+                            height: auto;
+                            margin-right: 20px;
+                        }
+                    }
+                }
+                span {
+                    float: right;
+                    font-size: 14px;
+                    color: #262626;
+                    @media #{$lg-layout}{
+                        margin-right: 0px;
+                    }
+                    @media #{$md-layout}{
+                        margin-right: 0px;
+                    }
+                    @media #{$xs-layout}{
+                        margin-right: 0px;
+                    }
+                }
+            }
+        }
+    }
+    .grand-btn {       
+        a {
+            background-color: transparent;
+            color:$theme-color-main2;
+            border: 2px solid $theme-color-main2;
+            text-align: center;
+            font-size: 14px;
+            display: block;
+            padding: 16px 10px 16px;
+            text-transform: uppercase;
+            font-weight: 500;
+            z-index: 2;                            
+            cursor: pointer;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            float: none;
+            overflow: hidden;
+            outline: 0;  
+            position: relative;
+            -webkit-appearance: none;
+            &:before{
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                transition: all 0.3s linear;
+                border: 2px solid #A67314;
+            }
+            &:hover {
+                background: $theme-color-main2;
+                color: $white;
+            }
+            &:hover{
+                &:before{
+                    content: '';
+                    position: absolute;
+                    top: 4px;
+                    bottom: 4px;
+                    left: 4px;
+                    right: 4px;
+                    border-color: $white;
+                }
+            }
+        }
+    }
+}
+
+
+
+
+
+

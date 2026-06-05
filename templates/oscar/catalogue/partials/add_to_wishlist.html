@@ -1,0 +1,31 @@
+{% load i18n %}
+{% load vault_tags %}
+
+<div class="pp-pdp-actions">
+    {# ---- Save to Vault ---- #}
+    {% if user.is_authenticated %}
+        {% if product.id in vault_product_ids %}
+            <a class="pp-icon-action is-active" href="{% url 'vault:index' %}" title="{% trans 'View in your Vault' %}">
+                <i class="fa fa-lock"></i> In Your Vault
+            </a>
+        {% else %}
+            <a class="pp-icon-action" href="{% url 'vault:add' pk=product.id %}" title="{% trans 'Save to your Vault and track its value' %}">
+                <i class="fa fa-lock"></i> Save to Vault
+            </a>
+        {% endif %}
+    {% else %}
+        <a class="pp-icon-action" href="{% url 'customer:login' %}?next={% url 'vault:add' pk=product.id %}" title="{% trans 'Log in to save to your Vault' %}">
+            <i class="fa fa-lock"></i> Save to Vault
+        </a>
+    {% endif %}
+
+    {# Global "watching in vault" count — social proof #}
+    <span class="pp-vault-count" title="Collectors watching this watch in their Vault">
+        <i class="fa fa-bookmark-o"></i> {{ product|vault_saves }} watching
+    </span>
+
+    {# ---- Compare ---- #}
+    <a class="pp-icon-action{% if product.id in compare_ids %} is-active{% endif %}" href="{% url 'compare:add' pk=product.id %}" title="{% trans 'Compare this watch' %}">
+        <i class="ti-reload"></i> {% if product.id in compare_ids %}In Compare{% else %}Compare{% endif %}
+    </a>
+</div>

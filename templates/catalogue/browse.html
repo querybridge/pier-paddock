@@ -1,0 +1,135 @@
+{% extends "oscar/layout.html" %}
+{% load pp_tags %}
+
+{% block title %}{{ page_title }} — {{ BRAND_NAME }}{% endblock %}
+{% block headertext %}{{ page_title }}{% endblock %}
+{% block banner_bg_class %}pp-banner-watches{% endblock %}
+{% block breadcrumbs %}<li><a href="{% url 'shop:browse' %}">Shop</a></li>{% endblock %}
+
+{% block content %}
+<div class="row">
+    {# ---------------- Sidebar ---------------- #}
+    <div class="col-lg-3 col-12 pp-shop-sidebar">
+        <form method="get" action="{% url 'shop:browse' %}">
+            {% if selected.q %}<input type="hidden" name="q" value="{{ selected.q }}">{% endif %}
+
+            <div class="pp-filter-block">
+                <h4>Brand</h4>
+                <ul>
+                    <li {% if not selected.brand %}class="active"{% endif %}><a href="{% url 'shop:browse' %}">All Brands</a></li>
+                    {% for b in brands %}
+                    <li {% if selected.brand == b.slug %}class="active"{% endif %}>
+                        <a href="{% url 'shop:browse' %}?brand={{ b.slug }}">{{ b.name }}</a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <div class="pp-filter-block">
+                <h4>Collection</h4>
+                <ul>
+                    {% for c in collections %}
+                    <li {% if selected.collection == c.slug %}class="active"{% endif %}>
+                        <a href="{% url 'shop:browse' %}?collection={{ c.slug }}">{{ c.name }}</a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <div class="pp-filter-block">
+                <h4>Price Range (USD)</h4>
+                <input type="hidden" name="brand" value="{{ selected.brand }}">
+                <input type="hidden" name="collection" value="{{ selected.collection }}">
+                <input type="hidden" name="material" value="{{ selected.material }}">
+                <input type="hidden" name="condition" value="{{ selected.condition }}">
+                <div class="pp-price-inputs">
+                    <input type="number" name="min_price" placeholder="Min" value="{{ selected.min_price }}">
+                    <span>&ndash;</span>
+                    <input type="number" name="max_price" placeholder="Max" value="{{ selected.max_price }}">
+                </div>
+                <button type="submit" class="pp-btn pp-btn--outline mt-3" style="width:100%;">Apply</button>
+            </div>
+        </form>
+
+        <div class="pp-filter-block">
+            <h4>Case Material</h4>
+            <ul>
+                {% for m in materials %}
+                <li {% if selected.material == m %}class="active"{% endif %}>
+                    <a href="{% url 'shop:browse' %}?material={{ m|urlencode }}{% if selected.brand %}&brand={{ selected.brand }}{% endif %}">{{ m }}</a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="pp-filter-block">
+            <h4>Condition</h4>
+            <ul>
+                {% for c in conditions %}
+                <li {% if selected.condition == c %}class="active"{% endif %}>
+                    <a href="{% url 'shop:browse' %}?condition={{ c|urlencode }}{% if selected.brand %}&brand={{ selected.brand }}{% endif %}">{{ c }}</a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        {% if base_querystring %}
+        <a class="text-gold" href="{% url 'shop:browse' %}"><i class="ti-close"></i> Clear all filters</a>
+        {% endif %}
+    </div>
+
+    {# ---------------- Results ---------------- #}
+    <div class="col-lg-9 col-12">
+        <div class="pp-shop-toolbar">
+            <div class="pp-muted">
+                {{ paginator.count }} timepiece{{ paginator.count|pluralize }}
+                {% if selected.q %}for &ldquo;{{ selected.q }}&rdquo;{% endif %}
+            </div>
+            <form method="get" action="{% url 'shop:browse' %}" id="sortForm">
+                {% for k, v in selected.items %}{% if v and k != 'sort' %}<input type="hidden" name="{{ k }}" value="{{ v }}">{% endif %}{% endfor %}
+                <label class="pp-muted mr-2">Sort</label>
+                <select name="sort" onchange="document.getElementById('sortForm').submit();">
+                    {% for key, opt in sort_options.items %}
+                    <option value="{{ key }}" {% if current_sort == key %}selected{% endif %}>{{ opt.1 }}</option>
+                    {% endfor %}
+                </select>
+            </form>
+        </div>
+
+        {% if products %}
+        <div class="row">
+            {% for product in products %}
+            <div class="col-lg-4 col-sm-6 col-12 mb-40">
+                {% include "partials/_product_wrap.html" %}
+            </div>
+            {% endfor %}
+        </div>
+
+        {% if is_paginated %}
+        <nav class="pp-pagination text-center mt-4">
+            <ul class="pagination justify-content-center">
+                {% if page_obj.has_previous %}
+                <li class="page-item"><a class="page-link" href="?{% if base_querystring %}{{ base_querystring }}&{% endif %}page={{ page_obj.previous_page_number }}">&laquo;</a></li>
+                {% endif %}
+                {% for n in paginator.page_range %}
+                <li class="page-item {% if n == page_obj.number %}active{% endif %}">
+                    <a class="page-link" href="?{% if base_querystring %}{{ base_querystring }}&{% endif %}page={{ n }}">{{ n }}</a>
+                </li>
+                {% endfor %}
+                {% if page_obj.has_next %}
+                <li class="page-item"><a class="page-link" href="?{% if base_querystring %}{{ base_querystring }}&{% endif %}page={{ page_obj.next_page_number }}">&raquo;</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
+
+        {% else %}
+        <div class="pp-empty">
+            <i class="ti-search"></i>
+            <h3>No watches match your filters</h3>
+            <p class="pp-muted">Try widening your search or <a href="{% url 'shop:browse' %}">browse the full collection</a>.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

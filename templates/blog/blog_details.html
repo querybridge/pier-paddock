@@ -1,0 +1,35 @@
+{% extends "oscar/layout.html" %}
+
+{% block title %}{{ post.title }} — {{ BRAND_NAME }}{% endblock %}
+{% block banner_title %}The Journal{% endblock %}
+{% block breadcrumbs %}<li><a href="{% url 'blog:list' %}">Blog</a></li>{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8 col-12">
+        <article class="pp-post">
+            {% if post.image %}<img src="{{ post.image.url }}" alt="{{ post.title }}" style="width:100%;border-radius:3px;margin-bottom:28px;">{% endif %}
+            <div class="pp-brand">{{ post.date|date:"F j, Y" }} · {{ post.author }}</div>
+            <h1 style="font-family:Georgia,serif;font-size:34px;margin:10px 0 24px;">{{ post.title }}</h1>
+            <div class="pp-post-body">
+                {% for para in post.body.splitlines %}{% if para.strip %}<p>{{ para }}</p>{% endif %}{% endfor %}
+            </div>
+            <hr class="mt-40">
+            <a href="{% url 'blog:list' %}" class="text-gold">&larr; Back to the Journal</a>
+        </article>
+    </div>
+    <div class="col-lg-4 col-12">
+        <div class="pp-form-card">
+            <h4 style="font-family:Georgia,serif;">Recent Articles</h4>
+            <ul style="list-style:none;padding:0;">
+                {% for p in recent_posts %}
+                <li style="margin-bottom:14px;border-bottom:1px solid #ece7dd;padding-bottom:14px;">
+                    <a href="{{ p.get_absolute_url }}" style="color:#1a1a1a;">{{ p.title }}</a>
+                    <div class="pp-muted" style="font-size:12px;">{{ p.date|date:"M j, Y" }}</div>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}

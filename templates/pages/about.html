@@ -1,0 +1,53 @@
+{% extends "oscar/layout.html" %}
+
+{% block title %}About Us — {{ BRAND_NAME }}{% endblock %}
+{% block headertext %}About {{ BRAND_NAME }}{% endblock %}
+{% block breadcrumbs %}<li>About</li>{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8 offset-lg-2 col-12 text-center">
+        <span class="text-gold" style="letter-spacing:3px;text-transform:uppercase;font-size:12px;">{{ BRAND_TAGLINE }}</span>
+        <h2 style="font-family:Georgia,serif;font-size:32px;margin:14px 0 24px;">A house built on trust and provenance</h2>
+        <p class="pp-muted">{{ BRAND_NAME }} curates the world's most coveted timepieces — from the
+            professional tool watches of Rolex and Omega to the haute horology of Patek Philippe,
+            Audemars Piguet, Vacheron Constantin and Richard Mille. Every piece is hand-selected
+            for condition, originality and completeness.</p>
+    </div>
+</div>
+
+<div class="row mt-40">
+    <div class="col-md-6 col-12 mb-4">
+        <div class="pp-form-card" style="height:100%;">
+            <h3>Our Story</h3>
+            <p class="pp-muted">We believe buying a luxury watch should feel as considered as the
+                craftsmanship inside it. That conviction shapes everything we do — from the way we
+                photograph and describe each watch to the insured, white-glove way it reaches your door.</p>
+            <p class="pp-muted">We deal exclusively in authenticated timepieces, each one independently
+                verified before it is offered for sale. No replicas, no ambiguity — only watches we would
+                proudly wear ourselves.</p>
+        </div>
+    </div>
+    <div class="col-md-6 col-12 mb-4">
+        <div class="pp-form-card" style="height:100%;">
+            <h3>Fulfilment &amp; Service</h3>
+            <p class="pp-muted">Every order placed with {{ BRAND_NAME }} is authenticated, stored and
+                fulfilled through our institutional-grade fulfilment network — backed by some of the most
+                respected names in fine watches and jewelry.</p>
+            <p class="pp-muted">That means your watch is held in secure, insured facilities, dispatched
+                overnight with signature on delivery, and fully insured in transit. You enjoy a boutique
+                buying experience backed by institutional-grade fulfilment.</p>
+        </div>
+    </div>
+</div>
+
+<div class="pp-trust-strip mt-40" style="border-radius:3px;">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4"><div class="pp-trust-item"><i class="fa fa-shield"></i><h5>Authenticated</h5></div></div>
+            <div class="col-md-4"><div class="pp-trust-item"><i class="fa fa-truck"></i><h5>Insured Delivery</h5></div></div>
+            <div class="col-md-4"><div class="pp-trust-item"><i class="fa fa-archive"></i><h5>Box &amp; Papers Verified</h5></div></div>
+        </div>
+    </div>
+</div>
+{% endblock %}

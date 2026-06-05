@@ -1,0 +1,37 @@
+{% extends "oscar/layout.html" %}
+
+{% block title %}The Journal — {{ BRAND_NAME }}{% endblock %}
+{% block headertext %}The Journal{% endblock %}
+{% block breadcrumbs %}<li>Blog</li>{% endblock %}
+
+{% block content %}
+<div class="row">
+    {% for post in posts %}
+    <div class="col-lg-4 col-md-6 col-12 mb-40">
+        <div class="pp-product-card" style="text-align:left;">
+            <a class="pp-product-img" href="{{ post.get_absolute_url }}" style="padding:0;">
+                {% if post.image %}<img src="{{ post.image.url }}" alt="{{ post.title }}">{% endif %}
+            </a>
+            <div class="pp-product-body">
+                <div class="pp-brand">{{ post.date|date:"F j, Y" }} · {{ post.author }}</div>
+                <h3 class="pp-title"><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></h3>
+                <p class="pp-muted">{{ post.excerpt|truncatewords:24 }}</p>
+                <a href="{{ post.get_absolute_url }}" class="text-gold">Read more &rarr;</a>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12 pp-empty"><p class="pp-muted">No posts yet.</p></div>
+    {% endfor %}
+</div>
+
+{% if is_paginated %}
+<nav class="text-center mt-4">
+    <ul class="pagination justify-content-center">
+        {% if page_obj.has_previous %}<li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">&laquo;</a></li>{% endif %}
+        {% for n in paginator.page_range %}<li class="page-item {% if n == page_obj.number %}active{% endif %}"><a class="page-link" href="?page={{ n }}">{{ n }}</a></li>{% endfor %}
+        {% if page_obj.has_next %}<li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">&raquo;</a></li>{% endif %}
+    </ul>
+</nav>
+{% endif %}
+{% endblock %}

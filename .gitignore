@@ -1,0 +1,38 @@
+# ─── Virtualenv ───────────────────────────────────────────────
+# This project directory doubles as the Python virtualenv. The venv is large
+# (~280 MB) and recreated with `pip install -r requirements.txt`, so it's
+# excluded to keep the repo small.
+/bin/
+/lib/
+/lib64/
+/include/
+pyvenv.cfg
+
+# ─── Python ───────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+
+# ─── Django ───────────────────────────────────────────────────
+# collectstatic output (regenerated)
+/staticfiles/
+*.log
+
+# Transient SQLite side-files (the demo db.sqlite3 itself IS committed —
+# it carries the demo catalogue, accounts and vault data).
+db.sqlite3-journal
+db.sqlite3-wal
+db.sqlite3-shm
+
+# ─── Regenerated / derivative images ──────────────────────────
+# sorl-thumbnail cache — derivative images rebuilt on demand. (Source product
+# imagery under media/images/ IS committed so the demo renders without a reseed.)
+/media/cache/
+
+# ─── OS / editor cruft ────────────────────────────────────────
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp

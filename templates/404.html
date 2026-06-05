@@ -1,0 +1,17 @@
+{% extends "oscar/layout.html" %}
+
+{% block title %}Page Not Found — {{ BRAND_NAME }}{% endblock %}
+{% block headertext %}404{% endblock %}
+{% block breadcrumbs %}<li>Not Found</li>{% endblock %}
+
+{% block content %}
+<div class="pp-empty">
+    <i class="ti-face-sad"></i>
+    <h2 style="font-family:Georgia,serif;">This page has wound down</h2>
+    <p class="pp-muted">The page you're looking for can't be found. It may have moved, or the link may be incorrect.</p>
+    <div class="mt-3">
+        <a class="pp-btn" href="{% url 'home' %}">Return Home</a>
+        <a class="pp-btn pp-btn--outline" href="{% url 'shop:browse' %}">Browse Watches</a>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,55 @@
+{% load pp_tags thumbnail %}
+{% with sr=product.stockrecords.first imgs=product.images.all %}
+<div class="product-wrap mb-30">
+    <div class="product-img pro-theme-color-border">
+        <a href="{{ product.get_absolute_url }}" class="image">
+            {% if imgs.0 %}{% thumbnail imgs.0.original "330x330" padding=True as t1 %}<img src="{{ t1.url }}" alt="{{ product.title }}">{% endthumbnail %}{% endif %}
+            {% if imgs.1 %}{% thumbnail imgs.1.original "330x330" padding=True as t2 %}<img class="img-02" src="{{ t2.url }}" alt="{{ product.title }}">{% endthumbnail %}{% endif %}
+        </a>
+        {% if not sr or sr.num_in_stock < 1 %}
+            <span class="pp-badge pp-badge--sold">Sold</span>
+        {% else %}
+            {% with cond=product|attr:"condition" %}{% if cond and cond != "New" %}<span class="pp-badge pp-badge--gold">{{ cond }}</span>{% endif %}{% endwith %}
+        {% endif %}
+        <div class="bquickview">
+            <a class="button btn-quickview" href="{{ product.get_absolute_url }}" title="View details"><span>View Details</span></a>
+        </div>
+    </div>
+    <div class="product-caption">
+        <p class="mf-product"><a href="{% url 'shop:browse' %}?brand={{ product.categories.first.slug }}">{{ product|attr:"brand" }}</a></p>
+        <h4 class="product-name"><a href="{{ product.get_absolute_url }}">{{ product|attr:"model" }}</a></h4>
+        <div class="pp-card-rule"></div>
+        <div class="pp-card-meta">
+            <span class="pp-card-ref">Ref. {{ product|attr:"reference" }}</span>
+            <span class="pp-card-price">{% if sr %}{{ sr.price|money }}{% else %}&mdash;{% endif %}</span>
+        </div>
+        <div class="box-hover">
+            <div class="product-ratings">
+                <div class="rating-box">
+                    <span class="badge">
+                        <span class="badge-starrating">
+                            {% for i in "12345" %}<i class="fa {% if forloop.counter <= product.rating %}fa-star{% else %}fa-star-o{% endif %}" aria-hidden="true"></i>{% endfor %}
+                        </span>
+                        <span class="badge-caption">{% if product.num_approved_reviews %}{{ product.num_approved_reviews }} review{{ product.num_approved_reviews|pluralize }}{% else %}No reviews{% endif %}</span>
+                    </span>
+                </div>
+            </div>
+            <div class="product-detail">
+                {{ product|attr:"movement" }} · {{ product|attr:"case_size" }} · {{ product|attr:"case_material" }}
+            </div>
+            <div class="product-action product-action-position-1 pro-action-theme-color">
+                <a title="Save to Vault" href="{% if request.user.is_authenticated %}{% url 'vault:add' pk=product.id %}{% else %}{% url 'customer:login' %}?next={% url 'vault:add' pk=product.id %}{% endif %}"><i class="fa fa-lock"></i></a>
+                {% if sr and sr.num_in_stock >= 1 %}
+                <form method="post" action="{% url 'basket:add' pk=product.id %}" class="d-inline-block">
+                    {% csrf_token %}<input type="hidden" name="quantity" value="1">
+                    <button class="btn-cart" type="submit" title="Add to Cart"><span>Add to Cart</span></button>
+                </form>
+                {% else %}
+                <a class="btn-cart" href="{{ product.get_absolute_url }}" title="View"><span>View Details</span></a>
+                {% endif %}
+                <a title="Compare" href="{% url 'compare:add' pk=product.id %}"><i class="ti-reload"></i></a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endwith %}

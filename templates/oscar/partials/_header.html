@@ -1,0 +1,191 @@
+{% load i18n %}
+<header class="header-area header-03">
+    <div class="header-large-device">
+        <div class="header-top section-padding-2 bg-main2">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-lg-4">
+                        <div class="social-icon-style social-mrg-dec social-font-dec">
+                            <a href="#"><i class="fa fa-facebook"></i></a>
+                            <a href="#"><i class="fa fa-twitter"></i></a>
+                            <a href="#"><i class="fa fa-instagram"></i></a>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="free-delivery text-center">
+                            <h4>Insured Delivery <span>| Authenticity Guaranteed | Signature Service</span></h4>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="header-right-wrap header-right-flex">
+                            <div class="setting-wrap same-style-2">
+                                <ul>
+                                    <li>
+                                        {% if request.user.is_authenticated %}
+                                        <a href="{% url 'customer:summary' %}">{{ request.user.get_full_name|default:request.user.email }} <i class="fa fa-angle-down"></i></a>
+                                        <ul>
+                                            <li><a href="{% url 'customer:summary' %}">My Account</a></li>
+                                            <li><a href="{% url 'customer:order-list' %}">My Orders</a></li>
+                                            <li><a href="{% url 'vault:index' %}">My Vault</a></li>
+                                            <li><a href="{% url 'customer:logout' %}">Logout</a></li>
+                                        </ul>
+                                        {% else %}
+                                        <a href="{% url 'customer:login' %}">Login / Register</a>
+                                        {% endif %}
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="header-middle bg-transparent section-padding-2">
+            <div class="container">
+                <div class="header-ptb">
+                    <div class="row align-items-center">
+                        <div class="col-xl-3 col-lg-3">
+                            <div class="logo logo-res-lg">
+                                <a class="brand-wordmark" href="{% url 'home' %}">
+                                    <span class="brand-name">{{ BRAND_NAME }}</span>
+                                    <span class="brand-tagline">{{ BRAND_TAGLINE }}</span>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-xl-7 col-lg-7 d-flex justify-content-center">
+                            <div class="main-menu menu-lh-1 menu-text-white">
+                                <nav>
+                                    <ul>
+                                        <li><a href="{% url 'home' %}">Home</a></li>
+                                        <li><a href="{% url 'shop:browse' %}">Shop<i class="fa fa-caret-down" aria-hidden="true"></i></a>
+                                            <ul class="sub-menu-width">
+                                                <li><a href="{% url 'shop:browse' %}">All Watches</a></li>
+                                                {% for c in nav_collections %}
+                                                <li><a href="{% url 'shop:browse' %}?collection={{ c.slug }}">{{ c.name }}</a></li>
+                                                {% endfor %}
+                                            </ul>
+                                        </li>
+                                        <li><a href="{% url 'shop:browse' %}">Brands<i class="fa fa-caret-down" aria-hidden="true"></i></a>
+                                            <ul class="sub-menu-width">
+                                                {% for b in nav_brands %}
+                                                <li><a href="{% url 'shop:browse' %}?brand={{ b.slug }}">{{ b.name }}</a></li>
+                                                {% empty %}
+                                                <li><a href="{% url 'shop:browse' %}">All Brands</a></li>
+                                                {% endfor %}
+                                            </ul>
+                                        </li>
+                                        <li><a href="{% url 'blog:list' %}">Blog</a></li>
+                                        <li><a href="{% url 'pages:about' %}">About</a></li>
+                                        <li><a href="{% url 'pages:faq' %}">FAQ</a></li>
+                                        <li><a href="{% url 'pages:contact' %}">Contact</a></li>
+                                    </ul>
+                                </nav>
+                            </div>
+                        </div>
+                        <div class="col-xl-2 col-lg-2">
+                            <div class="header-right-wrap header-right-flex">
+                                <div class="same-style same-style-mrg-dec">
+                                    <a class="search-active" href="#"><i class="fa fa-search" aria-hidden="true"></i></a>
+                                </div>
+                                <div class="same-style same-style-mrg-dec">
+                                    <a href="{% if request.user.is_authenticated %}{% url 'customer:summary' %}{% else %}{% url 'customer:login' %}{% endif %}"><i class="fa fa-user" aria-hidden="true"></i></a>
+                                </div>
+                                <div class="same-style same-style-mrg-dec">
+                                    <a href="{% url 'compare:index' %}" title="Compare"><i class="ti-reload"></i>
+                                        <span class="mini-cart-items">{{ compare_count }}</span>
+                                    </a>
+                                </div>
+                                <div class="same-style same-style-mrg-dec">
+                                    <a href="{% url 'vault:index' %}" title="Your Vault"><i class="fa fa-lock"></i>
+                                        <span class="mini-cart-items">{{ vault_count }}</span>
+                                    </a>
+                                </div>
+                                <div class="same-style same-style-mrg-dec">
+                                    <a href="{% url 'basket:summary' %}"><i class="ti-shopping-cart"></i>
+                                        <span class="mini-cart-items">{{ request.basket.num_items|default:0 }}</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="header-small-device bg-main">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-6">
+                    <div class="mobile-logo mobile-logo-width">
+                        <a class="brand-wordmark" href="{% url 'home' %}"><span class="brand-name">{{ BRAND_NAME }}</span></a>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="header-right-wrap header-right-flex">
+                        <div class="same-style same-style-mrg-dec">
+                            <a class="search-active" href="#"><i class="fa fa-search" aria-hidden="true"></i></a>
+                        </div>
+                        <div class="same-style same-style-mrg-dec">
+                            <a href="{% url 'basket:summary' %}"><i class="ti-shopping-cart"></i></a>
+                        </div>
+                        <div class="same-style">
+                            <a class="mobile-menu-button-active" href="#"><i class="fa fa-bars"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+{# Search overlay #}
+<div class="search-content-wrap">
+    <div class="search-content text-center">
+        <a class="search-close" href="#"><i class="ti-close"></i></a>
+        <form action="{% url 'shop:browse' %}" method="get">
+            <input type="text" name="q" placeholder="Search watches, brands, references…">
+            <button type="submit"><i class="ti-search"></i></button>
+        </form>
+    </div>
+</div>
+
+{# Mobile menu #}
+<div class="mobile-menu-active clickalbe-sidebar-wrapper-style-1">
+    <div class="clickalbe-sidebar-wrap">
+        <a class="sidebar-close"><i class="ti-close"></i></a>
+        <div class="mobile-menu-content-area sidebar-content-100-percent">
+            <div class="mobile-search">
+                <form class="search-form" action="{% url 'shop:browse' %}" method="get">
+                    <input type="text" name="q" placeholder="Search entire store…">
+                    <button class="button-search"><i class="ti-search"></i></button>
+                </form>
+            </div>
+            <div class="clickable-mainmenu-wrap clickable-mainmenu-style1">
+                <nav>
+                    <ul>
+                        <li><a href="{% url 'home' %}">Home</a></li>
+                        <li class="has-sub-menu"><a href="{% url 'shop:browse' %}">Shop</a>
+                            <ul class="sub-menu-2">
+                                <li><a href="{% url 'shop:browse' %}">All Watches</a></li>
+                                {% for c in nav_collections %}
+                                <li><a href="{% url 'shop:browse' %}?collection={{ c.slug }}">{{ c.name }}</a></li>
+                                {% endfor %}
+                            </ul>
+                        </li>
+                        <li class="has-sub-menu"><a href="{% url 'shop:browse' %}">Brands</a>
+                            <ul class="sub-menu-2">
+                                {% for b in nav_brands %}
+                                <li><a href="{% url 'shop:browse' %}?brand={{ b.slug }}">{{ b.name }}</a></li>
+                                {% endfor %}
+                            </ul>
+                        </li>
+                        <li><a href="{% url 'blog:list' %}">Blog</a></li>
+                        <li><a href="{% url 'pages:about' %}">About</a></li>
+                        <li><a href="{% url 'pages:faq' %}">FAQ</a></li>
+                        <li><a href="{% url 'pages:contact' %}">Contact</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>

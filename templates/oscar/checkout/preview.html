@@ -1,0 +1,45 @@
+{% extends "oscar/checkout/checkout.html" %}
+{% load i18n %}
+
+{% block title %}Order Preview — {{ BRAND_NAME }}{% endblock %}
+
+{% block checkout_nav %}
+    {% include 'oscar/checkout/nav.html' with step=4 %}
+{% endblock %}
+
+{% block checkout_title %}Review Your Order{% endblock %}
+
+{% block place_order %}
+    <div class="pp-demo-notice">
+        <strong><i class="fa fa-lock"></i> Payments are disabled in this demo.</strong>
+        You may review the full order below. Selecting &ldquo;Place Order&rdquo; will
+        <em>not</em> create an order or charge any card — it simply returns to this page
+        with a confirmation that transactions are inactive.
+    </div>
+
+    <div class="pp-vault-invite">
+        <i class="fa fa-lock text-gold"></i>
+        {% if user.is_authenticated %}
+            <span>When you place your order, we'll add {% if basket.num_items > 1 %}these watches{% else %}this watch{% endif %}
+            to <a href="{% url 'vault:index' %}">your Vault</a> so you can track {% if basket.num_items > 1 %}their{% else %}its{% endif %} value as an investment.</span>
+        {% else %}
+            <span><a href="{% url 'customer:login' %}">Sign in</a> or
+            <a href="{% url 'customer:register' %}">create a free account</a> and your purchase is added to your
+            Vault automatically — so you can track it as an investment.</span>
+        {% endif %}
+    </div>
+
+    <form method="post" action="{% url 'checkout:preview' %}" id="place_order_form">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="place_order" />
+        <div style="display:none">
+            {% block hiddenforms %}{% endblock %}
+        </div>
+        <div class="row mt-40">
+            <div class="col-sm-5 offset-sm-7">
+                <button id="place-order" type="submit" class="pp-btn" style="width:100%;">Place Order</button>
+                <p class="pp-muted text-center mt-2" style="font-size:12px;">Demo — no payment will be taken.</p>
+            </div>
+        </div>
+    </form>
+{% endblock place_order %}

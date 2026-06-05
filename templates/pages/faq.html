@@ -1,0 +1,45 @@
+{% extends "oscar/layout.html" %}
+
+{% block title %}FAQ — {{ BRAND_NAME }}{% endblock %}
+{% block headertext %}Frequently Asked Questions{% endblock %}
+{% block breadcrumbs %}<li>FAQ</li>{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8 offset-lg-2 col-12">
+        <div class="pp-faq">
+            <div class="pp-form-card mb-3">
+                <h4>Are your watches authentic?</h4>
+                <p class="pp-muted">Yes. Every timepiece is independently authenticated before sale and
+                    again prior to dispatch. We never list replicas or watches of uncertain origin.</p>
+            </div>
+            <div class="pp-form-card mb-3">
+                <h4>How is my watch shipped and insured?</h4>
+                <p class="pp-muted">Orders are shipped overnight, signature-required, and fully insured for
+                    their complete value while in transit. Complimentary insured overnight shipping is
+                    included; Saturday delivery is available for a small surcharge.</p>
+            </div>
+            <div class="pp-form-card mb-3">
+                <h4>What is your returns policy?</h4>
+                <p class="pp-muted">Because each watch is a unique, authenticated piece, returns are handled
+                    case-by-case. Contact our concierge within 48 hours of delivery and we will guide you
+                    through the insured return process.</p>
+            </div>
+            <div class="pp-form-card mb-3">
+                <h4>Do you offer sizing and servicing?</h4>
+                <p class="pp-muted">Yes. Our workshop can size bracelets and advise on servicing. Sizing
+                    requests can be noted at checkout or arranged with our concierge after purchase.</p>
+            </div>
+            <div class="pp-form-card mb-3">
+                <h4>What does &ldquo;Box &amp; Papers&rdquo; mean?</h4>
+                <p class="pp-muted">&ldquo;Full Set&rdquo; means the watch comes with its original box, warranty
+                    card and booklets. &ldquo;Watch Only&rdquo; means those accessories are not included. Each
+                    listing states its status clearly.</p>
+            </div>
+            <div class="pp-demo-notice mt-40">
+                This is a demonstration store — transactions are not active and no orders are fulfilled.
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

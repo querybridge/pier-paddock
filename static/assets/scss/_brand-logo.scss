@@ -1,0 +1,10 @@
+/*-------- 14. Brand logo style ---------*/
+
+.brand-logo-area{
+    @media #{$lg-layout} {
+        padding-bottom: 70px;     
+    }
+    @media #{$md-layout} {
+        padding-bottom: 50px;     
+    }
+}

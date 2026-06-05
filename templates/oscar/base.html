@@ -1,0 +1,45 @@
+{% load i18n %}
+{% load static %}
+<!DOCTYPE html>
+<html class="no-js" lang="{{ LANGUAGE_CODE|default:'en' }}">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>{% block title %}{{ BRAND_NAME }} — {{ BRAND_TAGLINE }}{% endblock %}</title>
+        <meta name="robots" content="noindex, follow">
+        <meta name="description" content="{% block description %}{{ BRAND_NAME }} — luxury timepieces, authenticated and insured.{% endblock %}">
+        <meta name="viewport" content="{% block viewport %}width=device-width, initial-scale=1, shrink-to-fit=no{% endblock %}">
+
+        {% block favicon %}
+            <link rel="shortcut icon" type="image/x-icon" href="{% static 'assets/images/favicon.png' %}">
+        {% endblock %}
+
+        {% block styles %}
+            {% include "oscar/partials/_styles.html" %}
+        {% endblock %}
+        {% block extrastyles %}{% endblock %}
+        {% block extrahead %}{% endblock %}
+        {% block tracking %}{% endblock %}
+    </head>
+
+    <body id="{% block body_id %}default{% endblock %}" class="{% block body_class %}default{% endblock %}">
+        <div class="main-wrapper">
+            {% block layout %}{% endblock %}
+        </div>
+
+        {% block scripts %}
+            {% include "oscar/partials/_scripts.html" %}
+        {% endblock %}
+        {% block extrascripts %}{% endblock %}
+        <script>
+            jQuery(function() {
+                // Self-contained search overlay toggle (independent of theme JS).
+                var $overlay = jQuery('.search-content-wrap');
+                jQuery('.search-active').on('click', function(e){ e.preventDefault(); $overlay.addClass('open'); $overlay.find('input').focus(); });
+                jQuery('.search-close').on('click', function(e){ e.preventDefault(); $overlay.removeClass('open'); });
+                jQuery(document).on('keyup', function(e){ if(e.key === 'Escape'){ $overlay.removeClass('open'); } });
+                {% block onbodyload %}{% endblock %}
+            });
+        </script>
+    </body>
+</html>

@@ -1,0 +1,480 @@
+/* Pier & Paddock — brand polish layered over the zwat theme. */
+:root {
+    --pp-gold: #c8a44d;
+    --pp-gold-dark: #a8863a;
+    --pp-ink: #14110e;
+    --pp-charcoal: #1d1a16;
+}
+
+body { color: #2b2b2b; }
+a { transition: color .2s ease; }
+
+/* ---- Normalise Oscar/Bootstrap defaults to the brand theme ---- */
+.btn-primary, .btn-success, .btn-info, .btn-lg.btn-primary {
+    background: var(--pp-ink) !important;
+    border-color: var(--pp-ink) !important;
+    color: #fff !important;
+    letter-spacing: 1px; text-transform: uppercase; font-size: 13px;
+    border-radius: 2px; padding: 11px 26px;
+}
+.btn-primary:hover, .btn-success:hover, .btn-info:hover {
+    background: var(--pp-gold) !important; border-color: var(--pp-gold) !important;
+}
+.btn-secondary, .btn-default {
+    background: #fff !important; border: 1px solid #ddd5c7 !important; color: var(--pp-ink) !important;
+    border-radius: 2px; text-transform: uppercase; font-size: 12px; letter-spacing: .5px;
+}
+.btn-secondary:hover { background: var(--pp-ink) !important; color: #fff !important; }
+.btn-danger { border-radius: 2px; }
+a.btn, .btn { border-radius: 2px; }
+.breadcrumb { background: transparent; padding-left: 0; }
+.form-control, input.form-control, select.form-control, textarea.form-control {
+    border: 1px solid #ddd5c7; border-radius: 2px;
+}
+.form-control:focus { border-color: var(--pp-gold); box-shadow: none; }
+.card.bg-light, .card-body.bg-light { background: #faf7f1 !important; border: 1px solid #ece7dd; }
+.page-item.active .page-link { background: var(--pp-ink); border-color: var(--pp-ink); }
+.page-link { color: var(--pp-ink); }
+.alert-success { background: #eef6ee; border-color: #cfe6cf; color: #2f6b34; }
+.alert-danger { background: #fbeeee; border-color: #efcaca; color: #8a1c1c; }
+.alert-info { background: #fff8e6; border-color: var(--pp-gold); color: #6b531a; }
+a:hover { color: var(--pp-gold); }
+
+/* ---- Brand wordmark (text logo) ---- */
+.brand-wordmark { display: inline-block; line-height: 1; text-decoration: none; }
+.brand-wordmark { padding: 6px 0; }
+.brand-wordmark .brand-name {
+    display: block;
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 23px;
+    letter-spacing: 1.5px;
+    font-weight: 600;
+    color: #1a1a1a;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+.brand-wordmark .brand-tagline {
+    display: block;
+    font-size: 9px;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--pp-gold-dark);
+    margin-top: 3px;
+    white-space: nowrap;
+}
+.header-small-device .brand-wordmark .brand-name { font-size: 20px; color:#fff; }
+/* Keep the header in normal flow (zwat sets it position:absolute to overlay a
+   hero) so inner-page banners and content never underlap it. */
+.header-area { position: relative !important; }
+.header-middle.bg-transparent { background: #fff !important; }
+.header-area.header-03 { border-bottom: 1px solid #efe9dd; background:#fff; }
+/* Header sits on white now, so force dark nav + icon colours (theme used
+   white text for an overlay hero). */
+.main-menu.menu-text-white nav > ul > li > a,
+.main-menu nav > ul > li > a { color: #1a1a1a !important; font-weight: 500; letter-spacing: 1px; text-transform: uppercase; font-size: 13px; }
+.main-menu nav > ul > li > a:hover,
+.main-menu nav > ul > li:hover > a { color: var(--pp-gold-dark) !important; }
+.main-menu nav ul li ul.sub-menu-width { background:#fff; box-shadow:0 10px 30px rgba(0,0,0,.12); border-top:2px solid var(--pp-gold); }
+.main-menu nav ul li ul.sub-menu-width li a { color:#5b554c !important; text-transform:none; letter-spacing:0; }
+.main-menu nav ul li ul.sub-menu-width li a:hover { color: var(--pp-gold-dark) !important; }
+.header-right-flex .same-style > a { color: #1a1a1a; }
+.header-right-flex .same-style > a:hover { color: var(--pp-gold-dark); }
+.header-right-flex .mini-cart-items { background: var(--pp-gold-dark); color:#fff; }
+.header-top.bg-main2 { background: var(--pp-ink); }
+.header-top .free-delivery h4,
+.header-top .free-delivery span,
+.header-top .setting-wrap > ul > li > a { color: #d8cfbd; font-size: 12px; letter-spacing: 1px; }
+.header-top .social-icon-style a { color:#d8cfbd; }
+.header-top .social-icon-style a:hover { color: var(--pp-gold); }
+.setting-wrap ul li ul { background:#fff; box-shadow:0 6px 24px rgba(0,0,0,.12); }
+
+/* ---- Hero slider (zwat owl carousel) ---- */
+.slider-03 .single-main-slider { position: relative; background-color:#14110e; }
+.slider-03 .single-main-slider:before {
+    content: ""; position: absolute; inset: 0;
+    background: linear-gradient(180deg, rgba(15,13,11,.55) 0%, rgba(15,13,11,.30) 40%, rgba(15,13,11,.65) 100%);
+    z-index: 1;
+}
+.slider-03 .main-slider-content { z-index: 2; max-width: 760px; margin: 0 auto; text-align: center; padding: 0 15px; }
+.slider-03 .main-slider-content .pp-slide-eyebrow {
+    display:block; color: var(--pp-gold); letter-spacing: 5px; text-transform: uppercase;
+    font-size: 13px; line-height: 1; margin-bottom: 24px;
+}
+.slider-03 .main-slider-content h1 { font-size: 62px; line-height: 1.1; margin-bottom: 22px; color:#fff; }
+.slider-03 .main-slider-content > span { font-size: 19px; line-height: 30px; color: #d8cfbd; max-width: 600px; margin: 0 auto 32px; }
+.slider-03 .btn-style-3 a {
+    display:inline-block; background: var(--pp-gold); color:#14110e; padding: 14px 38px;
+    letter-spacing: 2px; text-transform: uppercase; font-size: 13px; font-weight:600; border-radius: 2px;
+    border: 1px solid var(--pp-gold);
+}
+.slider-03 .btn-style-3 a:hover { background: transparent; color:#fff; border-color:#fff; }
+@media only screen and (max-width: 991px){ .slider-03 .main-slider-content h1 { font-size: 40px; } }
+@media only screen and (max-width: 767px){ .slider-03 .main-slider-content h1 { font-size: 30px; } .slider-height { height: 70vh; } }
+/* Owl dots */
+.slider-area .owl-dots { position: absolute; bottom: 28px; left: 0; right: 0; text-align: center; z-index: 3; }
+.slider-area .owl-dots .owl-dot span { width: 10px; height: 10px; margin: 5px; background: rgba(255,255,255,.45); border-radius: 50%; display:inline-block; }
+.slider-area .owl-dots .owl-dot.active span { background: var(--pp-gold); }
+
+/* ---- Product-wrap caption (rollover card) tuning ---- */
+/* Lift the hovered card so the rollover panel (which overflows downward over
+   the next grid row) — and the Add to Cart button inside it — stay on top and
+   remain clickable. Without this the adjacent card/row covers the button. */
+.product-wrap:hover { z-index: 50; }
+.product-wrap .product-caption { text-align: center; padding-top: 18px; }
+/* zwat hides the manufacturer (.mf-product) by default — show it as the brand
+   eyebrow, in deep bronze (not light gold) so it reads clearly on white. */
+.product-wrap .product-caption .mf-product { display: block !important; float: none; margin: 0 0 6px; text-align: center; }
+/* Brand name 25% larger than the previous 11px (≈13.75px). */
+.product-wrap .product-caption .mf-product a { color: #735714; text-transform: uppercase; letter-spacing: 2px; font-size: 13.75px; font-weight: 600; }
+.product-wrap .product-name a { font-family: Georgia, serif; font-size: 17px; color:#1a1a1a; }
+/* On hover, the dark .box-hover panel slides up and overlaps the lower caption
+   (long model names wrap into it). To stay legible, turn the whole caption into
+   a cohesive dark panel with light text on hover. */
+.product-wrap:hover .product-caption { background:#262626; }
+.product-wrap:hover .product-caption .mf-product a { color:var(--pp-gold); }
+.product-wrap:hover .product-caption .product-name a { color:#fff; }
+.product-wrap:hover .product-caption .pp-card-rule { border-top-color:rgba(255,255,255,.14); }
+.product-wrap:hover .product-caption .pp-card-ref,
+.product-wrap:hover .product-caption .pp-card-price { color:#cfc9bd; }
+/* Horizontal line treatment between the name and the ref/price line. */
+.product-wrap .product-caption .pp-card-rule { border-top: 1px solid #ece7dd; margin: 14px 0 12px; }
+/* Reference and price on one line; the price matches the reference's size & colour. */
+.product-wrap .product-caption .pp-card-meta { display: flex; justify-content: center; align-items: center; gap: 14px; }
+.product-wrap .product-caption .pp-card-ref,
+.product-wrap .product-caption .pp-card-price { color: #8a847a; font-size: 12px; font-weight: 400; }
+.product-wrap .btn-quickview { background: var(--pp-ink); color:#fff; border:0; padding: 10px 0; width:100%; letter-spacing:1px; text-transform:uppercase; font-size:11px; }
+/* The product-slider's .owl-stage-outer has 160px of transparent padding-bottom
+   (with a -160px margin) so the hover panel can overflow downward. That zone
+   sits over whatever follows (e.g. the "View All Watches" button) and swallows
+   its clicks. Let the empty zone pass clicks through; keep the cards/stage
+   interactive. */
+.product-slider .owl-stage-outer { pointer-events: none; }
+.product-slider .owl-stage,
+.product-slider .owl-nav,
+.product-slider .owl-dots { pointer-events: auto; }
+/* Lift the "View All" button above the carousel's stacking context (owl sets
+   .owl-carousel { z-index:1 }) so its overflow zone can't intercept the click. */
+.pp-viewall { position: relative; z-index: 3; }
+
+/* ---- PDP vault + compare actions ---- */
+.pp-pdp-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 14px; margin-top: 16px; }
+.pp-pdp-actions .pp-action-form { margin: 0; }
+.pp-icon-action {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: #fff; border: 1px solid #ddd5c7; color: var(--pp-ink);
+    padding: 11px 20px; border-radius: 2px; cursor: pointer;
+    font-size: 12px; letter-spacing: 1px; text-transform: uppercase; line-height: 1;
+}
+.pp-icon-action i { font-size: 15px; }
+.pp-icon-action:hover { background: var(--pp-ink); color: #fff !important; border-color: var(--pp-ink); }
+.pp-icon-action.is-active { background: var(--pp-gold-dark); border-color: var(--pp-gold-dark); color: #fff !important; }
+.pp-icon-action.is-active:hover { background: var(--pp-ink); border-color: var(--pp-ink); }
+.pp-vault-count { color: #8a847a; font-size: 13px; display: inline-flex; align-items: center; gap: 6px; }
+.pp-vault-count i { color: var(--pp-gold-dark); }
+
+/* ---- Compare table ---- */
+.pp-compare-wrap { overflow-x: auto; }
+.pp-compare-table { width: 100%; border-collapse: collapse; min-width: 640px; }
+.pp-compare-table th, .pp-compare-table td {
+    border: 1px solid #ece7dd; padding: 16px; text-align: center; vertical-align: middle; font-size: 14px;
+}
+.pp-compare-table tbody th.pp-compare-label,
+.pp-compare-table thead th.pp-compare-label {
+    text-align: left; width: 200px; background: #faf7f1; color: #5b554c;
+    text-transform: uppercase; letter-spacing: .5px; font-size: 12px; font-weight: 600;
+}
+.pp-compare-col { width: auto; background: #fff; vertical-align: top; }
+.pp-compare-img { display: block; background: #f7f4ef; border-radius: 3px; padding: 12px; margin-bottom: 12px; }
+.pp-compare-img img { max-width: 160px; width: 100%; height: auto; }
+.pp-compare-col .pp-brand { color: var(--pp-gold-dark); text-transform: uppercase; letter-spacing: 2px; font-size: 11px; }
+.pp-compare-name { display: block; font-family: Georgia, serif; font-size: 18px; color: #1a1a1a; margin: 6px 0; }
+.pp-compare-price { font-size: 16px; font-weight: 600; color: #1a1a1a; margin-bottom: 10px; }
+.pp-compare-remove { color: #8a1c1c; font-size: 12px; text-transform: uppercase; letter-spacing: .5px; }
+.pp-compare-remove:hover { color: #5a1010; }
+.pp-compare-empty { background: #faf7f1; }
+.pp-compare-choose {
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;
+    min-height: 240px; border: 2px dashed #d8cfbd; border-radius: 4px; margin: 0 6px;
+    color: #8a847a; text-transform: uppercase; letter-spacing: 1px; font-size: 12px; padding: 20px;
+}
+.pp-compare-choose:hover { border-color: var(--pp-gold); color: var(--pp-gold-dark); }
+.pp-compare-plus { font-size: 38px; line-height: 1; color: var(--pp-gold-dark); }
+/* Match the Add to Cart button height to the vault/compare icon buttons
+   (42px desktop, 33px medium, 36px mobile) and vertically centre its label. */
+.product-wrap .product-action .btn-cart {
+    cursor: pointer; border: 0;
+    height: 42px; line-height: 1;
+    display: inline-flex; align-items: center; justify-content: center;
+    padding: 0 16px;
+    background: #a8863a; color: #fff;
+}
+.product-wrap .product-action .btn-cart:hover { background: #8f7030; color: #fff; }
+.product-wrap .product-action .btn-cart span { color: #fff; }
+.product-wrap .box-hover .product-action form { display: inline-flex; vertical-align: top; margin: 0; }
+@media only screen and (min-width: 768px) and (max-width: 1600px) {
+    .product-wrap .product-action .btn-cart { height: 33px; padding: 0 12px; }
+}
+@media only screen and (max-width: 767px) {
+    .product-wrap .product-action .btn-cart { height: 36px; }
+}
+/* Box-hover panel is dark (#262626) — force its text light for contrast. */
+.product-wrap .box-hover .badge-caption,
+.product-wrap .box-hover .product-detail { color: #cfc9bd; }
+.product-wrap .box-hover .badge-starrating i { color: var(--pp-gold); }
+
+/* ---- Buttons & accents ---- */
+.pp-btn, .btn-pp {
+    display: inline-block;
+    background: var(--pp-ink);
+    color: #fff !important;
+    padding: 12px 32px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    font-size: 12px;
+    border: 1px solid var(--pp-ink);
+    border-radius: 2px;
+    cursor: pointer;
+}
+.pp-btn:hover, .btn-pp:hover { background: var(--pp-gold); border-color: var(--pp-gold); color:#fff !important; }
+.pp-btn--outline { background: transparent; color: var(--pp-ink) !important; }
+.pp-btn--outline:hover { background: var(--pp-ink); color:#fff !important; }
+.text-gold { color: var(--pp-gold-dark) !important; }
+
+/* ---- Hero ---- */
+.pp-hero {
+    position: relative;
+    background-size: cover;
+    background-position: center;
+    background-color: #14110e;
+    min-height: 600px;
+    display: flex;
+    align-items: center;
+}
+.pp-hero-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(90deg, rgba(15,13,11,.88) 0%, rgba(15,13,11,.64) 45%, rgba(15,13,11,.30) 100%);
+}
+.pp-hero .container { position: relative; z-index: 2; }
+.pp-hero-content { max-width: 640px; padding: 60px 0; color: #fff; }
+.pp-hero-eyebrow { display:block; color: var(--pp-gold); letter-spacing: 4px; text-transform: uppercase; font-size: 13px; margin-bottom: 18px; }
+.pp-hero-content h1 { font-family: Georgia, serif; font-size: 52px; line-height: 1.12; color:#fff; margin-bottom: 22px; }
+.pp-hero-content p { font-size: 17px; color: #d8cfbd; margin-bottom: 30px; max-width: 540px; }
+.pp-hero-actions { display:flex; gap: 14px; flex-wrap: wrap; }
+.pp-btn--ghost { background: transparent; border-color: rgba(255,255,255,.6); color:#fff !important; }
+.pp-btn--ghost:hover { background:#fff; color:var(--pp-ink) !important; border-color:#fff; }
+@media (max-width: 767px){ .pp-hero-content h1 { font-size: 34px; } .pp-hero { min-height: 460px; } }
+
+/* ---- Search overlay (self-contained toggle) ---- */
+.search-content-wrap {
+    position: fixed; inset: 0; z-index: 9999;
+    background: rgba(20,17,14,.96);
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; visibility: hidden; transition: opacity .25s ease;
+}
+.search-content-wrap.open { opacity: 1; visibility: visible; }
+.search-content-wrap .search-content { width: 90%; max-width: 680px; position: relative; }
+.search-content-wrap form { display: flex; border-bottom: 2px solid var(--pp-gold); }
+.search-content-wrap input { flex: 1; background: transparent; border: 0; color: #fff; font-size: 26px; padding: 14px 6px; outline: none; }
+.search-content-wrap input::placeholder { color: #8a8378; }
+.search-content-wrap button { background: transparent; border: 0; color: var(--pp-gold); font-size: 24px; cursor: pointer; }
+.search-content-wrap .search-close { position: absolute; top: -60px; right: 0; color: #fff; font-size: 26px; cursor: pointer; }
+
+/* ---- Page banner ---- */
+.pp-page-banner {
+    padding: 70px 0;
+    background: linear-gradient(135deg, #1d1a16 0%, #2c2620 100%);
+    margin-bottom: 50px;
+}
+/* PLP (shop) banner — watch imagery behind the title, with a dark overlay to
+   keep the centered title and breadcrumb readable. */
+.pp-page-banner.pp-banner-watches {
+    background:
+        linear-gradient(rgba(15, 13, 11, .55), rgba(15, 13, 11, .60)),
+        url('../assets/images/banner/img-middle-mirora1.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+.pp-page-banner .breadcrumb-content h2 {
+    color:#fff; font-family: Georgia, serif; font-size: 38px; letter-spacing:1px; margin-bottom: 12px;
+}
+.pp-page-banner .breadcrumb-content ul { padding:0; margin:0; }
+.pp-page-banner .breadcrumb-content ul li {
+    display:inline-block; color:#b9b0a0; font-size:13px; letter-spacing:1px; text-transform:uppercase;
+}
+.pp-page-banner .breadcrumb-content ul li + li:before { content:"\f105"; font-family:FontAwesome; padding:0 10px; color:#6d645a; }
+.pp-page-banner .breadcrumb-content ul li a { color:#b9b0a0; }
+.pp-page-banner .breadcrumb-content ul li a:hover { color: var(--pp-gold); }
+.pp-page-content { padding-bottom: 70px; }
+
+/* ---- Section headings ---- */
+.pp-section-title { text-align:center; margin-bottom: 45px; }
+.pp-section-title span { display:block; color:var(--pp-gold-dark); letter-spacing:3px; text-transform:uppercase; font-size:12px; margin-bottom:10px; }
+.pp-section-title h2 { font-family:Georgia, serif; font-size:34px; color:#1a1a1a; }
+
+/* ---- Product cards ---- */
+.pp-product-card {
+    background:#fff; border:1px solid #ece7dd; border-radius:3px; overflow:hidden;
+    text-align:center; height:100%; transition: box-shadow .25s ease, transform .25s ease;
+    position:relative;
+}
+.pp-product-card:hover { box-shadow:0 18px 40px rgba(0,0,0,.10); transform: translateY(-4px); }
+.pp-product-card .pp-product-img { display:block; padding:18px; background:#f7f4ef; }
+.pp-product-card .pp-product-img img { max-width:100%; height:auto; }
+.pp-product-card .pp-product-body { padding:22px 18px 26px; }
+.pp-product-card .pp-brand { color:var(--pp-gold-dark); letter-spacing:2px; text-transform:uppercase; font-size:11px; }
+.pp-product-card .pp-title { font-family:Georgia, serif; font-size:17px; margin:8px 0 4px; }
+.pp-product-card .pp-title a { color:#1a1a1a; }
+.pp-product-card .pp-ref { color:#9a9489; font-size:12px; margin-bottom:10px; }
+.pp-product-card .pp-price { font-size:18px; font-weight:600; color:#1a1a1a; }
+.pp-product-card .pp-actions { margin-top:16px; display:flex; gap:8px; justify-content:center; }
+.pp-product-card .pp-actions form { margin:0; }
+.pp-badge {
+    position:absolute; top:14px; left:14px; z-index:2;
+    background:var(--pp-ink); color:#fff; font-size:10px; letter-spacing:1px; text-transform:uppercase;
+    padding:5px 12px; border-radius:2px;
+}
+.pp-badge--sold { background:#8a1c1c; }
+.pp-badge--gold { background:var(--pp-gold-dark); }
+.pp-icon-btn {
+    width:42px; height:42px; line-height:42px; text-align:center; border:1px solid #ddd5c7; border-radius:50%;
+    color:#1a1a1a; background:#fff;
+}
+.pp-icon-btn:hover { background:var(--pp-ink); color:#fff; border-color:var(--pp-ink); }
+
+/* ---- Shop sidebar ---- */
+.pp-shop-sidebar .pp-filter-block { margin-bottom: 34px; border-bottom:1px solid #ece7dd; padding-bottom:24px; }
+.pp-shop-sidebar h4 { font-family:Georgia, serif; font-size:18px; margin-bottom:18px; }
+.pp-shop-sidebar ul { list-style:none; padding:0; margin:0; }
+.pp-shop-sidebar ul li { margin-bottom:9px; }
+.pp-shop-sidebar ul li a { color:#5b554c; font-size:14px; }
+.pp-shop-sidebar ul li.active > a, .pp-shop-sidebar ul li a:hover { color:var(--pp-gold-dark); font-weight:600; }
+.pp-shop-toolbar { display:flex; justify-content:space-between; align-items:center; margin-bottom:28px; padding-bottom:16px; border-bottom:1px solid #ece7dd; flex-wrap:wrap; gap:12px; }
+.pp-shop-toolbar select { padding:8px 14px; border:1px solid #ddd5c7; border-radius:2px; }
+.pp-price-inputs { display:flex; gap:8px; align-items:center; }
+.pp-price-inputs input { width:80px; padding:7px 10px; border:1px solid #ddd5c7; border-radius:2px; }
+
+/* ---- Spec table ---- */
+.pp-spec-table { width:100%; border-collapse:collapse; margin:24px 0; }
+.pp-spec-table th, .pp-spec-table td { padding:11px 16px; border-bottom:1px solid #ece7dd; font-size:14px; text-align:left; }
+.pp-spec-table th { width:38%; color:#8a8378; font-weight:500; text-transform:uppercase; letter-spacing:1px; font-size:12px; }
+
+/* ---- Detail badges ---- */
+.pp-detail-badges { margin:16px 0; }
+.pp-detail-badges .pp-chip {
+    display:inline-block; background:#f3efe7; color:#5b554c; padding:6px 14px; border-radius:20px;
+    font-size:12px; letter-spacing:.5px; margin:0 6px 6px 0;
+}
+.pp-shipping-note { background:#faf7f1; border-left:3px solid var(--pp-gold); padding:14px 18px; margin:18px 0; font-size:13px; color:#5b554c; }
+
+/* ---- Cart row thumbnail + wire-price note ---- */
+.pp-cart-thumb { display:block; width:96px; background:#f7f4ef; border:1px solid #ece7dd; border-radius:3px; padding:8px; }
+.pp-cart-thumb img { display:block; width:100%; height:auto; }
+.pp-wire-note { font-size:11px; line-height:1.6; color:#8a847a; margin:12px 0 0; }
+.pp-wire-note strong { color:#5b554c; }
+
+/* ---- Trust strip ---- */
+/* ---- Vault (investment view) ---- */
+.pp-up { color:#1f7a44; }
+.pp-down { color:#a82323; }
+.pp-vault-summary .pp-vault-stat { background:#faf7f1; border:1px solid #ece7dd; border-radius:3px; padding:22px 24px; height:100%; }
+.pp-vault-stat-label { display:block; color:#8a847a; text-transform:uppercase; letter-spacing:1.5px; font-size:11px; margin-bottom:8px; }
+.pp-vault-stat-value { font-family:Georgia,serif; font-size:26px; color:#1a1a1a; }
+.pp-vault-stat-value small { font-size:14px; font-family:inherit; }
+.pp-vault-heading { font-family:Georgia,serif; font-size:22px; margin:8px 0 18px; }
+.pp-vault-table { width:100%; border-collapse:collapse; min-width:640px; }
+.pp-vault-table th { text-align:left; background:#faf7f1; color:#5b554c; text-transform:uppercase; letter-spacing:.5px; font-size:11px; font-weight:600; padding:12px 16px; border-bottom:1px solid #ece7dd; }
+.pp-vault-table td { padding:14px 16px; border-bottom:1px solid #ece7dd; font-size:14px; vertical-align:middle; }
+.pp-vault-table .text-right { text-align:right; }
+.pp-vault-watch { display:flex; align-items:center; gap:14px; }
+.pp-vault-watch img { width:62px; background:#f7f4ef; border:1px solid #ece7dd; border-radius:3px; padding:6px; }
+.pp-vault-name { display:block; font-family:Georgia,serif; font-size:16px; color:#1a1a1a; }
+.pp-vault-x { color:#b9b0a0; margin-left:8px; }
+.pp-vault-x:hover { color:#a82323; }
+.pp-btn--sm { padding:7px 14px; font-size:11px; }
+.pp-btn--gold { background:#a8863a; border-color:#a8863a; color:#fff !important; }
+.pp-btn--gold:hover { background:#8f7030; border-color:#8f7030; color:#fff !important; }
+.pp-vault-actions { white-space:nowrap; }
+.pp-vault-actions .pp-btn { margin-left:6px; }
+.pp-vault-cart-form { display:inline-block; margin:0; }
+.pp-vault-invite { background:#faf7f1; border:1px solid #ece7dd; border-left:3px solid var(--pp-gold); border-radius:3px; padding:14px 18px; margin:18px 0; font-size:13px; color:#5b554c; }
+.pp-vault-invite a { color:var(--pp-gold-dark); font-weight:600; }
+
+/* ---- Modal (P&P styled) ---- */
+.pp-modal { position:fixed; inset:0; z-index:10000; display:none; }
+.pp-modal.open { display:flex; align-items:center; justify-content:center; }
+.pp-modal-backdrop { position:absolute; inset:0; background:rgba(20,17,14,.62); }
+.pp-modal-card { position:relative; z-index:1; background:#fff; border-radius:4px; padding:38px 36px; width:90%; max-width:440px; box-shadow:0 24px 64px rgba(0,0,0,.30); animation:ppModalIn .22s ease; }
+@keyframes ppModalIn { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:none; } }
+.pp-modal-close { position:absolute; top:14px; right:20px; font-size:26px; line-height:1; color:#b9b0a0; }
+.pp-modal-close:hover { color:var(--pp-ink); }
+.pp-modal-eyebrow { display:block; color:var(--pp-gold-dark); letter-spacing:2.5px; text-transform:uppercase; font-size:11px; margin-bottom:8px; }
+.pp-modal-title { font-family:Georgia,serif; font-size:24px; margin:0 0 4px; color:#1a1a1a; }
+.pp-modal-watch { font-size:14px; margin-bottom:6px; }
+.pp-modal label { display:block; font-size:12px; color:#5b554c; letter-spacing:.5px; text-transform:uppercase; margin:18px 0 8px; }
+.pp-modal-input { display:flex; align-items:center; border:1px solid #ddd5c7; border-radius:2px; padding:0 14px; }
+.pp-modal-input span { color:#8a847a; font-size:18px; }
+.pp-modal-input input { flex:1; border:0; padding:13px 8px; font-size:18px; outline:none; background:transparent; }
+.pp-modal-actions { display:flex; gap:12px; margin-top:26px; }
+.pp-modal-actions .pp-btn { flex:1; text-align:center; }
+
+.pp-trust-strip { background:#faf7f1; padding:38px 0; border-top:1px solid #ece7dd; border-bottom:1px solid #ece7dd; }
+.pp-trust-item { text-align:center; color:#5b554c; }
+.pp-trust-item i { font-size:30px; color:var(--pp-gold-dark); display:block; margin-bottom:12px; }
+.pp-trust-item h5 { font-size:14px; letter-spacing:1px; text-transform:uppercase; color:#1a1a1a; }
+
+/* ---- Footer ---- */
+.pp-footer { background:var(--pp-ink) !important; color:#b9b0a0; padding-top:60px; }
+.pp-footer .brand-name { color:#fff; font-family:Georgia, serif; }
+.pp-footer .brand-tagline { color:var(--pp-gold); letter-spacing:2px; text-transform:uppercase; font-size:11px; }
+.pp-footer h4 { color:#fff; font-size:15px; letter-spacing:1px; text-transform:uppercase; margin-bottom:20px; }
+.pp-footer ul { list-style:none; padding:0; margin:0; }
+.pp-footer ul li { margin-bottom:10px; font-size:13px; }
+.pp-footer a { color:#b9b0a0; }
+.pp-footer a:hover { color:var(--pp-gold); }
+.pp-footer .social-icon-style-2 a { color:#b9b0a0; margin-right:14px; font-size:16px; }
+.pp-footer-top { padding-bottom:40px; border-bottom:1px solid #2e2a24; }
+.pp-footer-bottom { padding:26px 0; }
+.pp-footer-bottom p { margin:0; font-size:12px; letter-spacing:.5px; }
+.pp-demo-disclaimer { color:var(--pp-gold) !important; }
+
+/* ---- Alerts ---- */
+.pp-messages { margin-bottom:24px; }
+.pp-demo-notice {
+    background:#fff8e6; border:1px solid var(--pp-gold); color:#6b531a; padding:16px 20px; border-radius:3px;
+    margin:18px 0; font-size:14px;
+}
+
+/* ---- Forms ---- */
+.pp-form-card { background:#fff; border:1px solid #ece7dd; border-radius:3px; padding:36px; }
+.pp-form-card h3 { font-family:Georgia, serif; margin-bottom:24px; }
+.pp-form-card label { font-size:13px; letter-spacing:.5px; color:#5b554c; }
+.pp-form-card input:not([type=checkbox]):not([type=radio]):not([type=submit]),
+.pp-form-card select, .pp-form-card textarea {
+    width:100%; padding:11px 14px; border:1px solid #ddd5c7; border-radius:2px; margin-bottom:16px; background:#fff;
+}
+.pp-form-card .form-group { margin-bottom:8px; }
+
+/* small helpers */
+.pp-muted { color:#9a9489; }
+.mt-40 { margin-top:40px; } .mb-40 { margin-bottom:40px; }
+.pp-empty { text-align:center; padding:60px 20px; }
+.pp-empty i { font-size:54px; color:#d8cfbd; display:block; margin-bottom:20px; }
+/* ---- Hero slide entrance animation (screenshot-safe) ----
+   Content is visible at rest (opacity:1); the elegant staggered intro plays
+   on the active slide using `backwards` fill so it's hidden ONLY during its
+   own brief delay, never after. This avoids the theme's `fill-mode:both`
+   leaving text invisible if the animation timing is interrupted. */
+.slider-03 .main-slider-content .pp-slide-eyebrow,
+.slider-03 .main-slider-content h1,
+.slider-03 .main-slider-content > span,
+.slider-03 .main-slider-content .btn-style-3 { opacity: 1; }
+
+@keyframes ppSlideUp {
+    from { opacity: 0; transform: translateY(45px); }
+    to   { opacity: 1; transform: none; }
+}
+.owl-item.active .slider-03 .main-slider-content .pp-slide-eyebrow { animation: ppSlideUp .9s ease .20s backwards; }
+.owl-item.active .slider-03 .main-slider-content h1               { animation: ppSlideUp .9s ease .45s backwards; }
+.owl-item.active .slider-03 .main-slider-content > span           { animation: ppSlideUp .9s ease .70s backwards; }
+.owl-item.active .slider-03 .main-slider-content .btn-style-3     { animation: ppSlideUp .9s ease .95s backwards; }

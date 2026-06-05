@@ -1,0 +1,107 @@
+{% extends "oscar/layout.html" %}
+{% load i18n %}
+{% load currency_filters %}
+{% load purchase_info_tags %}
+{% load widget_tweaks %}
+{% load thumbnail %}
+
+{% block title %}Shopping Cart — {{ BRAND_NAME }}{% endblock %}
+{% block headertext %}Shopping Cart{% endblock %}
+{% block breadcrumbs %}<li>Cart</li>{% endblock %}
+{% block mini_basket %}{% endblock %}
+
+{% block content %}
+{% if basket.is_empty %}
+    <div class="pp-empty">
+        <i class="ti-shopping-cart"></i>
+        <h3>Your cart is empty</h3>
+        <p class="pp-muted">You haven't added any timepieces yet.</p>
+        <a class="pp-btn" href="{% url 'shop:browse' %}">Browse the Collection</a>
+    </div>
+{% else %}
+    <form method="post" id="basket_formset">
+        {% csrf_token %}
+        {{ formset.management_form }}
+        <div class="pp-cart-table">
+            <table class="pp-spec-table" style="margin-top:0;">
+                <thead>
+                    <tr>
+                        <th colspan="2" style="width:auto;">Item</th>
+                        <th>Quantity</th>
+                        <th class="text-right">Price</th>
+                        <th class="text-right">Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for form in formset %}
+                    {% with line=form.instance product=form.instance.product %}
+                    {% purchase_info_for_line request line as session %}
+                    <tr>
+                        <td style="width:120px;">
+                            {{ form.id }}
+                            {% with image=product.primary_image %}
+                            <a href="{{ product.get_absolute_url }}" class="pp-cart-thumb">
+                                {% if image %}
+                                    {% thumbnail image.original "110x110" padding=True as thumb %}
+                                        <img src="{{ thumb.url }}" alt="{{ product.get_title }}">
+                                    {% empty %}
+                                        <img src="{{ image.original.url }}" alt="{{ product.get_title }}">
+                                    {% endthumbnail %}
+                                {% endif %}
+                            </a>
+                            {% endwith %}
+                        </td>
+                        <td>
+                            <a href="{{ product.get_absolute_url }}" style="font-family:Georgia,serif;font-size:16px;color:#1a1a1a;">{{ line.description }}</a>
+                            <div class="pp-muted" style="font-size:12px;">{{ session.availability.message }}</div>
+                            {% for field_errors in form.errors.values %}{% for error in field_errors %}<div class="text-danger" style="font-size:12px;">{{ error }}</div>{% endfor %}{% endfor %}
+                            <div style="display:none">{{ form.save_for_later }}{{ form.DELETE }}</div>
+                        </td>
+                        <td>
+                            <div style="display:flex;gap:8px;align-items:center;">
+                                {% render_field form.quantity class+="form-control" style="width:70px;" %}
+                                <button class="pp-btn pp-btn--outline" type="submit" style="padding:8px 14px;">Update</button>
+                            </div>
+                            <a href="#" class="text-danger" style="font-size:12px;" onclick="this.closest('tr').querySelector('input[type=number],input[name$=quantity]').value=0;this.closest('form').submit();return false;">Remove</a>
+                        </td>
+                        <td class="text-right">
+                            {% if line.is_tax_known %}{{ line.unit_price_incl_tax|currency:line.price_currency }}{% else %}{{ line.unit_price_excl_tax|currency:line.price_currency }}{% endif %}
+                        </td>
+                        <td class="text-right">
+                            {% if line.is_tax_known %}{{ line.line_price_incl_tax|currency:line.price_currency }}{% else %}{{ line.line_price_excl_tax|currency:line.price_currency }}{% endif %}
+                        </td>
+                    </tr>
+                    {% endwith %}
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </form>
+
+    <div class="row mt-40">
+        <div class="col-md-6 col-12 mb-3">
+            <a class="pp-btn pp-btn--outline" href="{% url 'shop:browse' %}">&larr; Continue Shopping</a>
+        </div>
+        <div class="col-md-6 col-12">
+            <div class="pp-form-card">
+                <h3 style="margin-bottom:18px;">Order Summary</h3>
+                <table style="width:100%;">
+                    <tr><td class="pp-muted">Subtotal</td><td class="text-right">{{ basket.total_excl_tax|currency:basket.currency }}</td></tr>
+                    <tr><td class="pp-muted">Shipping</td><td class="text-right">Calculated at checkout</td></tr>
+                    <tr style="border-top:1px solid #ece7dd;"><td style="padding-top:12px;font-weight:600;">Total</td>
+                        <td class="text-right" style="padding-top:12px;font-size:20px;font-weight:600;">
+                            {% if basket.is_tax_known %}{{ basket.total_incl_tax|currency:basket.currency }}{% else %}{{ basket.total_excl_tax|currency:basket.currency }}{% endif %}
+                        </td></tr>
+                </table>
+                <p class="pp-wire-note">
+                    Prices shown are <strong>wire-transfer prices</strong>. A 3.5% surcharge is added to credit card purchases.
+                </p>
+                <a class="pp-btn mt-3" style="width:100%;text-align:center;" href="{% url 'checkout:index' %}">Proceed to Checkout</a>
+                <p class="pp-muted text-center mt-2" style="font-size:12px;">Fully insured, signature-required shipping</p>
+            </div>
+        </div>
+    </div>
+{% endif %}
+{% endblock %}
+
+{% block onbodyload %}{% endblock %}

@@ -1,0 +1,177 @@
+{% extends "oscar/layout.html" %}
+{% load static %}
+{% load pp_tags %}
+
+{% block title %}{{ BRAND_NAME }} — {{ BRAND_TAGLINE }}{% endblock %}
+
+{% block page_banner %}{% endblock %}
+
+{% block content_wrapper %}
+    {# ---------------- Hero slider (animated owl carousel) ---------------- #}
+    <div class="slider-area">
+        <div class="container-fluid p-0">
+            <div class="main-slider-active-1 owl-carousel slider-nav-position-2 slider-nav-style-2 slider-03">
+                <div class="single-main-slider slider-animated-2 bg-img slider-height pp-slide" style="background-image:url({% static 'assets/images/slider/slider-07.png' %});">
+                    <div class="container height-100-percent">
+                        <div class="col-12 row no-gutters p-lg-0">
+                            <div class="main-slider-content pp-slide-content">
+                                <span class="pp-slide-eyebrow animated">{{ BRAND_TAGLINE }}</span>
+                                <h1 class="animated">The Finest Timepieces,<br>Authenticated &amp; Insured</h1>
+                                <span class="animated">Every watch independently verified, fully insured, and delivered with signature service.</span>
+                                <div class="btn-style-3 btn-hover-2">
+                                    <a class="animated bs3-black-text bs3-btn-bg bs3-ptb bs3-border-radius ptb-2-white-hover" href="{% url 'shop:browse' %}">Explore the Collection</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="single-main-slider slider-animated-2 bg-img slider-height pp-slide" style="background-image:url({% static 'assets/images/slider/slider-09.png' %});">
+                    <div class="container height-100-percent">
+                        <div class="col-12 row no-gutters p-lg-0">
+                            <div class="main-slider-content pp-slide-content">
+                                <span class="pp-slide-eyebrow animated">The Holy Trinity &amp; Beyond</span>
+                                <h1 class="animated">Haute Horology,<br>Within Reach</h1>
+                                <span class="animated">Patek Philippe, Audemars Piguet and Vacheron Constantin — alongside Rolex, Omega and Richard Mille.</span>
+                                <div class="btn-style-3 btn-hover-2">
+                                    <a class="animated bs3-black-text bs3-btn-bg bs3-ptb bs3-border-radius ptb-2-white-hover" href="{% url 'shop:browse' %}?collection=complications">Shop Complications</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="single-main-slider slider-animated-2 bg-img slider-height pp-slide" style="background-image:url({% static 'assets/images/slider/slider-08.png' %});">
+                    <div class="container height-100-percent">
+                        <div class="col-12 row no-gutters p-lg-0">
+                            <div class="main-slider-content pp-slide-content">
+                                <span class="pp-slide-eyebrow animated">Rare &amp; Discontinued</span>
+                                <h1 class="animated">Pre-Owned,<br>Impeccably Verified</h1>
+                                <span class="animated">Discover sought-after references, each accompanied by a full authenticity guarantee.</span>
+                                <div class="btn-style-3 btn-hover-2">
+                                    <a class="animated bs3-black-text bs3-btn-bg bs3-ptb bs3-border-radius ptb-2-white-hover" href="{% url 'shop:browse' %}?collection=pre-owned">Shop Pre-Owned</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# ---------------- Featured collections ---------------- #}
+    <div class="collection-area" style="padding:70px 0 30px;">
+        <div class="container">
+            <div class="pp-section-title">
+                <span>Curated for you</span>
+                <h2>Featured Collections</h2>
+            </div>
+            <div class="row">
+                <div class="col-md-4 col-12 mb-40">
+                    <div class="pp-product-card" style="text-align:left;">
+                        <div class="pp-product-body">
+                            <div class="pp-brand">Rolex Professional</div>
+                            <h3 class="pp-title">Tool Watches, Refined</h3>
+                            <p class="pp-muted">Submariner, GMT-Master II, Daytona &amp; more.</p>
+                            <a class="pp-btn pp-btn--outline" href="{% url 'shop:browse' %}?brand=rolex">Shop Rolex</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 col-12 mb-40">
+                    <div class="pp-product-card" style="text-align:left;">
+                        <div class="pp-product-body">
+                            <div class="pp-brand">The Holy Trinity</div>
+                            <h3 class="pp-title">Haute Horology</h3>
+                            <p class="pp-muted">Patek Philippe · Audemars Piguet · Vacheron Constantin.</p>
+                            <a class="pp-btn pp-btn--outline" href="{% url 'shop:browse' %}?brand=patek-philippe">Discover</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 col-12 mb-40">
+                    <div class="pp-product-card" style="text-align:left;">
+                        <div class="pp-product-body">
+                            <div class="pp-brand">New Arrivals</div>
+                            <h3 class="pp-title">Just Landed</h3>
+                            <p class="pp-muted">The latest pieces to join the collection.</p>
+                            <a class="pp-btn pp-btn--outline" href="{% url 'shop:browse' %}?sort=newest">View All</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# ---------------- New arrivals (product slider w/ rollover) ---------------- #}
+    <div class="product-area product-nav-position-2" style="padding:30px 0 70px;">
+        <div class="container">
+            <div class="pp-section-title">
+                <span>Hand-selected</span>
+                <h2>New Arrivals</h2>
+            </div>
+            <div class="product-slider owl-carousel product-nav-position-2 product-nav-style-2 product-home-03">
+                {% for product in new_arrivals %}
+                    {% include "partials/_product_wrap.html" %}
+                {% endfor %}
+            </div>
+            <div class="text-center mt-40 pp-viewall">
+                <a class="pp-btn" href="{% url 'shop:browse' %}">View All Watches</a>
+            </div>
+        </div>
+    </div>
+
+    {# ---------------- Trust strip ---------------- #}
+    <div class="pp-trust-strip">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 col-12 mb-3 mb-md-0">
+                    <div class="pp-trust-item">
+                        <i class="fa fa-shield"></i>
+                        <h5>Authenticity Guaranteed</h5>
+                        <p class="pp-muted">Every watch independently authenticated.</p>
+                    </div>
+                </div>
+                <div class="col-md-4 col-12 mb-3 mb-md-0">
+                    <div class="pp-trust-item">
+                        <i class="fa fa-truck"></i>
+                        <h5>Signature Service</h5>
+                        <p class="pp-muted">Every order ships overnight, signature-required and tracked.</p>
+                    </div>
+                </div>
+                <div class="col-md-4 col-12">
+                    <div class="pp-trust-item">
+                        <i class="fa fa-lock"></i>
+                        <h5>Fully Insured Delivery</h5>
+                        <p class="pp-muted">Overnight, signature-required, fully insured.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# ---------------- Latest journal ---------------- #}
+    {% if latest_posts %}
+    <div class="blog-area" style="padding:70px 0;">
+        <div class="container">
+            <div class="pp-section-title">
+                <span>The Journal</span>
+                <h2>From Our Editors</h2>
+            </div>
+            <div class="row">
+                {% for post in latest_posts %}
+                <div class="col-md-4 col-12 mb-40">
+                    <div class="pp-product-card" style="text-align:left;">
+                        <a class="pp-product-img" href="{{ post.get_absolute_url }}" style="padding:0;">
+                            {% if post.image %}<img src="{{ post.image.url }}" alt="{{ post.title }}">{% endif %}
+                        </a>
+                        <div class="pp-product-body">
+                            <div class="pp-brand">{{ post.date|date:"M j, Y" }}</div>
+                            <h3 class="pp-title"><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></h3>
+                            <p class="pp-muted">{{ post.excerpt|truncatewords:18 }}</p>
+                            <a href="{{ post.get_absolute_url }}" class="text-gold">Read more &rarr;</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+{% endblock %}
