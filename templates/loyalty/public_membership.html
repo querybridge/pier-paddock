@@ -1,0 +1,41 @@
+{% extends "oscar/layout.html" %}
+{% load loyalty_tags %}
+
+{% block title %}The Crest Membership — {{ BRAND_NAME }}{% endblock %}
+{% block headertext %}The Crest Membership{% endblock %}
+{% block breadcrumbs %}<li>Membership</li>{% endblock %}
+
+{% block content %}
+<section class="pp-crest-intro text-center">
+    <p class="pp-eyebrow">Pier &amp; Paddock</p>
+    <h2>Five crests. One standing.</h2>
+    <p class="pp-muted pp-crest-intro-lede">Your membership rises with your collection. Every crest unlocks
+        a deeper level of access — earlier looks, sharper market intelligence, and a concierge that grows
+        with you. Driven by lifetime spend, a single significant acquisition can advance you several crests at once.</p>
+    {% if not request.user.is_authenticated %}
+    <a class="pp-btn pp-btn--gold" href="{% url 'customer:login' %}">Join &amp; sign in</a>
+    {% else %}
+    <a class="pp-btn pp-btn--gold" href="{% url 'loyalty:dashboard' %}">View your membership</a>
+    {% endif %}
+</section>
+
+<div class="pp-tier-grid">
+    {% for row in tier_rows %}
+    <div class="pp-tier-card">
+        <div class="pp-tier-card-head">
+            {% crest_row row.crest size="md" %}
+            <h3>{{ row.name }}</h3>
+            <p class="pp-muted">{{ row.earned_by }}</p>
+        </div>
+        <ul class="pp-tier-benefits">
+            {% for b in row.benefits %}
+            <li><i class="fa fa-shield"></i> {{ b.label }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endfor %}
+</div>
+
+<p class="pp-muted pp-fineprint text-center mt-3">{{ BRAND_DEMO_DISCLAIMER }}
+    Tier thresholds (Collector / Curator / Steward) are configurable by the retailer.</p>
+{% endblock %}

@@ -11,17 +11,58 @@ from django.db import models
 
 
 class MarketValue(models.Model):
-    """The latest (current) market value for a watch model — dummy for now."""
+    """Valuation for a watch model — its current secondary value, the original
+    retail price, and a short value history that powers the Vault sparkline.
+
+    This is the spec's ``Valuation`` record. Values are seeded dummy data for
+    the demo; in production they'd be sourced from the WatchCharts API
+    (historical/secondary pricing).
+    """
 
     product = models.OneToOneField(
         "catalogue.Product", on_delete=models.CASCADE, related_name="market_value"
     )
-    value = models.DecimalField(max_digits=12, decimal_places=2)
+    value = models.DecimalField(max_digits=12, decimal_places=2)  # current secondary value
+    retail_price = models.DecimalField(
+        max_digits=12, decimal_places=2, null=True, blank=True,
+        help_text="Original retail / list price, for the premium-to-retail figure.",
+    )
     currency = models.CharField(max_length=12, default="USD")
+    # List of {"date": "YYYY-MM-DD", "value": <number>}, oldest first.
+    value_history = models.JSONField(default=list, blank=True)
     updated = models.DateField()
 
     def __str__(self):
         return "%s — %s" % (self.product, self.value)
+
+    @property
+    def premium_to_retail(self):
+        """Current value minus retail (positive = trading above retail)."""
+        if self.retail_price:
+            return self.value - self.retail_price
+        return None
+
+    @property
+    def premium_pct(self):
+        if self.retail_price:
+            return (self.value - self.retail_price) / self.retail_price * Decimal(100)
+        return None
+
+    def sparkline_points(self, width=120, height=32, pad=2):
+        """Return an SVG polyline 'points' string for the value history."""
+        pts = [p for p in (self.value_history or []) if p.get("value") is not None]
+        if len(pts) < 2:
+            return ""
+        values = [float(p["value"]) for p in pts]
+        lo, hi = min(values), max(values)
+        span = (hi - lo) or 1.0
+        n = len(values)
+        coords = []
+        for i, v in enumerate(values):
+            x = pad + (width - 2 * pad) * (i / (n - 1))
+            y = pad + (height - 2 * pad) * (1 - (v - lo) / span)
+            coords.append("%.1f,%.1f" % (x, y))
+        return " ".join(coords)
 
 
 class VaultItem(models.Model):

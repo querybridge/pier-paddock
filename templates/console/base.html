@@ -1,0 +1,46 @@
+{% load static %}
+{% load loyalty_tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex, nofollow">
+    <title>{% block title %}Operator Console{% endblock %} — {{ BRAND_NAME }}</title>
+    <link rel="icon" type="image/x-icon" href="{% static 'img/crest.ico' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="{% static 'css/loyalty.css' %}">
+    <link rel="stylesheet" href="{% static 'css/console.css' %}">
+</head>
+<body class="cns">
+    <header class="cns-topbar">
+        <a class="cns-brand" href="{% url 'console:dashboard' %}">
+            <span class="cns-wordmark">{{ BRAND_NAME }}</span>
+            <span class="cns-sub">Operator Console</span>
+        </a>
+        <div class="cns-topbar-right">
+            <span class="cns-demo-flag"><i class="fa fa-flask"></i> Demo controls — staff only</span>
+            <a class="cns-storefront" href="{% url 'home' %}"><i class="fa fa-external-link"></i> Storefront</a>
+        </div>
+    </header>
+
+    <div class="cns-shell">
+        <nav class="cns-side">
+            <a href="{% url 'console:dashboard' %}" class="{% if console_section == 'dashboard' %}active{% endif %}"><i class="fa fa-pie-chart"></i> Analytics</a>
+            <a href="{% url 'console:members' %}" class="{% if console_section == 'members' %}active{% endif %}"><i class="fa fa-users"></i> Members</a>
+            <a href="{% url 'console:early_access' %}" class="{% if console_section == 'early_access' %}active{% endif %}"><i class="fa fa-eye"></i> Early Access</a>
+            <a href="{% url 'console:config' %}" class="{% if console_section == 'config' %}active{% endif %}"><i class="fa fa-sliders"></i> Configuration</a>
+            <a href="{% url 'admin:index' %}" class="cns-side-foot"><i class="fa fa-database"></i> Django Admin</a>
+        </nav>
+
+        <main class="cns-main">
+            {% if messages %}
+            <div class="cns-messages">
+                {% for m in messages %}<div class="cns-msg cns-msg--{{ m.tags }}">{{ m }}</div>{% endfor %}
+            </div>
+            {% endif %}
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+</body>
+</html>

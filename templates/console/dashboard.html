@@ -1,0 +1,53 @@
+{% extends "console/base.html" %}
+{% load pp_tags %}
+
+{% block title %}Analytics{% endblock %}
+
+{% block content %}
+<h1 class="cns-h1">Program Analytics</h1>
+
+<div class="cns-stat-row">
+    <div class="cns-stat"><span class="cns-stat-num">{{ member_total }}</span><span class="cns-stat-lbl">Members</span></div>
+    <div class="cns-stat cns-stat--gold"><span class="cns-stat-num">{{ credit_liability|money }}</span><span class="cns-stat-lbl">Retailer's Credit liability</span></div>
+    <div class="cns-stat"><span class="cns-stat-num">{{ steward_count }}</span><span class="cns-stat-lbl">Stewards</span></div>
+    <div class="cns-stat"><span class="cns-stat-num">{{ active_grails }}</span><span class="cns-stat-lbl">Active grails</span></div>
+</div>
+
+<div class="cns-grid2">
+    <section class="cns-panel">
+        <h2 class="cns-h2">Members by tier</h2>
+        <ul class="cns-bars">
+            {% for t in tier_counts %}
+            <li>
+                <span class="cns-bar-label">{{ t.name }}</span>
+                <span class="cns-bar-track"><span class="cns-bar-fill" style="width:{{ t.pct }}%;"></span></span>
+                <span class="cns-bar-count">{{ t.count }}</span>
+            </li>
+            {% endfor %}
+        </ul>
+    </section>
+
+    <section class="cns-panel">
+        <h2 class="cns-h2">Grail demand <span class="cns-hint">— the signal we feed the retailer</span></h2>
+        {% if grail_demand %}
+        <table class="cns-table">
+            <thead><tr><th>Brand</th><th>Model</th><th>Ref.</th><th class="cns-right">Requests</th></tr></thead>
+            <tbody>
+            {% for g in grail_demand %}
+            <tr><td>{{ g.brand }}</td><td>{{ g.model }}</td><td class="cns-muted">{{ g.reference|default:"—" }}</td><td class="cns-right"><strong>{{ g.count }}</strong></td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        {% else %}<p class="cns-muted">No grail entries yet.</p>{% endif %}
+    </section>
+</div>
+
+<section class="cns-panel">
+    <h2 class="cns-h2">Engagement snapshot</h2>
+    <div class="cns-stat-row">
+        <div class="cns-stat cns-stat--plain"><span class="cns-stat-num">{{ vault_saves }}</span><span class="cns-stat-lbl">Vault saves</span></div>
+        <div class="cns-stat cns-stat--plain"><span class="cns-stat-num">{{ active_grails }}</span><span class="cns-stat-lbl">Active grail entries</span></div>
+        <div class="cns-stat cns-stat--plain"><span class="cns-stat-num">{{ alert_optins }}</span><span class="cns-stat-lbl">Marketing opt-ins</span></div>
+    </div>
+</section>
+{% endblock %}

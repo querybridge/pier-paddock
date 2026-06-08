@@ -1,0 +1,50 @@
+{% extends "console/base.html" %}
+
+{% block title %}Early Access{% endblock %}
+
+{% block content %}
+<h1 class="cns-h1">Inventory Early Access</h1>
+<p class="cns-muted">Flag a piece as a members-only first look. It appears in qualifying members' Vaults
+    (at or above the chosen crest) during the window — before the public listing.</p>
+
+<form method="post" class="cns-inline-form">{% csrf_token %}
+    <label>Watch
+        <select name="product" required>
+            <option value="">— select a watch —</option>
+            {% for w in watches %}<option value="{{ w.id }}">{{ w.title }}</option>{% endfor %}
+        </select>
+    </label>
+    <label>Visible to
+        <select name="min_crest">
+            {% for val, name in crest_options %}<option value="{{ val }}" {% if val == 4 %}selected{% endif %}>{{ name }}+ ({{ val }} crests)</option>{% endfor %}
+        </select>
+    </label>
+    <label>Window (days)<input type="number" name="days" value="3" min="1" max="30"></label>
+    <button class="cns-btn cns-btn--gold" type="submit">Flag as first-look</button>
+</form>
+
+<div class="cns-panel cns-panel--flush">
+<table class="cns-table">
+    <thead><tr><th>Watch</th><th>Visible to</th><th>Window</th><th>Status</th><th></th></tr></thead>
+    <tbody>
+    {% for la in listings %}
+    <tr>
+        <td><strong>{{ la.product.title }}</strong></td>
+        <td>{{ la.get_visible_to_min_crest_display|default:la.visible_to_min_crest }} crests+</td>
+        <td class="cns-muted">{{ la.window_start|date:"M j" }} – {{ la.window_end|date:"M j, Y" }}</td>
+        <td>{% if la.is_active %}<span class="cns-tag cns-tag--gold">active</span>{% else %}<span class="cns-tag">expired</span>{% endif %}</td>
+        <td class="cns-right">
+            <form method="post">{% csrf_token %}
+                <input type="hidden" name="action" value="remove">
+                <input type="hidden" name="listing" value="{{ la.id }}">
+                <button class="cns-textbtn" type="submit">Remove</button>
+            </form>
+        </td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="5" class="cns-muted">No first-look flags yet.</td></tr>
+    {% endfor %}
+    </tbody>
+</table>
+</div>
+{% endblock %}

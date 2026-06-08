@@ -68,10 +68,23 @@ def mark_owned(request, pk):
 
 
 class VaultView(LoginRequiredMixin, TemplateView):
+    """The unified Vault, inside the Crest member area.
+
+    Saving is unlimited at every tier. Price tracking — current secondary
+    value, premium-to-retail, the sparkline and the portfolio total — is a
+    Collector benefit (crest 3+); below that the value column is shown locked.
+    Members at Curator+ also see first-look pieces here before public listing.
+    """
     template_name = "vault/vault.html"
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
+        from apps.loyalty import services
+        from apps.loyalty.models import EarlyAccessListing
+
+        membership = services.get_membership(self.request.user)
+        can_track = membership.crest_count >= 3  # Collector+
+
         items = list(
             VaultItem.objects.filter(user=self.request.user)
             .select_related("product", "product__market_value")
@@ -87,12 +100,29 @@ class VaultView(LoginRequiredMixin, TemplateView):
         total_gain = total_value - total_cost
         total_pct = (total_gain / total_cost * Decimal(100)) if total_cost else None
 
+        # First-look pieces visible to this member's crest level, still inside
+        # their access window and not yet in their Vault.
+        owned_ids = {i.product_id for i in items}
+        first_look = []
+        if membership.crest_count >= 2:
+            for la in (EarlyAccessListing.objects
+                       .select_related("product")
+                       .prefetch_related("product__images")):
+                if (la.is_active
+                        and membership.crest_count >= la.visible_to_min_crest
+                        and la.product_id not in owned_ids):
+                    first_look.append(la)
+
         ctx.update(
+            membership=membership,
+            can_track=can_track,
+            active_member_tab="vault",
             owned=owned,
             watching=watching,
             total_cost=total_cost,
             total_value=total_value,
             total_gain=total_gain,
             total_pct=total_pct,
+            first_look=first_look,
         )
         return ctx

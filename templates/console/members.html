@@ -1,0 +1,51 @@
+{% extends "console/base.html" %}
+{% load pp_tags %}
+{% load loyalty_tags %}
+
+{% block title %}Members{% endblock %}
+
+{% block content %}
+<h1 class="cns-h1">Members</h1>
+
+<form method="get" class="cns-filterbar">
+    <label>Tier
+        <select name="tier" onchange="this.form.submit()">
+            <option value="">All tiers</option>
+            {% for t in tier_options %}<option value="{{ t }}" {% if tier_filter == t %}selected{% endif %}>{{ t }}</option>{% endfor %}
+        </select>
+    </label>
+    <label>Sort
+        <select name="sort" onchange="this.form.submit()">
+            <option value="-lifetime_spend" {% if sort == '-lifetime_spend' %}selected{% endif %}>Spend (high → low)</option>
+            <option value="lifetime_spend" {% if sort == 'lifetime_spend' %}selected{% endif %}>Spend (low → high)</option>
+            <option value="-crest_count" {% if sort == '-crest_count' %}selected{% endif %}>Crests (high → low)</option>
+            <option value="-credit_balance" {% if sort == '-credit_balance' %}selected{% endif %}>Credit balance</option>
+            <option value="-join_date" {% if sort == '-join_date' %}selected{% endif %}>Newest</option>
+        </select>
+    </label>
+</form>
+
+<div class="cns-panel cns-panel--flush">
+<table class="cns-table cns-table--hover">
+    <thead><tr>
+        <th>Member</th><th>Tier</th><th>Crests</th><th class="cns-right">Lifetime spend</th>
+        <th class="cns-right">Purchases</th><th class="cns-right">Credit</th><th>Joined</th>
+    </tr></thead>
+    <tbody>
+    {% for m in members %}
+    <tr onclick="window.location='{% url 'console:member' m.pk %}'">
+        <td><strong>{{ m.user.get_full_name|default:m.user.email }}</strong><br><span class="cns-muted">{{ m.user.email }}</span></td>
+        <td>{{ m.tier }}{% if m.invited %} <span class="cns-tag">invited</span>{% endif %}</td>
+        <td>{% crest_row m.crest_count size="sm" %}</td>
+        <td class="cns-right">{{ m.lifetime_spend|money }}</td>
+        <td class="cns-right">{{ m.purchase_count }}</td>
+        <td class="cns-right">{{ m.credit_balance|money }}</td>
+        <td class="cns-muted">{{ m.join_date|date:"M j, Y" }}</td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="7" class="cns-muted">No members match.</td></tr>
+    {% endfor %}
+    </tbody>
+</table>
+</div>
+{% endblock %}

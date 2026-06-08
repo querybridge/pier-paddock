@@ -1,0 +1,58 @@
+{% extends "loyalty/account_base.html" %}
+
+{% block title %}Alerts — {{ BRAND_NAME }}{% endblock %}
+{% block headertext %}Alerts &amp; Notifications{% endblock %}
+{% block member_breadcrumb %}<li>Alerts</li>{% endblock %}
+
+{% block member_content %}
+<div class="row">
+    <div class="col-lg-5 col-12">
+        <div class="pp-card">
+            <h3 class="pp-card-title">Alert preferences</h3>
+            <form method="post" action="{% url 'loyalty:alerts' %}" class="pp-form">{% csrf_token %}
+                <label class="pp-check"><input type="checkbox" name="alerts_email" {% if membership.alerts_email %}checked{% endif %}> Email alerts</label>
+                <label class="pp-check"><input type="checkbox" name="alerts_sms" {% if membership.alerts_sms %}checked{% endif %}> SMS alerts</label>
+                <button class="pp-btn pp-btn--outline" type="submit">Save preferences</button>
+            </form>
+            <hr>
+            <ul class="pp-alert-status">
+                <li>{% if on_first_alert %}<i class="fa fa-check pp-up"></i>{% else %}<i class="fa fa-lock pp-muted"></i>{% endif %}
+                    Collectors' first-alert list {% if not on_first_alert %}<span class="pp-muted">(Collector+)</span>{% endif %}</li>
+                <li>{% if gets_prelisting %}<i class="fa fa-check pp-up"></i>{% else %}<i class="fa fa-lock pp-muted"></i>{% endif %}
+                    Pre-listing first-look notices {% if not gets_prelisting %}<span class="pp-muted">(Curator+)</span>{% endif %}</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="col-lg-7 col-12">
+        <div class="pp-card">
+            <div class="pp-card-head">
+                <h3 class="pp-card-title">Notification feed</h3>
+                {% if notifications %}
+                <form method="post" action="{% url 'loyalty:alerts' %}">{% csrf_token %}
+                    <input type="hidden" name="action" value="mark_read">
+                    <button class="pp-textbtn" type="submit">Mark all read</button>
+                </form>
+                {% endif %}
+            </div>
+            {% if notifications %}
+            <ul class="pp-feed">
+                {% for n in notifications %}
+                <li class="pp-feed-item {% if not n.read %}is-unread{% endif %}">
+                    <span class="pp-feed-icon pp-feed-icon--{{ n.kind }}"><i class="fa fa-bell"></i></span>
+                    <span class="pp-feed-body">
+                        <strong>{{ n.title }}</strong>
+                        {% if n.body %}<span class="pp-muted">{{ n.body }}</span>{% endif %}
+                        <span class="pp-feed-time">{{ n.created|date:"M j, Y · g:i a" }}</span>
+                    </span>
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <div class="pp-empty"><i class="fa fa-bell-o"></i><h3>No notifications yet</h3>
+                <p class="pp-muted">First-look pieces, grail matches and restocks will appear here.</p></div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

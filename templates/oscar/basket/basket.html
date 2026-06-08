@@ -88,11 +88,18 @@
                 <table style="width:100%;">
                     <tr><td class="pp-muted">Subtotal</td><td class="text-right">{{ basket.total_excl_tax|currency:basket.currency }}</td></tr>
                     <tr><td class="pp-muted">Shipping</td><td class="text-right">Calculated at checkout</td></tr>
+                    {% if membership and membership.credit_balance > 0 %}
+                    <tr><td class="pp-muted">Retailer's Credit <span class="pp-pill pp-pill--gold" style="font-size:10px;">{{ membership.tier }}</span></td>
+                        <td class="text-right pp-up">−{{ membership.credit_balance|currency:basket.currency }}</td></tr>
+                    {% endif %}
                     <tr style="border-top:1px solid #ece7dd;"><td style="padding-top:12px;font-weight:600;">Total</td>
                         <td class="text-right" style="padding-top:12px;font-size:20px;font-weight:600;">
                             {% if basket.is_tax_known %}{{ basket.total_incl_tax|currency:basket.currency }}{% else %}{{ basket.total_excl_tax|currency:basket.currency }}{% endif %}
                         </td></tr>
                 </table>
+                {% if membership and membership.credit_balance > 0 %}
+                <p class="pp-muted" style="font-size:12px;margin-top:8px;">Your {{ membership.credit_balance|currency:basket.currency }} Retailer's Credit would apply at checkout. <em>(Demo — no order is placed.)</em></p>
+                {% endif %}
                 <p class="pp-wire-note">
                     Prices shown are <strong>wire-transfer prices</strong>. A 3.5% surcharge is added to credit card purchases.
                 </p>

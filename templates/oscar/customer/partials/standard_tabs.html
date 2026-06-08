@@ -20,5 +20,8 @@
     <a href="{% url 'customer:notifications-inbox' %}" class="nav-link{% if active_tab == 'notifications' %} active{% endif %}">{% trans "Notifications" %}</a>
 </li>
 <li class="nav-item">
+    <a href="{% url 'loyalty:dashboard' %}" class="nav-link">Membership</a>
+</li>
+<li class="nav-item">
     <a href="{% url 'vault:index' %}" class="nav-link{% if active_tab == 'wishlists' %} active{% endif %}">Your Vault</a>
 </li>
