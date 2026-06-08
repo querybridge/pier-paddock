@@ -1,0 +1,25 @@
+{% extends "loyalty/account_base.html" %}
+
+{% block title %}{{ report.quarter_label }} Market Report — {{ BRAND_NAME }}{% endblock %}
+{% block headertext %}{{ report.quarter_label }} Market Report{% endblock %}
+{% block member_breadcrumb %}<li>Market Report</li>{% endblock %}
+
+{% block member_content %}
+{% if not entitled %}
+    <div class="pp-locked-panel"><i class="fa fa-lock"></i>
+        <h3>This report is for {{ report.min_crest }}-crest members and above</h3>
+        <p class="pp-muted">The quarterly market report unlocks at Patron. Make your first purchase to read it.</p>
+        <a class="pp-btn" href="{% url 'loyalty:dashboard' %}">Back to membership</a>
+    </div>
+{% else %}
+    <article class="pp-report">
+        <header class="pp-report-head">
+            <span class="pp-muted">{{ report.published|date:"F Y" }}</span>
+            <h2>{{ report.headline }}</h2>
+        </header>
+        <div class="pp-report-body">{{ report.content|safe }}</div>
+        <p class="pp-muted pp-fineprint mt-3">{{ BRAND_DEMO_DISCLAIMER }} Figures are illustrative; production
+            reports draw on WatchCharts secondary-market data.</p>
+    </article>
+{% endif %}
+{% endblock %}

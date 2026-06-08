@@ -1,0 +1,124 @@
+{% extends "console/base.html" %}
+{% load pp_tags %}
+{% load loyalty_tags %}
+
+{% block title %}{{ user_obj.email }}{% endblock %}
+
+{% block content %}
+<a class="cns-back" href="{% url 'console:members' %}"><i class="fa fa-angle-left"></i> All members</a>
+
+<div class="cns-member-head">
+    <div>
+        <h1 class="cns-h1">{{ user_obj.get_full_name|default:user_obj.email }}</h1>
+        <p class="cns-muted">{{ user_obj.email }} · member since {{ member.join_date|date:"M j, Y" }}</p>
+    </div>
+    <div class="cns-member-crest">
+        {% crest_row member.crest_count size="lg" label=True %}
+    </div>
+</div>
+
+<div class="cns-stat-row">
+    <div class="cns-stat cns-stat--plain"><span class="cns-stat-num">{{ member.lifetime_spend|money }}</span><span class="cns-stat-lbl">Lifetime spend</span></div>
+    <div class="cns-stat cns-stat--plain"><span class="cns-stat-num">{{ member.purchase_count }}</span><span class="cns-stat-lbl">Purchases</span></div>
+    <div class="cns-stat cns-stat--gold"><span class="cns-stat-num">{{ member.credit_balance|money }}</span><span class="cns-stat-lbl">Retailer's Credit</span></div>
+    <div class="cns-stat cns-stat--plain"><span class="cns-stat-num">{{ member.concierge_channel|capfirst }}</span><span class="cns-stat-lbl">Concierge</span></div>
+</div>
+
+{# ===================== DEMO CONTROLS ===================== #}
+<section class="cns-demo">
+    <div class="cns-demo-head"><i class="fa fa-flask"></i> Demo Controls <span>— these simulate real activity; not part of the customer experience</span></div>
+
+    <div class="cns-demo-grid">
+        {# Marquee action #}
+        <form method="post" class="cns-demo-card cns-demo-card--marquee">{% csrf_token %}
+            <input type="hidden" name="action" value="simulate_purchase">
+            <h3>Simulate purchase</h3>
+            <p class="cns-muted">Logs a purchase, accrues credit (Collector+), and advances the tier live.</p>
+            <label>Watch
+                <select name="product">
+                    <option value="">— none / generic —</option>
+                    {% for w in watches %}<option value="{{ w.id }}">{{ w.title }}</option>{% endfor %}
+                </select>
+            </label>
+            <label>Amount (USD)<input type="text" name="amount" placeholder="20000" required></label>
+            <button class="cns-btn cns-btn--gold" type="submit"><i class="fa fa-bolt"></i> Simulate purchase</button>
+        </form>
+
+        <form method="post" class="cns-demo-card">{% csrf_token %}
+            <input type="hidden" name="action" value="set_spend">
+            <h3>Set lifetime spend</h3>
+            <p class="cns-muted">Jump this member to any spend state instantly.</p>
+            <label>Lifetime spend (USD)<input type="text" name="amount" value="{{ member.lifetime_spend|stringformat:'.0f' }}"></label>
+            <button class="cns-btn" type="submit">Set spend</button>
+        </form>
+
+        <form method="post" class="cns-demo-card">{% csrf_token %}
+            <input type="hidden" name="action" value="grant_credit">
+            <h3>Grant / adjust credit</h3>
+            <p class="cns-muted">Add (or, with a minus sign, deduct) Retailer's Credit.</p>
+            <label>Amount (USD)<input type="text" name="amount" placeholder="1000"></label>
+            <button class="cns-btn" type="submit">Apply adjustment</button>
+        </form>
+
+        <form method="post" class="cns-demo-card">{% csrf_token %}
+            <input type="hidden" name="action" value="issue_invitation">
+            <h3>Issue invitation</h3>
+            <p class="cns-muted">Elevate to Steward by invitation, independent of spend.</p>
+            <button class="cns-btn" type="submit" {% if member.invited %}disabled{% endif %}>
+                {% if member.invited %}Already invited{% else %}Invite to Steward{% endif %}</button>
+        </form>
+
+        <form method="post" class="cns-demo-card">{% csrf_token %}
+            <input type="hidden" name="action" value="mark_grail">
+            <h3>Mark grail matched</h3>
+            <p class="cns-muted">Flip a grail entry to matched and notify the member.</p>
+            {% if grails %}
+            <label>Grail
+                <select name="grail">
+                    {% for g in grails %}<option value="{{ g.id }}" {% if g.status == 'matched' %}disabled{% endif %}>{{ g.brand }} {{ g.model }}{% if g.status == 'matched' %} (matched){% endif %}</option>{% endfor %}
+                </select>
+            </label>
+            <button class="cns-btn" type="submit">Mark matched</button>
+            {% else %}<p class="cns-muted">No grail entries.</p>{% endif %}
+        </form>
+
+        <form method="post" class="cns-demo-card">{% csrf_token %}
+            <input type="hidden" name="action" value="toggle_marketing">
+            <h3>Marketing opt-in</h3>
+            <p class="cns-muted">Currently <strong>{{ member.marketing_opt_in|yesno:"opted in,opted out" }}</strong> (drives the 1st crest).</p>
+            <button class="cns-btn" type="submit">Toggle opt-in</button>
+        </form>
+    </div>
+</section>
+
+{# ===================== READ VIEWS ===================== #}
+<div class="cns-grid2">
+    <section class="cns-panel">
+        <h2 class="cns-h2">Vault ({{ vault_items|length }})</h2>
+        {% if vault_items %}<ul class="cns-list">
+            {% for v in vault_items %}<li>{{ v.product.title }} <span class="cns-tag">{{ v.get_status_display }}</span></li>{% endfor %}
+        </ul>{% else %}<p class="cns-muted">Empty.</p>{% endif %}
+    </section>
+
+    <section class="cns-panel">
+        <h2 class="cns-h2">Grail list ({{ grails|length }})</h2>
+        {% if grails %}<ul class="cns-list">
+            {% for g in grails %}<li>{{ g.brand }} {{ g.model }} <span class="cns-tag">{{ g.get_status_display }}</span></li>{% endfor %}
+        </ul>{% else %}<p class="cns-muted">No grails.</p>{% endif %}
+    </section>
+
+    <section class="cns-panel">
+        <h2 class="cns-h2">Credit history</h2>
+        {% if credits %}<table class="cns-table"><tbody>
+            {% for c in credits %}<tr><td class="cns-muted">{{ c.date|date:"M j, Y" }}</td><td>{{ c.get_type_display }}</td><td class="cns-right {% if c.amount >= 0 %}cns-up{% else %}cns-down{% endif %}">{% if c.amount >= 0 %}+{% endif %}{{ c.amount|money }}</td></tr>{% endfor %}
+        </tbody></table>{% else %}<p class="cns-muted">No credit activity.</p>{% endif %}
+    </section>
+
+    <section class="cns-panel">
+        <h2 class="cns-h2">Purchase log</h2>
+        {% if purchases %}<table class="cns-table"><tbody>
+            {% for p in purchases %}<tr><td class="cns-muted">{{ p.date|date:"M j, Y" }}</td><td>{{ p.product.title|default:p.note }}</td><td class="cns-right">{{ p.amount|money }}</td></tr>{% endfor %}
+        </tbody></table>{% else %}<p class="cns-muted">No purchases.</p>{% endif %}
+    </section>
+</div>
+{% endblock %}

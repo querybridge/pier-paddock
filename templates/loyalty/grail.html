@@ -1,0 +1,71 @@
+{% extends "loyalty/account_base.html" %}
+{% load pp_tags %}
+
+{% block title %}Grail List — {{ BRAND_NAME }}{% endblock %}
+{% block headertext %}Your Grail List{% endblock %}
+{% block member_breadcrumb %}<li>Grail List</li>{% endblock %}
+
+{% block member_content %}
+{% if not unlocked %}
+    <div class="pp-locked-panel">
+        <i class="fa fa-lock"></i>
+        <h3>The Grail List unlocks at Collector</h3>
+        <p class="pp-muted">Tell us the pieces you're hunting — brand, model, reference, even a target
+            price — and we'll watch the market and our incoming inventory for you. When we find a match,
+            it lands here and on your dashboard. This is a <strong>Collector</strong> benefit.</p>
+        <a class="pp-btn" href="{% url 'shop:browse' %}">Browse the Collection</a>
+    </div>
+{% else %}
+    <p class="pp-muted mb-40" style="margin-top:-20px;">The pieces you're hunting. We watch the market and our
+        incoming inventory and flag a match the moment one appears.</p>
+
+    <div class="row">
+        <div class="col-lg-7 col-12">
+            {% if entries %}
+            <div class="pp-compare-wrap mb-40">
+                <table class="pp-vault-table">
+                    <thead><tr><th>Piece</th><th class="text-right">Target</th><th class="text-center">Status</th><th></th></tr></thead>
+                    <tbody>
+                    {% for e in entries %}
+                    <tr>
+                        <td>
+                            <span class="pp-brand">{{ e.brand }}</span>
+                            <div class="pp-vault-name">{{ e.model }}</div>
+                            {% if e.reference %}<div class="pp-muted" style="font-size:12px;">Ref. {{ e.reference }}</div>{% endif %}
+                        </td>
+                        <td class="text-right">{% if e.target_price %}{{ e.target_price|money }}{% else %}<span class="pp-muted">—</span>{% endif %}</td>
+                        <td class="text-center">
+                            {% if e.status == 'matched' %}<a class="pp-pill pp-pill--gold pp-pill--link" href="{% url 'shop:browse' %}?q={{ e.brand|urlencode }}+{{ e.model|urlencode }}">View now <i class="fa fa-arrow-right"></i></a>
+                            {% else %}<span class="pp-pill">Watching</span>{% endif %}
+                        </td>
+                        <td class="text-right">
+                            <form method="post" action="{% url 'loyalty:grail_remove' e.pk %}">{% csrf_token %}
+                                <button class="pp-iconbtn" title="Remove"><i class="fa fa-trash-o"></i></button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="pp-empty"><i class="fa fa-bullseye"></i><h3>No grails yet</h3>
+                <p class="pp-muted">Add the first piece you're chasing.</p></div>
+            {% endif %}
+        </div>
+
+        <div class="col-lg-5 col-12">
+            <div class="pp-card">
+                <h3 class="pp-card-title">Add a grail</h3>
+                <form method="post" action="{% url 'loyalty:grail' %}" class="pp-form">{% csrf_token %}
+                    <label>Brand <input type="text" name="brand" required placeholder="Patek Philippe"></label>
+                    <label>Model <input type="text" name="model" required placeholder="Nautilus 5711"></label>
+                    <label>Reference <span class="pp-muted">(optional)</span><input type="text" name="reference" placeholder="5711/1A"></label>
+                    <label>Target price <span class="pp-muted">(optional)</span><input type="text" name="target_price" placeholder="$120,000"></label>
+                    <button class="pp-btn pp-btn--gold" type="submit">Add to grail list</button>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endif %}
+{% endblock %}

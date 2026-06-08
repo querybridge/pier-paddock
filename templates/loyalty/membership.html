@@ -1,0 +1,126 @@
+{% extends "loyalty/account_base.html" %}
+{% load loyalty_tags %}
+{% load pp_tags %}
+
+{% block title %}Membership — {{ BRAND_NAME }}{% endblock %}
+{% block headertext %}Your Membership{% endblock %}
+
+{% block member_content %}
+
+{# ---------- Crest hero ---------- #}
+<section class="pp-crest-hero">
+    <div class="pp-crest-hero-mark">
+        {% crest_row membership.crest_count size="lg" %}
+    </div>
+    <div class="pp-crest-hero-meta">
+        <h2 class="pp-crest-tier">{{ membership.tier }} <span>· {{ membership.crest_count }} Crest{{ membership.crest_count|pluralize }}</span></h2>
+        <p class="pp-muted">Member since {{ membership.join_date|date:"F Y" }}{% if membership.is_by_invitation %} · <span class="pp-invite-badge">By invitation</span>{% endif %}</p>
+
+        {% if next_step %}
+        <div class="pp-progress-wrap">
+            {% widthratio membership.lifetime_spend next_step.target 100 as pct %}
+            <div class="pp-progress"><div class="pp-progress-bar" style="width:{{ pct }}%;"></div></div>
+            <p class="pp-progress-caption">
+                {{ membership.lifetime_spend|money }} of {{ next_step.target|money }} lifetime —
+                <strong>{{ next_step.remaining|money }} to {{ next_step.label }}</strong>
+            </p>
+        </div>
+        {% else %}
+        <p class="pp-progress-caption"><strong>{% if membership.is_by_invitation %}Steward · by invitation{% else %}Highest tier reached — Steward{% endif %}</strong></p>
+        {% endif %}
+    </div>
+</section>
+
+{# ---------- Matched-grail / notification surfacing ---------- #}
+{% if matched_grails %}
+<div class="pp-flash pp-flash--gold">
+    <i class="fa fa-bullseye"></i>
+    {% for g in matched_grails %}<strong>Grail match:</strong> {{ g.brand }} {{ g.model }}
+        <a class="pp-pill pp-pill--gold pp-pill--link" href="{% url 'shop:browse' %}?q={{ g.brand|urlencode }}+{{ g.model|urlencode }}">View now <i class="fa fa-arrow-right"></i></a>{% if not forloop.last %} &nbsp; {% endif %}{% endfor %}
+</div>
+{% endif %}
+
+<div class="row">
+    {# ---------- Benefits ---------- #}
+    <div class="col-lg-8 col-12">
+        <div class="pp-card">
+            <h3 class="pp-card-title">Your Benefits</h3>
+            <p class="pp-muted">Everything unlocked at your tier — and what's waiting above.</p>
+            <ul class="pp-benefits">
+                {% for b in benefits %}
+                <li class="pp-benefit {% if b.unlocked %}is-unlocked{% else %}is-locked{% endif %}">
+                    <span class="pp-benefit-icon">
+                        {% if b.unlocked %}<i class="fa fa-check"></i>{% else %}<i class="fa fa-lock"></i>{% endif %}
+                    </span>
+                    <span class="pp-benefit-text">
+                        <strong>{{ b.label }}</strong>
+                        <span class="pp-muted">{{ b.blurb }}</span>
+                    </span>
+                    {% if not b.unlocked %}<span class="pp-benefit-unlock">Unlocks at {{ b.unlocks_at }}</span>{% endif %}
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    {# ---------- Sidebar: credit, concierge, report ---------- #}
+    <div class="col-lg-4 col-12">
+
+        {# Retailer's Credit — Collector+ #}
+        <div class="pp-card pp-credit-card">
+            <h3 class="pp-card-title">Retailer's Credit</h3>
+            {% if membership.crest_count >= 3 %}
+                <div class="pp-credit-balance">{{ membership.credit_balance|money }}</div>
+                <p class="pp-muted">Applied to your next purchase.</p>
+                {% if credit_transactions %}
+                <ul class="pp-credit-log">
+                    {% for t in credit_transactions %}
+                    <li><span>{{ t.date|date:"M j, Y" }}</span>
+                        <span class="{% if t.amount >= 0 %}pp-up{% else %}pp-down{% endif %}">{% if t.amount >= 0 %}+{% endif %}{{ t.amount|money }}</span></li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            {% else %}
+                <div class="pp-locked-teaser">
+                    <i class="fa fa-lock"></i>
+                    <p>Retailer's Credit — funded by us toward your next acquisition — unlocks at <strong>Collector</strong>.</p>
+                </div>
+            {% endif %}
+        </div>
+
+        {# Concierge — scales with tier #}
+        <div class="pp-card">
+            <h3 class="pp-card-title">Concierge</h3>
+            {% if concierge_channel == 'direct' %}
+                <p><strong>Your advisor:</strong> Eleanor Voss</p>
+                <p class="pp-muted">Direct line — <a href="tel:+10000000000">+1 (000) 000-0000</a> · <a href="mailto:concierge@pierandpaddock.example">email</a></p>
+            {% elif concierge_channel == 'dedicated' %}
+                <p><strong>Dedicated channel</strong></p>
+                <p class="pp-muted">Reach your sourcing desk at <a href="mailto:curators@pierandpaddock.example">curators@pierandpaddock.example</a>.</p>
+            {% elif concierge_channel == 'email' %}
+                <p><strong>Email concierge</strong></p>
+                <p class="pp-muted">Sourcing questions? Write to <a href="mailto:concierge@pierandpaddock.example">concierge@pierandpaddock.example</a>.</p>
+            {% else %}
+                <div class="pp-locked-teaser"><i class="fa fa-lock"></i>
+                    <p>Concierge access begins at <strong>Patron</strong> (after your first purchase).</p></div>
+            {% endif %}
+        </div>
+
+        {# Quarterly market report — Patron+ #}
+        <div class="pp-card">
+            <h3 class="pp-card-title">Quarterly Market Report</h3>
+            {% if membership.crest_count >= 2 and latest_report %}
+                <p><a class="pp-btn pp-btn--outline" href="{% url 'loyalty:report' latest_report.pk %}"><i class="fa fa-file-text-o"></i> {{ latest_report.quarter_label }}</a></p>
+                <p class="pp-muted">{{ latest_report.headline }}</p>
+            {% else %}
+                <div class="pp-locked-teaser"><i class="fa fa-lock"></i>
+                    <p>Our analysts' quarterly briefing unlocks at <strong>Patron</strong>.</p></div>
+            {% endif %}
+        </div>
+
+    </div>
+</div>
+
+<p class="pp-muted pp-fineprint mt-3">{{ BRAND_DEMO_DISCLAIMER }} Tiers are driven by lifetime spend; see the <a href="{% url 'membership_public' %}">membership overview</a>.</p>
+
+{% endblock %}

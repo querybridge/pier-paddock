@@ -46,7 +46,11 @@ Optional — rebuild the demo catalogue/imagery/accounts from scratch:
 
 ```bash
 python manage.py load_demo_catalogue
+python manage.py load_loyalty_demo   # Crest membership: per-tier members + data
 ```
+
+(The shipped `db.sqlite3` already includes the membership data, so this is only
+needed if you rebuild from scratch. `load_loyalty_demo` is idempotent.)
 
 ## 5. Create the web app
 

@@ -22,11 +22,13 @@
                                 <ul>
                                     <li>
                                         {% if request.user.is_authenticated %}
-                                        <a href="{% url 'customer:summary' %}">{{ request.user.get_full_name|default:request.user.email }} <i class="fa fa-angle-down"></i></a>
+                                        <a href="{% url 'customer:summary' %}">{% if membership %}{% load loyalty_tags %}<span class="pp-crest-chip" title="{{ membership.tier }} · {{ membership.crest_count }} crests">{% crest_row membership.crest_count size="sm" %}</span> {% endif %}{{ request.user.get_full_name|default:request.user.email }} <i class="fa fa-angle-down"></i></a>
                                         <ul>
                                             <li><a href="{% url 'customer:summary' %}">My Account</a></li>
+                                            <li><a href="{% url 'loyalty:dashboard' %}">My Membership</a></li>
                                             <li><a href="{% url 'customer:order-list' %}">My Orders</a></li>
                                             <li><a href="{% url 'vault:index' %}">My Vault</a></li>
+                                            {% if request.user.is_staff %}<li><a href="{% url 'console:dashboard' %}">Operator Console</a></li>{% endif %}
                                             <li><a href="{% url 'customer:logout' %}">Logout</a></li>
                                         </ul>
                                         {% else %}

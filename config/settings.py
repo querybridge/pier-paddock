@@ -68,6 +68,7 @@ INSTALLED_APPS = [
     "apps.shop.apps.ShopConfig",
     "apps.compare.apps.CompareConfig",
     "apps.vault.apps.VaultConfig",
+    "apps.loyalty.apps.LoyaltyConfig",
     "apps.blog.apps.BlogConfig",
     "apps.pages.apps.PagesConfig",
 ]
@@ -127,6 +128,7 @@ TEMPLATES = [
                 "apps.core.context_processors.navigation",
                 "apps.compare.context_processors.compare",
                 "apps.vault.context_processors.vault",
+                "apps.loyalty.context_processors.membership",
             ],
         },
     },
@@ -214,3 +216,34 @@ THUMBNAIL_DEBUG = False
 # Demo account surfaced in the README / login page.
 DEMO_USER_EMAIL = "demo@example.com"
 DEMO_USER_PASSWORD = "Demo1234!"
+
+# ---------------------------------------------------------------------------
+# Crest membership / loyalty program
+#
+# The program is built around two email providers, but BOTH ARE INACTIVE in the
+# demo (no keys, no network calls) — the code is structured so a real key flips
+# them on without touching call sites. See apps/loyalty/emails.py.
+#   * SendGrid  — transactional mail (tier advances, grail matches, concierge
+#                 replies, alert confirmations). Triggered per-event.
+#   * Mailchimp — marketing mail (the market newsletter / quarterly report
+#                 broadcasts). Members sync as audience contacts with their tier
+#                 as a merge field / segment tag.
+# While disabled, transactional "sends" are logged to the console email backend
+# and marketing "syncs" are no-ops that log what WOULD be sent.
+# ---------------------------------------------------------------------------
+LOYALTY_TRANSACTIONAL_ENABLED = _env_bool("LOYALTY_TRANSACTIONAL_ENABLED", False)
+LOYALTY_MARKETING_ENABLED = _env_bool("LOYALTY_MARKETING_ENABLED", False)
+
+# SendGrid (transactional). Unused while disabled; placeholders document intent.
+SENDGRID_API_KEY = os.environ.get("SENDGRID_API_KEY", "")
+SENDGRID_FROM_EMAIL = os.environ.get(
+    "SENDGRID_FROM_EMAIL", "Pier & Paddock Concierge <concierge@pierandpaddock.example>"
+)
+
+# Mailchimp (marketing). Unused while disabled; placeholders document intent.
+MAILCHIMP_API_KEY = os.environ.get("MAILCHIMP_API_KEY", "")
+MAILCHIMP_SERVER_PREFIX = os.environ.get("MAILCHIMP_SERVER_PREFIX", "")  # e.g. "us21"
+MAILCHIMP_AUDIENCE_ID = os.environ.get("MAILCHIMP_AUDIENCE_ID", "")
+
+# Shared demo password for the seeded per-tier member logins (load_loyalty_demo).
+LOYALTY_DEMO_PASSWORD = "Crest1234!"

@@ -1,0 +1,122 @@
+/* ==========================================================================
+   Operator Console — branded-clean staff theme.
+   Part of the product (navy/gold), but visibly a back-office tool.
+   ========================================================================== */
+:root {
+    --cns-navy: #1B2A41; --cns-navy-2: #24344f; --cns-gold: #9A7B43;
+    --cns-gold-soft: #c8a86a; --cns-bg: #f4f5f7; --cns-line: #e3e6ea;
+    --cns-up: #2e7d52; --cns-down: #b4453c;
+}
+* { box-sizing: border-box; }
+body.cns { margin: 0; background: var(--cns-bg); color: #2b3344;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; font-size: 14px; }
+a { color: var(--cns-gold); text-decoration: none; }
+
+/* Topbar */
+.cns-topbar { display: flex; align-items: center; justify-content: space-between;
+    background: var(--cns-navy); color: #fff; padding: 0 26px; height: 60px; }
+.cns-brand { display: flex; align-items: baseline; gap: 10px; }
+.cns-wordmark { font-family: Georgia, serif; font-size: 19px; color: #fff; letter-spacing: .4px; }
+.cns-sub { color: var(--cns-gold-soft); font-size: 12px; letter-spacing: 2px; text-transform: uppercase; }
+.cns-topbar-right { display: flex; align-items: center; gap: 22px; }
+.cns-demo-flag { font-size: 12px; color: var(--cns-gold-soft); border: 1px solid rgba(200,168,106,.4); padding: 4px 11px; border-radius: 20px; }
+.cns-storefront { color: #c5cdd9; font-size: 13px; }
+
+/* Shell */
+.cns-shell { display: flex; min-height: calc(100vh - 60px); }
+.cns-side { width: 220px; background: #fff; border-right: 1px solid var(--cns-line); padding: 18px 0; flex: 0 0 220px; }
+.cns-side a { display: block; padding: 11px 24px; color: #5a6577; font-weight: 600; border-left: 3px solid transparent; }
+.cns-side a:hover { background: #faf9f7; color: var(--cns-navy); }
+.cns-side a.active { color: var(--cns-navy); border-left-color: var(--cns-gold); background: #faf8f4; }
+.cns-side a i { width: 20px; color: var(--cns-gold); }
+.cns-side-foot { margin-top: 16px; border-top: 1px solid var(--cns-line); padding-top: 18px !important; font-weight: 400 !important; color: #9aa3b1 !important; }
+.cns-main { flex: 1; padding: 30px 38px; max-width: 1180px; }
+
+/* Headings */
+.cns-h1 { font-size: 26px; color: var(--cns-navy); margin: 0 0 6px; font-weight: 700; }
+.cns-h2 { font-size: 15px; color: var(--cns-navy); margin: 0 0 14px; letter-spacing: .3px; }
+.cns-hint { color: #9aa3b1; font-weight: 400; font-size: 12px; }
+.cns-muted { color: #8b94a3; }
+.cns-right { text-align: right; }
+.cns-up { color: var(--cns-up); } .cns-down { color: var(--cns-down); }
+.cns-back { display: inline-block; margin-bottom: 14px; color: #6b7585; font-weight: 600; }
+
+/* Messages */
+.cns-messages { margin-bottom: 20px; }
+.cns-msg { padding: 12px 16px; border-radius: 4px; margin-bottom: 8px; font-weight: 500; }
+.cns-msg--alert-success { background: rgba(46,125,82,.12); color: #1f5e3c; border: 1px solid rgba(46,125,82,.3); }
+.cns-msg--alert-info { background: rgba(27,42,65,.07); color: var(--cns-navy); border: 1px solid rgba(27,42,65,.15); }
+.cns-msg--alert-danger { background: rgba(180,69,60,.1); color: #8e3029; border: 1px solid rgba(180,69,60,.3); }
+.cns-msg--alert-warning { background: rgba(154,123,67,.12); color: #6a5526; border: 1px solid rgba(154,123,67,.3); }
+
+/* Stat row */
+.cns-stat-row { display: flex; flex-wrap: wrap; gap: 16px; margin: 0 0 24px; }
+.cns-stat { flex: 1; min-width: 150px; background: var(--cns-navy); color: #fff; border-radius: 6px; padding: 20px 22px; display: flex; flex-direction: column; }
+.cns-stat--gold { background: linear-gradient(135deg, var(--cns-gold), var(--cns-gold-soft)); }
+.cns-stat--plain { background: #fff; border: 1px solid var(--cns-line); color: var(--cns-navy); }
+.cns-stat-num { font-size: 26px; font-weight: 700; }
+.cns-stat-lbl { font-size: 12px; opacity: .85; margin-top: 3px; letter-spacing: .3px; }
+
+/* Panels */
+.cns-panel { background: #fff; border: 1px solid var(--cns-line); border-radius: 6px; padding: 22px 24px; margin-bottom: 22px; }
+.cns-panel--flush { padding: 0; overflow: hidden; }
+.cns-grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+@media (max-width: 900px) { .cns-grid2 { grid-template-columns: 1fr; } .cns-side { display: none; } }
+
+/* Bars */
+.cns-bars { list-style: none; padding: 0; margin: 0; }
+.cns-bars li { display: flex; align-items: center; gap: 12px; padding: 7px 0; }
+.cns-bar-label { width: 86px; font-weight: 600; color: var(--cns-navy); }
+.cns-bar-track { flex: 1; height: 12px; background: #eef0f3; border-radius: 6px; overflow: hidden; }
+.cns-bar-fill { display: block; height: 100%; background: linear-gradient(90deg, var(--cns-navy), var(--cns-gold)); }
+.cns-bar-count { width: 36px; text-align: right; font-weight: 700; }
+
+/* Tables */
+.cns-table { width: 100%; border-collapse: collapse; }
+.cns-table th { text-align: left; font-size: 12px; text-transform: uppercase; letter-spacing: .4px; color: #8b94a3; padding: 12px 16px; border-bottom: 1px solid var(--cns-line); }
+.cns-table td { padding: 12px 16px; border-bottom: 1px solid #f1f3f5; vertical-align: middle; }
+.cns-table--hover tbody tr { cursor: pointer; }
+.cns-table--hover tbody tr:hover { background: #faf8f4; }
+.cns-list { list-style: none; padding: 0; margin: 0; }
+.cns-list li { padding: 8px 0; border-bottom: 1px solid #f1f3f5; }
+.cns-tag { display: inline-block; background: #eef0f3; color: #5a6577; font-size: 11px; padding: 2px 9px; border-radius: 12px; margin-left: 4px; }
+.cns-tag--gold { background: var(--cns-gold); color: #fff; }
+
+/* Filter / inline forms */
+.cns-filterbar, .cns-inline-form { display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-end; margin-bottom: 20px; }
+.cns-filterbar label, .cns-inline-form label, .cns-config-form label { display: flex; flex-direction: column; font-size: 12px; font-weight: 600; color: var(--cns-navy); gap: 5px; }
+select, .cns-inline-form input, .cns-filterbar input, .cns-config-form input, .cns-demo-card input, .cns-demo-card select {
+    padding: 9px 12px; border: 1px solid #d3d8df; border-radius: 4px; font-size: 14px; background: #fff; min-width: 160px; }
+
+/* Buttons */
+.cns-btn { display: inline-block; background: var(--cns-navy); color: #fff; border: 0; border-radius: 4px; padding: 10px 18px; font-weight: 600; cursor: pointer; font-size: 14px; }
+.cns-btn:hover { background: var(--cns-navy-2); }
+.cns-btn--gold { background: var(--cns-gold); }
+.cns-btn--gold:hover { background: #876b39; }
+.cns-btn:disabled { background: #c7ccd4; cursor: not-allowed; }
+.cns-textbtn { background: none; border: 0; color: var(--cns-down); cursor: pointer; font-weight: 600; font-size: 13px; }
+
+/* Member detail */
+.cns-member-head { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; margin-bottom: 18px; }
+.cns-member-crest { background: var(--cns-navy); padding: 16px 22px; border-radius: 6px; }
+.cns-member-crest .pp-crest-label { color: #fff; }
+.cns-member-crest .pp-crest--locked .pp-crest-shield { fill: rgba(255,255,255,.07); }
+
+/* Demo controls */
+.cns-demo { border: 1px dashed var(--cns-gold); border-radius: 8px; padding: 8px 22px 22px; margin: 8px 0 28px; background: #fbf9f5; }
+.cns-demo-head { font-weight: 700; color: var(--cns-navy); padding: 14px 0; font-size: 15px; }
+.cns-demo-head i { color: var(--cns-gold); margin-right: 7px; }
+.cns-demo-head span { font-weight: 400; color: #9aa3b1; font-size: 12px; }
+.cns-demo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 16px; }
+.cns-demo-card { background: #fff; border: 1px solid var(--cns-line); border-radius: 6px; padding: 18px; display: flex; flex-direction: column; gap: 10px; }
+.cns-demo-card h3 { margin: 0; font-size: 15px; color: var(--cns-navy); }
+.cns-demo-card p { margin: 0; font-size: 12.5px; }
+.cns-demo-card label { display: flex; flex-direction: column; font-size: 12px; font-weight: 600; gap: 5px; color: var(--cns-navy); }
+.cns-demo-card input, .cns-demo-card select { min-width: 0; width: 100%; }
+.cns-demo-card--marquee { border: 2px solid var(--cns-gold); box-shadow: 0 4px 16px rgba(154,123,67,.16); }
+
+/* Config form */
+.cns-config-form { max-width: 540px; background: #fff; border: 1px solid var(--cns-line); border-radius: 6px; padding: 26px; }
+.cns-config-row { margin-bottom: 20px; }
+.cns-config-form input { width: 100%; }
+.cns-config-form .cns-hint { display: block; margin-top: 5px; }

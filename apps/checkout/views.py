@@ -28,10 +28,14 @@ class PaymentDetailsView(core_views.PaymentDetailsView):
 
     def _add_basket_to_vault(self, request):
         """Simulated post-purchase step: add the basket's watches to the
-        signed-in customer's Vault as owned holdings."""
+        signed-in customer's Vault as owned holdings AND record the spend
+        against their Crest membership (advancing their tier + accruing
+        Retailer's Credit). No real order is created — this is the demo
+        stand-in for what a completed purchase would do."""
         if not request.user.is_authenticated:
             return 0
         from apps.vault.models import VaultItem
+        from apps.loyalty import services
 
         added = 0
         today = timezone.now().date()
@@ -52,6 +56,11 @@ class PaymentDetailsView(core_views.PaymentDetailsView):
                     "purchase_date": today,
                 },
             )
+            # Drive the loyalty program off the (simulated) spend.
+            if price is not None:
+                services.record_demo_purchase(
+                    request.user, price * line.quantity, product=product,
+                    note="Demo checkout (no order placed)")
             added += 1
         return added
 

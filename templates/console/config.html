@@ -1,0 +1,37 @@
+{% extends "console/base.html" %}
+
+{% block title %}Configuration{% endblock %}
+
+{% block content %}
+<h1 class="cns-h1">Program Configuration</h1>
+<p class="cns-muted">The tier bands and credit accrual are tunable to the retailer's catalogue. Saving
+    re-grades every member against the new thresholds on the spot.</p>
+
+<form method="post" class="cns-config-form">{% csrf_token %}
+    <div class="cns-config-row">
+        <label>Collector threshold (USD)
+            <input type="text" name="collector_threshold" value="{{ config.collector_threshold|stringformat:'.2f' }}">
+            <span class="cns-hint">Earns the 3rd crest — unlocks price tracking + Retailer's Credit.</span>
+        </label>
+    </div>
+    <div class="cns-config-row">
+        <label>Curator threshold (USD)
+            <input type="text" name="curator_threshold" value="{{ config.curator_threshold|stringformat:'.2f' }}">
+            <span class="cns-hint">Earns the 4th crest — 72-hr first-look, reserve/hold.</span>
+        </label>
+    </div>
+    <div class="cns-config-row">
+        <label>Steward threshold (USD)
+            <input type="text" name="steward_threshold" value="{{ config.steward_threshold|stringformat:'.2f' }}">
+            <span class="cns-hint">Earns the 5th crest — or reachable by invitation.</span>
+        </label>
+    </div>
+    <div class="cns-config-row">
+        <label>Retailer's Credit accrual rate
+            <input type="text" name="credit_accrual_rate" value="{{ config.credit_accrual_rate }}">
+            <span class="cns-hint">Fraction of spend accrued as credit on Collector+ purchases. Enter 0.02 or 2 for 2%.</span>
+        </label>
+    </div>
+    <button class="cns-btn cns-btn--gold" type="submit">Save configuration</button>
+</form>
+{% endblock %}

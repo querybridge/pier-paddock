@@ -1,0 +1,29 @@
+{% extends "oscar/layout.html" %}
+{% load loyalty_tags %}
+
+{% comment %}
+Shared shell for the Crest member area. Carries the storefront skin and a
+consistent sub-navigation across Membership / Vault / Grail / Alerts. Pages set
+``active_member_tab`` and fill {% block member_content %}.
+{% endcomment %}
+
+{% block breadcrumbs %}<li><a href="{% url 'loyalty:dashboard' %}">Membership</a></li>{% block member_breadcrumb %}{% endblock %}{% endblock %}
+
+{% block content %}
+<div class="pp-member-shell">
+    <nav class="pp-member-nav">
+        <a href="{% url 'loyalty:dashboard' %}" class="{% if active_member_tab == 'membership' %}active{% endif %}">
+            <i class="fa fa-shield"></i> Membership</a>
+        <a href="{% url 'vault:index' %}" class="{% if active_member_tab == 'vault' %}active{% endif %}">
+            <i class="fa fa-archive"></i> The Vault</a>
+        <a href="{% url 'loyalty:grail' %}" class="{% if active_member_tab == 'grail' %}active{% endif %}">
+            <i class="fa fa-bullseye"></i> Grail List</a>
+        <a href="{% url 'loyalty:alerts' %}" class="{% if active_member_tab == 'alerts' %}active{% endif %}">
+            <i class="fa fa-bell"></i> Alerts{% if loyalty_unread %} <span class="pp-badge">{{ loyalty_unread }}</span>{% endif %}</a>
+    </nav>
+
+    <div class="pp-member-body">
+        {% block member_content %}{% endblock %}
+    </div>
+</div>
+{% endblock %}
