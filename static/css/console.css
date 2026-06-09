@@ -115,6 +115,23 @@ select, .cns-inline-form input, .cns-filterbar input, .cns-config-form input, .c
 .cns-demo-card input, .cns-demo-card select { min-width: 0; width: 100%; }
 .cns-demo-card--marquee { border: 2px solid var(--cns-gold); box-shadow: 0 4px 16px rgba(154,123,67,.16); }
 
+/* Operations sign-in */
+.cns--ops { display: flex; min-height: 100vh; }
+.cns-ops-wrap { margin: auto; width: 100%; max-width: 420px; padding: 30px 20px; }
+.cns-ops-card { background: #fff; border: 1px solid var(--cns-line); border-radius: 8px; padding: 34px 32px; box-shadow: 0 10px 40px rgba(27,42,65,.10); }
+.cns-ops-brand { text-align: center; margin-bottom: 22px; }
+.cns-ops-brand .cns-wordmark { display: block; color: var(--cns-navy); font-size: 24px; }
+.cns-ops-brand .cns-sub { color: var(--cns-gold); }
+.cns-ops-title { font-size: 20px; color: var(--cns-navy); margin: 0 0 4px; text-align: center; }
+.cns-ops-lead { color: #8b94a3; font-size: 13.5px; text-align: center; margin: 0 0 22px; }
+.cns-ops-form label { display: block; font-size: 12px; font-weight: 600; color: var(--cns-navy); margin-bottom: 14px; }
+.cns-ops-form input { display: block; width: 100%; margin-top: 5px; padding: 10px 12px; border: 1px solid #d3d8df; border-radius: 4px; font-size: 14px; }
+.cns-ops-form button { margin-top: 6px; }
+.cns-ops-hint { margin-top: 22px; padding-top: 18px; border-top: 1px solid var(--cns-line); font-size: 12px; color: #8b94a3; line-height: 1.9; }
+.cns-ops-hint code { background: #f4f5f7; padding: 1px 5px; border-radius: 3px; color: var(--cns-navy); }
+.cns-ops-back { display: inline-block; margin-top: 18px; color: #8b94a3; font-size: 13px; }
+.cns-ops-back:hover { color: var(--cns-navy); }
+
 /* Config form */
 .cns-config-form { max-width: 540px; background: #fff; border: 1px solid var(--cns-line); border-radius: 6px; padding: 26px; }
 .cns-config-row { margin-bottom: 20px; }

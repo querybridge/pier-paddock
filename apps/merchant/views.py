@@ -53,8 +53,10 @@ class MerchantPortalMixin(UserPassesTestMixin):
         return self.profile is not None
 
     def handle_no_permission(self):
-        messages.error(self.request, "The Merchant Portal is for listing partners only.")
-        return redirect("/")
+        # Anonymous -> Operations sign-in (with ?next); a signed-in operator who
+        # landed here -> the Operator Console.
+        from apps.core.operations import route_to_operations
+        return route_to_operations(self.request, self.request.path)
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
