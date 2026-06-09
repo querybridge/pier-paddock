@@ -20,19 +20,17 @@
         <div class="pp-gallery">
             <div class="pp-gallery-main" style="background:#f7f4ef;border:1px solid #ece7dd;border-radius:3px;padding:20px;text-align:center;">
                 {% with first=product.primary_image %}
-                {% thumbnail first.original "560" as fmain %}
-                <img id="pp-main-image" src="{{ fmain.url }}" alt="{{ product.title }}" style="max-width:100%;">
-                {% endthumbnail %}
+                {# Main image stays full-resolution so it's sharp on retina; only
+                   the strip below is thumbnailed (the payload win from #5). #}
+                <img id="pp-main-image" src="{{ first.original.url }}" alt="{{ product.title }}" style="max-width:100%;">
                 {% endwith %}
             </div>
             <div class="pp-gallery-thumbs" style="display:flex;gap:12px;margin-top:14px;">
                 {% for image in product.images.all %}
-                {% thumbnail image.original "560" as big %}
-                <a href="#" class="pp-thumb" onclick="document.getElementById('pp-main-image').src='{{ big.url }}';return false;"
+                <a href="#" class="pp-thumb" onclick="document.getElementById('pp-main-image').src='{{ image.original.url }}';return false;"
                    style="flex:1;border:1px solid #ece7dd;border-radius:3px;padding:8px;background:#f7f4ef;">
-                    {% thumbnail image.original "90x90" padding=True as th %}<img src="{{ th.url }}" alt="" style="width:100%;">{% endthumbnail %}
+                    {% thumbnail image.original "150x150" padding=True as th %}<img src="{{ th.url }}" alt="" style="width:100%;">{% endthumbnail %}
                 </a>
-                {% endthumbnail %}
                 {% endfor %}
             </div>
         </div>
