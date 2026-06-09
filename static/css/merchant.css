@@ -1,0 +1,12 @@
+/* Merchant Portal — small additions on top of console.css (shared chrome).
+   A warmer gold accent distinguishes the supplier portal from the navy
+   Operator Console while staying in the same branded-clean family. */
+.cns--merchant .cns-topbar { background: #14223a; border-bottom: 2px solid var(--cns-gold); }
+.cns--merchant .cns-sub { color: var(--cns-gold-soft); }
+.cns--merchant .cns-side a.active { border-left-color: var(--cns-gold); }
+
+.cns-merchant-chip {
+    font-size: 13px; color: #fff; background: rgba(154,123,67,.22);
+    border: 1px solid rgba(200,168,106,.45); padding: 5px 13px; border-radius: 20px;
+}
+.cns-merchant-chip i { margin-right: 6px; color: var(--cns-gold-soft); }

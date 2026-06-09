@@ -69,6 +69,7 @@ INSTALLED_APPS = [
     "apps.compare.apps.CompareConfig",
     "apps.vault.apps.VaultConfig",
     "apps.loyalty.apps.LoyaltyConfig",
+    "apps.merchant.apps.MerchantConfig",
     "apps.blog.apps.BlogConfig",
     "apps.pages.apps.PagesConfig",
 ]

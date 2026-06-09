@@ -1,0 +1,45 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex, nofollow">
+    <title>{% block title %}Merchant Portal{% endblock %} — {{ BRAND_NAME }}</title>
+    <link rel="icon" type="image/x-icon" href="{% static 'img/crest.ico' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="{% static 'css/loyalty.css' %}">
+    <link rel="stylesheet" href="{% static 'css/console.css' %}">
+    <link rel="stylesheet" href="{% static 'css/merchant.css' %}">
+</head>
+<body class="cns cns--merchant">
+    <header class="cns-topbar">
+        <a class="cns-brand" href="{% url 'merchant:dashboard' %}">
+            <span class="cns-wordmark">{{ BRAND_NAME }}</span>
+            <span class="cns-sub">Merchant Portal</span>
+        </a>
+        <div class="cns-topbar-right">
+            <span class="cns-merchant-chip"><i class="fa fa-building-o"></i> {{ merchant }}</span>
+            <a class="cns-storefront" href="{% url 'home' %}"><i class="fa fa-external-link"></i> Storefront</a>
+        </div>
+    </header>
+
+    <div class="cns-shell">
+        <nav class="cns-side">
+            <a href="{% url 'merchant:dashboard' %}" class="{% if portal_section == 'dashboard' %}active{% endif %}"><i class="fa fa-tachometer"></i> Dashboard</a>
+            <a href="{% url 'merchant:listings' %}" class="{% if portal_section == 'listings' %}active{% endif %}"><i class="fa fa-list-alt"></i> Listings</a>
+            <a href="{% url 'merchant:feed' %}" class="{% if portal_section == 'feed' %}active{% endif %}"><i class="fa fa-rss"></i> XML Feed</a>
+            <a href="{% url 'merchant:sales' %}" class="{% if portal_section == 'sales' %}active{% endif %}"><i class="fa fa-line-chart"></i> Sales</a>
+        </nav>
+
+        <main class="cns-main">
+            {% if messages %}
+            <div class="cns-messages">
+                {% for m in messages %}<div class="cns-msg cns-msg--{{ m.tags }}">{{ m }}</div>{% endfor %}
+            </div>
+            {% endif %}
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+</body>
+</html>

@@ -1,0 +1,48 @@
+{% extends "merchant/base.html" %}
+
+{% block title %}XML Feed{% endblock %}
+
+{% block content %}
+<h1 class="cns-h1">XML Product Feed</h1>
+<p class="cns-muted">Point us at your product feed and we'll keep your listings, prices and stock in sync.
+    <span class="cns-tag">demo</span> — in this build the feed is <strong>not</strong> fetched; "Sync now" simulates a run.</p>
+
+<div class="cns-grid2">
+    <section class="cns-panel">
+        <h2 class="cns-h2">Feed settings</h2>
+        <form method="post" class="cns-config-form" style="border:0;padding:0;max-width:none;">{% csrf_token %}
+            <div class="cns-config-row">
+                <label>Feed URL
+                    <input type="url" name="feed_url" value="{{ profile.feed_url }}" placeholder="https://feeds.example.com/watches.xml">
+                    <span class="cns-hint">Standard product XML (title, brand, ref, price, qty, condition).</span>
+                </label>
+            </div>
+            <div class="cns-config-row">
+                <label>Contact email<input type="email" name="contact_email" value="{{ profile.contact_email }}" placeholder="ops@your-co.example"></label>
+            </div>
+            <div class="cns-config-row">
+                <label class="cns-check"><input type="checkbox" name="feed_enabled" {% if profile.feed_enabled %}checked{% endif %}> Feed enabled</label>
+                <label class="cns-check"><input type="checkbox" name="auto_sync" {% if profile.auto_sync %}checked{% endif %}> Auto-sync nightly</label>
+            </div>
+            <button class="cns-btn" type="submit">Save settings</button>
+        </form>
+    </section>
+
+    <section class="cns-panel">
+        <h2 class="cns-h2">Sync status</h2>
+        <ul class="cns-list">
+            <li>Status:
+                {% if profile.feed_url and profile.feed_enabled %}<span class="cns-tag cns-tag--gold">connected</span>
+                {% elif profile.feed_url %}<span class="cns-tag">disabled</span>
+                {% else %}<span class="cns-tag">no feed URL</span>{% endif %}</li>
+            <li>Last synced: {% if profile.last_synced %}{{ profile.last_synced|date:"M j, Y · g:i a" }}{% else %}<span class="cns-muted">never</span>{% endif %}</li>
+            {% if profile.last_sync_result %}<li class="cns-muted">{{ profile.last_sync_result }}</li>{% endif %}
+        </ul>
+        <form method="post" style="margin-top:14px;">{% csrf_token %}
+            <input type="hidden" name="action" value="sync">
+            <button class="cns-btn cns-btn--gold" type="submit"><i class="fa fa-refresh"></i> Sync now</button>
+        </form>
+        <p class="cns-hint" style="margin-top:12px;">Production parses the feed and upserts your listings; here it just timestamps a simulated run.</p>
+    </section>
+</div>
+{% endblock %}

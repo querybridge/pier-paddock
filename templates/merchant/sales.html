@@ -1,0 +1,46 @@
+{% extends "merchant/base.html" %}
+{% load pp_tags %}
+
+{% block title %}Sales{% endblock %}
+
+{% block content %}
+<h1 class="cns-h1">Sales Monitor</h1>
+
+<div class="cns-stat-row">
+    <div class="cns-stat"><span class="cns-stat-num">{{ summary.month_units }}</span><span class="cns-stat-lbl">Units this month</span></div>
+    <div class="cns-stat cns-stat--gold"><span class="cns-stat-num">{{ summary.month_gross|money }}</span><span class="cns-stat-lbl">Revenue this month</span></div>
+    <div class="cns-stat cns-stat--plain"><span class="cns-stat-num">{{ summary.life_units }}</span><span class="cns-stat-lbl">Lifetime units</span></div>
+    <div class="cns-stat cns-stat--plain"><span class="cns-stat-num">{{ summary.life_gross|money }}</span><span class="cns-stat-lbl">Lifetime revenue</span></div>
+</div>
+
+<div class="cns-grid2">
+    <section class="cns-panel cns-panel--flush">
+        <div style="padding:18px 22px 0;"><h2 class="cns-h2">By piece</h2></div>
+        <table class="cns-table">
+            <thead><tr><th>Piece</th><th class="cns-right">Units</th><th class="cns-right">Revenue</th></tr></thead>
+            <tbody>
+            {% for r in rows %}
+            <tr><td>{{ r.product__title }}</td><td class="cns-right"><strong>{{ r.units }}</strong></td><td class="cns-right">{{ r.gross|money }}</td></tr>
+            {% empty %}
+            <tr><td colspan="3" class="cns-muted">No sales yet.</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </section>
+
+    <section class="cns-panel cns-panel--flush">
+        <div style="padding:18px 22px 0;"><h2 class="cns-h2">Recent sales</h2></div>
+        <table class="cns-table">
+            <thead><tr><th>Date</th><th>Piece</th><th class="cns-right">Amount</th></tr></thead>
+            <tbody>
+            {% for s in recent %}
+            <tr><td class="cns-muted">{{ s.date|date:"M j, Y" }}</td><td>{{ s.product.title|default:s.note }}</td><td class="cns-right">{{ s.amount|money }}</td></tr>
+            {% empty %}
+            <tr><td colspan="3" class="cns-muted">No recent sales.</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </section>
+</div>
+<p class="cns-muted" style="font-size:12px;margin-top:6px;">Demo figures derive from simulated purchases (checkout is disabled). {{ BRAND_NAME }} fulfils via the listing partner.</p>
+{% endblock %}

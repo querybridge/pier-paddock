@@ -1,0 +1,51 @@
+{% extends "merchant/base.html" %}
+{% load pp_tags %}
+
+{% block title %}Listings{% endblock %}
+
+{% block content %}
+<h1 class="cns-h1">Listings</h1>
+<p class="cns-muted">The watches you supply to {{ BRAND_NAME }}. Add one manually below, or keep them in
+    sync via your <a href="{% url 'merchant:feed' %}">XML feed</a>.</p>
+
+<section class="cns-panel">
+    <h2 class="cns-h2">Add a listing</h2>
+    <form method="post" class="cns-inline-form">{% csrf_token %}
+        <label>Brand<input type="text" name="brand" required placeholder="Omega"></label>
+        <label>Model<input type="text" name="model" required placeholder="Speedmaster Professional"></label>
+        <label>Reference<input type="text" name="reference" placeholder="310.30.42"></label>
+        <label>Case material
+            <select name="material">
+                <option>Stainless Steel</option><option>Yellow Gold</option><option>White Gold</option>
+                <option>Rose Gold</option><option>Platinum</option><option>Titanium</option><option>Ceramic</option>
+            </select>
+        </label>
+        <label>Condition
+            <select name="condition"><option>Pre-Owned</option><option>Unworn</option><option>New</option><option>Vintage</option></select>
+        </label>
+        <label>Price (USD)<input type="text" name="price" required placeholder="6500"></label>
+        <label>Stock<input type="number" name="stock" value="1" min="0"></label>
+        <button class="cns-btn cns-btn--gold" type="submit"><i class="fa fa-plus"></i> Add listing</button>
+    </form>
+</section>
+
+<div class="cns-panel cns-panel--flush">
+<table class="cns-table">
+    <thead><tr><th>Watch</th><th>SKU</th><th class="cns-right">Price</th><th class="cns-right">Stock</th><th class="cns-right">Units sold</th><th></th></tr></thead>
+    <tbody>
+    {% for r in rows %}
+    <tr>
+        <td><strong>{{ r.product.title }}</strong></td>
+        <td class="cns-muted">{{ r.sku }}</td>
+        <td class="cns-right">{{ r.price|money }}</td>
+        <td class="cns-right">{{ r.stock }}</td>
+        <td class="cns-right">{{ r.units_sold }}</td>
+        <td class="cns-right"><a class="cns-textbtn" style="color:var(--cns-gold);" href="{{ r.product.get_absolute_url }}" target="_blank">View ↗</a></td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="6" class="cns-muted">No listings yet — add your first above.</td></tr>
+    {% endfor %}
+    </tbody>
+</table>
+</div>
+{% endblock %}

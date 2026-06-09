@@ -38,6 +38,21 @@ from apps.vault.models import MarketValue, VaultItem
 Product = get_model("catalogue", "Product")
 User = get_user_model()
 
+# Staff "retailer operator" account — for demoing the Operator Console (/console/)
+# as the retailer/back-office, separate from the all-powerful superuser admin.
+# is_staff (not superuser): exactly what the StaffConsoleMixin gate requires.
+RETAILER_EMAIL = "retailer@pierpaddock.demo"
+RETAILER_PASSWORD = "Retail1234!"
+
+# Merchant persona for the Merchant Portal (/merchant/) — a generic stand-in for
+# the IDC-style dropship supplier (kept invisible in the storefront UI). Staff,
+# linked to the catalogue's Oscar Partner, NOT a superuser. Deliberately distinct
+# from the loyalty "retailer/operator" account so the two roles don't blur.
+MERCHANT_EMAIL = "merchant@meridianwatch.demo"
+MERCHANT_PASSWORD = "Merchant1234!"
+MERCHANT_NAME = "Meridian Watch Supply"
+MERCHANT_SALE_NOTE = "Merchant feed sale (seeded)"
+
 # (login, tier-target spend, purchase_count, first/last name)
 PERSONAS = [
     ("member@pierpaddock.demo", Decimal("0"), 0, "Mara", "Ellison"),
@@ -67,6 +82,8 @@ class Command(BaseCommand):
         self._seed_market_report()
         members = self._seed_personas()
         self._seed_first_look(members)
+        self._seed_retailer()
+        self._seed_merchant_portal()
         self._ensure_all_memberships()
 
         self.stdout.write(self.style.SUCCESS(
@@ -74,6 +91,10 @@ class Command(BaseCommand):
         for login, *_ in PERSONAS:
             ms = Membership.objects.get(user__email=login)
             self.stdout.write("  %-28s %s (%d crests)" % (login, ms.tier, ms.crest_count))
+        self.stdout.write("  %-28s Operator Console (staff) — password: %s"
+                          % (RETAILER_EMAIL, RETAILER_PASSWORD))
+        self.stdout.write("  %-28s Merchant Portal (%s, staff) — password: %s"
+                          % (MERCHANT_EMAIL, MERCHANT_NAME, MERCHANT_PASSWORD))
 
     # ------------------------------------------------------------------ #
     def _backfill_valuations(self):
@@ -254,6 +275,97 @@ class Command(BaseCommand):
                 window_start=now - datetime.timedelta(days=1),
                 window_end=now + datetime.timedelta(days=5))
         self.stdout.write("  first-look flags seeded: 2 (Curator+)")
+
+    def _seed_retailer(self):
+        """Create/refresh the retailer-operator staff account used to demo the
+        Operator Console. Staff but NOT superuser, so it shows exactly the
+        back-office a retailer would use — no Django superuser powers."""
+        user = User.objects.filter(email=RETAILER_EMAIL).first()
+        if not user:
+            user = User.objects.create_user(
+                username=RETAILER_EMAIL, email=RETAILER_EMAIL,
+                password=RETAILER_PASSWORD,
+                first_name="Demo", last_name="Operator")
+        else:
+            user.set_password(RETAILER_PASSWORD)
+            user.first_name, user.last_name = "Demo", "Operator"
+        user.is_staff = True
+        user.is_superuser = False
+        user.is_active = True
+        user.save()
+        self.stdout.write("  retailer operator seeded: %s (staff)" % RETAILER_EMAIL)
+
+    def _seed_merchant_portal(self):
+        """Set up the Merchant Portal demo: a merchant profile on the catalogue's
+        Partner, a staff supplier account linked to it, and a seeded sales
+        history (DemoPurchase rows scoped to that partner's products) so the
+        sales monitor looks alive. Sales history is attributed to background
+        collector buyers and does NOT touch the tier personas' spend."""
+        import datetime
+
+        from oscar.core.loading import get_model
+        from apps.loyalty.models import DemoPurchase
+        from apps.merchant.models import MerchantProfile
+
+        Partner = get_model("partner", "Partner")
+        Product = get_model("catalogue", "Product")
+
+        partner = Partner.objects.first()
+        if partner is None:
+            self.stdout.write("  merchant portal skipped (no Partner found)")
+            return
+
+        profile, _ = MerchantProfile.objects.get_or_create(partner=partner)
+        profile.display_name = MERCHANT_NAME
+        profile.contact_email = "ops@meridianwatch.demo"
+        profile.feed_url = "https://feeds.meridianwatch.demo/pierpaddock.xml"
+        profile.feed_enabled = True
+        profile.last_synced = timezone.now() - datetime.timedelta(hours=6)
+        profile.last_sync_result = "Synced — %d listings reconciled." % (
+            partner.stockrecords.values("product").distinct().count())
+        profile.save()
+
+        # Supplier staff account, linked to the partner.
+        user = User.objects.filter(email=MERCHANT_EMAIL).first()
+        if not user:
+            user = User.objects.create_user(
+                username=MERCHANT_EMAIL, email=MERCHANT_EMAIL,
+                password=MERCHANT_PASSWORD, first_name="Meridian", last_name="Supply")
+        else:
+            user.set_password(MERCHANT_PASSWORD)
+        user.is_staff = True
+        user.is_superuser = False
+        user.is_active = True
+        user.save()
+        partner.users.add(user)
+
+        # Seeded sales history (idempotent: drop prior seeded rows first).
+        DemoPurchase.objects.filter(note=MERCHANT_SALE_NOTE).delete()
+        products = list(
+            Product.objects.filter(stockrecords__partner=partner)
+            .distinct().prefetch_related("stockrecords")
+        )
+        buyers = list(User.objects.filter(email__startswith="collector").order_by("email"))
+        if not buyers:
+            buyers = list(User.objects.filter(email=settings.DEMO_USER_EMAIL))
+        now = timezone.now()
+        made = 0
+        if products and buyers:
+            # ~65 sales spread over the last ~6 months, a handful this month.
+            for i in range(65):
+                p = random.choice(products)
+                sr = p.stockrecords.filter(partner=partner).first()
+                if not sr:
+                    continue
+                amount = self._round50(Decimal(sr.price) * Decimal(str(round(random.uniform(0.94, 1.06), 3))))
+                days_ago = random.randint(0, 185)
+                DemoPurchase.objects.create(
+                    user=random.choice(buyers), product=p, amount=amount,
+                    date=now - datetime.timedelta(days=days_ago, hours=random.randint(0, 23)),
+                    note=MERCHANT_SALE_NOTE)
+                made += 1
+        self.stdout.write("  merchant portal seeded: %s (%s), %d sales"
+                          % (MERCHANT_EMAIL, MERCHANT_NAME, made))
 
     def _ensure_all_memberships(self):
         """Every user (incl. pre-existing demo/collector/admin accounts created
