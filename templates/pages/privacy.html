@@ -1,0 +1,48 @@
+{% extends "oscar/layout.html" %}
+
+{% block title %}Privacy Policy — {{ BRAND_NAME }}{% endblock %}
+{% block headertext %}Privacy Policy{% endblock %}
+{% block breadcrumbs %}<li>Privacy Policy</li>{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8 offset-lg-2 col-12 pp-legal">
+        <p class="pp-muted">Last updated {% now "F Y" %}. This Privacy Policy explains how {{ BRAND_NAME }}
+            ("we", "us") collects, uses and protects your personal information when you use this site.</p>
+
+        <h3>We do not sell your data</h3>
+        <p class="pp-muted"><strong>We do not sell, rent or trade your personal information to third parties.</strong>
+            We never have and we never will. Your information is used only to operate this store and serve you.</p>
+
+        <h3>Information we collect</h3>
+        <p class="pp-muted">We collect the information you provide directly — your name, email address, shipping
+            address and the contents of your cart and Vault — together with basic technical data (such as your
+            browser type and pages visited) needed to run the site securely.</p>
+
+        <h3>How we use it</h3>
+        <p class="pp-muted">We use your information to: create and manage your account; process and fulfil your
+            orders; provide the Vault and Crest membership features; respond to your enquiries; and, only if you
+            opt in, send you product alerts and membership communications. You can change your communication
+            preferences at any time from your account.</p>
+
+        <h3>Sharing</h3>
+        <p class="pp-muted">We share information only with the service providers needed to operate the store —
+            for example, our fulfilment partner, payment processor and email providers — and only to the extent
+            required to perform their service. We may disclose information where required by law.</p>
+
+        <h3>Your choices &amp; rights</h3>
+        <p class="pp-muted">You may access, correct or delete your account information, and opt out of marketing
+            communications, at any time. Marketing opt-in is never a condition of purchase.</p>
+
+        <h3>Data security &amp; retention</h3>
+        <p class="pp-muted">We use appropriate technical and organisational measures to protect your information,
+            and retain it only as long as needed to provide our services and meet legal obligations.</p>
+
+        <h3>Contact</h3>
+        <p class="pp-muted">Questions about this policy? Please <a class="text-gold" href="{% url 'pages:contact' %}">contact us</a>.</p>
+
+        <p class="pp-muted pp-fineprint mt-3">{{ BRAND_DEMO_DISCLAIMER }} This policy is illustrative sample content
+            for a demonstration store.</p>
+    </div>
+</div>
+{% endblock %}

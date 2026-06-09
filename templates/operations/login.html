@@ -1,0 +1,47 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Operations — {{ BRAND_NAME }}</title>
+    <link rel="icon" type="image/x-icon" href="{% static 'img/crest.ico' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="{% static 'css/loyalty.css' %}">
+    <link rel="stylesheet" href="{% static 'css/console.css' %}">
+</head>
+<body class="cns cns--ops">
+    <div class="cns-ops-wrap">
+        <div class="cns-ops-card">
+            <div class="cns-ops-brand">
+                <span class="cns-wordmark">{{ BRAND_NAME }}</span>
+                <span class="cns-sub">Operations</span>
+            </div>
+            <h1 class="cns-ops-title">Staff sign-in</h1>
+            <p class="cns-ops-lead">Sign in to your operations account — you'll be taken to your console.</p>
+
+            {% if error %}<div class="cns-msg cns-msg--alert-danger">That email and password didn't match. Please try again.</div>{% endif %}
+
+            <form method="post" action="{% url 'operations' %}" class="cns-ops-form">
+                {% csrf_token %}
+                <input type="hidden" name="next" value="{{ next }}">
+                <label>Email
+                    <input type="email" name="username" autocomplete="username" required autofocus>
+                </label>
+                <label>Password
+                    <input type="password" name="password" autocomplete="current-password" required>
+                </label>
+                <button class="cns-btn cns-btn--gold" type="submit" style="width:100%;">Sign in</button>
+            </form>
+
+            <div class="cns-ops-hint">
+                <div><strong>Operator Console</strong> — <code>retailer@pierpaddock.demo</code> / <code>Retail1234!</code></div>
+                <div><strong>Merchant Portal</strong> — <code>merchant@meridianwatch.demo</code> / <code>Merchant1234!</code></div>
+            </div>
+
+            <a class="cns-ops-back" href="{% url 'home' %}"><i class="fa fa-angle-left"></i> Back to storefront</a>
+        </div>
+    </div>
+</body>
+</html>

@@ -50,10 +50,17 @@
             </div>
         </div>
         <div class="row pp-footer-bottom align-items-center">
-            <div class="col-md-6 col-12">
+            <div class="col-md-4 col-12">
                 <p class="text-copyright">&copy; {% now "Y" %} {{ BRAND_NAME }}. {{ BRAND_FOOTER_ATTRIBUTION }}.</p>
             </div>
-            <div class="col-md-6 col-12 text-md-right">
+            <div class="col-md-4 col-12 text-center">
+                <p class="pp-footer-legal">
+                    <a href="{% url 'pages:privacy' %}">Privacy Policy</a>
+                    <a href="{% url 'pages:terms' %}">Terms &amp; Conditions</a>
+                    <a href="{% url 'pages:contact' %}">Contact</a>
+                </p>
+            </div>
+            <div class="col-md-4 col-12 text-md-right">
                 <p class="pp-demo-disclaimer">{{ BRAND_DEMO_DISCLAIMER }}</p>
             </div>
         </div>

@@ -60,8 +60,10 @@ class StaffConsoleMixin(UserPassesTestMixin):
         return is_merchant(user)
 
     def handle_no_permission(self):
-        messages.error(self.request, "The Operator Console is staff-only.")
-        return redirect("/")
+        # Anonymous -> Operations sign-in (with ?next); a signed-in staff user
+        # in the wrong place -> their own back-office.
+        from apps.core.operations import route_to_operations
+        return route_to_operations(self.request, self.request.path)
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)

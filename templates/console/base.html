@@ -30,7 +30,7 @@
             <a href="{% url 'console:members' %}" class="{% if console_section == 'members' %}active{% endif %}"><i class="fa fa-users"></i> Members</a>
             <a href="{% url 'console:early_access' %}" class="{% if console_section == 'early_access' %}active{% endif %}"><i class="fa fa-eye"></i> Early Access</a>
             <a href="{% url 'console:config' %}" class="{% if console_section == 'config' %}active{% endif %}"><i class="fa fa-sliders"></i> Configuration</a>
-            <a href="{% url 'admin:index' %}" class="cns-side-foot"><i class="fa fa-database"></i> Django Admin</a>
+            {% if request.user.is_superuser %}<a href="{% url 'admin:index' %}" class="cns-side-foot"><i class="fa fa-database"></i> Django Admin</a>{% endif %}
         </nav>
 
         <main class="cns-main">
