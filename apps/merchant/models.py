@@ -110,3 +110,13 @@ class MerchantProfile(models.Model):
             .order_by("-units", "-gross")
         )
         return list(rows)
+
+
+def is_merchant(user):
+    """True if this user is a listing merchant (staff linked to a Partner that
+    has a MerchantProfile). Merchants use the Merchant Portal ONLY — they have
+    no Crest membership and no customer account. Used by the portal gate, the
+    membership context processor, and the portal-only middleware."""
+    if user is None or not getattr(user, "is_authenticated", False):
+        return False
+    return MerchantProfile.objects.filter(partner__users=user).exists()

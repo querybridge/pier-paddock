@@ -7,6 +7,14 @@ def membership(request):
     if user is None or not user.is_authenticated:
         return {"membership": None, "loyalty_unread": 0}
 
+    # Merchants (listing partners) are not members — no crest, no account.
+    try:
+        from apps.merchant.models import is_merchant
+        if is_merchant(user):
+            return {"membership": None, "loyalty_unread": 0}
+    except Exception:
+        pass
+
     ms = getattr(user, "membership", None)
     if ms is None:
         try:
