@@ -20,8 +20,8 @@
         <div class="pp-gallery">
             <div class="pp-gallery-main" style="background:#f7f4ef;border:1px solid #ece7dd;border-radius:3px;padding:20px;text-align:center;">
                 {% with first=product.primary_image %}
-                {# Main image stays full-resolution so it's sharp on retina; only
-                   the strip below is thumbnailed (the payload win from #5). #}
+                {% comment %}Main image stays full-resolution so it's sharp on retina;
+                only the strip below is thumbnailed (the payload win from #5).{% endcomment %}
                 <img id="pp-main-image" src="{{ first.original.url }}" alt="{{ product.title }}" style="max-width:100%;">
                 {% endwith %}
             </div>
