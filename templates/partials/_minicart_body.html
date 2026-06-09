@@ -1,0 +1,34 @@
+{% load pp_tags thumbnail %}
+{% if basket.is_empty %}
+<div class="pp-drawer-body">
+    <div class="pp-mini-empty">
+        <i class="ti-shopping-cart" style="font-size:36px;color:#d8d0c2;"></i>
+        <p>Your cart is empty.</p>
+        <a class="pp-btn pp-btn--outline" href="{% url 'shop:browse' %}" onclick="ppCloseCart()">Browse the collection</a>
+    </div>
+</div>
+{% else %}
+<div class="pp-drawer-body">
+    {% for line in basket.all_lines %}{% with p=line.product %}
+    <div class="pp-mini-line">
+        {% with img=p.primary_image %}{% if img %}{% thumbnail img.original "62x62" padding=True as t %}<img src="{{ t.url }}" alt="">{% endthumbnail %}{% endif %}{% endwith %}
+        <div style="flex:1;">
+            <div class="pp-mini-brand">{{ p|attr:"brand" }}</div>
+            <a class="pp-mini-name" href="{{ p.get_absolute_url }}">{{ p|attr:"model" }}</a>
+            <div class="pp-mini-meta">Qty {{ line.quantity }} · {% if basket.is_tax_known %}{{ line.line_price_incl_tax|money }}{% else %}{{ line.line_price_excl_tax|money }}{% endif %}</div>
+        </div>
+    </div>
+    {% endwith %}{% endfor %}
+</div>
+<div class="pp-drawer-foot">
+    <div class="pp-drawer-subtotal">
+        <span>Subtotal</span>
+        <span class="v">{% if basket.is_tax_known %}{{ basket.total_incl_tax|money }}{% else %}{{ basket.total_excl_tax|money }}{% endif %}</span>
+    </div>
+    <div class="pp-drawer-actions">
+        <a class="pp-btn pp-btn--outline" href="{% url 'basket:summary' %}">View Cart</a>
+        <a class="pp-btn" href="{% url 'checkout:index' %}">Checkout</a>
+    </div>
+    <div class="pp-drawer-note">Demo — checkout is disabled at the payment step.</div>
+</div>
+{% endif %}

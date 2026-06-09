@@ -1,0 +1,19 @@
+{% comment %}Mini-cart drawer + quick-view modal — included once in layout so
+they're available on every page. Populated/opened by static/js/shop-ux.js.{% endcomment %}
+<div class="pp-drawer-backdrop" id="ppMiniCartBackdrop" onclick="ppCloseCart()"></div>
+<aside class="pp-drawer" id="ppMiniCart" aria-hidden="true">
+    <div class="pp-drawer-head">
+        <h3>Your Cart<span class="pp-drawer-added" id="ppMiniAdded"></span></h3>
+        <button type="button" class="pp-drawer-close" aria-label="Close" onclick="ppCloseCart()">&times;</button>
+    </div>
+    <div class="pp-drawer-content" id="ppMiniCartBody">
+        {% include "partials/_minicart_body.html" %}
+    </div>
+</aside>
+
+<div class="pp-qv-backdrop" id="ppQuickView" onclick="ppQVBackdrop(event)">
+    <div class="pp-qv-card">
+        <button type="button" class="pp-qv-close" aria-label="Close" onclick="ppCloseQuickView()">&times;</button>
+        <div id="ppQuickViewBody"><div class="pp-qv-loading">Loading…</div></div>
+    </div>
+</div>

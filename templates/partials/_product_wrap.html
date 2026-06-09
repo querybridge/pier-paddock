@@ -1,6 +1,6 @@
 {% load pp_tags thumbnail %}
 {% with sr=product.stockrecords.first imgs=product.images.all %}
-<div class="product-wrap mb-30">
+<div class="product-wrap mb-30" data-pk="{{ product.id }}">
     <div class="product-img pro-theme-color-border">
         <a href="{{ product.get_absolute_url }}" class="image">
             {% if imgs.0 %}{% thumbnail imgs.0.original "330x330" padding=True as t1 %}<img src="{{ t1.url }}" alt="{{ product.title }}">{% endthumbnail %}{% endif %}
@@ -12,7 +12,7 @@
             {% with cond=product|attr:"condition" %}{% if cond and cond != "New" %}<span class="pp-badge pp-badge--gold">{{ cond }}</span>{% endif %}{% endwith %}
         {% endif %}
         <div class="bquickview">
-            <a class="button btn-quickview" href="{{ product.get_absolute_url }}" title="View details"><span>View Details</span></a>
+            <a class="button btn-quickview pp-quickview-trigger" href="{{ product.get_absolute_url }}" data-pk="{{ product.id }}" title="Quick view"><span>Quick View</span></a>
         </div>
     </div>
     <div class="product-caption">
@@ -23,6 +23,8 @@
             <span class="pp-card-ref">Ref. {{ product|attr:"reference" }}</span>
             <span class="pp-card-price">{% if sr %}{{ sr.price|money }}{% else %}&mdash;{% endif %}</span>
         </div>
+        {# Key specs — always visible, scannable before clicking, on every device. #}
+        <div class="pp-card-specs">{{ product|attr:"movement" }} · {{ product|attr:"case_size" }} · {{ product|attr:"case_material" }}</div>
         <div class="box-hover">
             <div class="product-ratings">
                 <div class="rating-box">
@@ -34,13 +36,10 @@
                     </span>
                 </div>
             </div>
-            <div class="product-detail">
-                {{ product|attr:"movement" }} · {{ product|attr:"case_size" }} · {{ product|attr:"case_material" }}
-            </div>
             <div class="product-action product-action-position-1 pro-action-theme-color">
-                <a title="Save to Vault" href="{% if request.user.is_authenticated %}{% url 'vault:add' pk=product.id %}{% else %}{% url 'customer:login' %}?next={% url 'vault:add' pk=product.id %}{% endif %}"><i class="fa fa-lock"></i></a>
+                <a class="pp-act-vault" title="Save to Vault" href="{% if request.user.is_authenticated %}{% url 'vault:add' pk=product.id %}{% else %}{% url 'customer:login' %}?next={% url 'vault:add' pk=product.id %}{% endif %}">{% include "partials/_icon_vault.html" with cls="pp-ico--act" %}</a>
                 {% if sr and sr.num_in_stock >= 1 %}
-                <form method="post" action="{% url 'basket:add' pk=product.id %}" class="d-inline-block">
+                <form method="post" action="{% url 'basket:add' pk=product.id %}" class="d-inline-block pp-add-form">
                     {% csrf_token %}<input type="hidden" name="quantity" value="1">
                     <button class="btn-cart" type="submit" title="Add to Cart"><span>Add to Cart</span></button>
                 </form>

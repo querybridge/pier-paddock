@@ -1,0 +1,36 @@
+{% load pp_tags thumbnail %}
+{% with sr=product.stockrecords.first %}
+<div class="pp-qv-grid">
+    <div class="pp-qv-img">
+        {% with img=product.primary_image %}{% if img %}{% thumbnail img.original "440" as t %}<img src="{{ t.url }}" alt="{{ product.title }}">{% endthumbnail %}{% endif %}{% endwith %}
+    </div>
+    <div class="pp-qv-info">
+        <div class="pp-qv-brand">{{ product|attr:"brand" }}</div>
+        <h3>{{ product|attr:"model" }}</h3>
+        <div class="pp-muted">Ref. {{ product|attr:"reference" }}</div>
+        <div class="pp-qv-price">{% if sr %}{{ sr.price|money }}{% else %}&mdash;{% endif %}</div>
+
+        <div class="pp-detail-badges" style="margin:6px 0 4px;">
+            <span class="pp-chip">{{ product|attr:"condition" }}</span>
+            <span class="pp-chip">{{ product|attr:"box_papers" }}</span>
+            <span class="pp-chip">{{ product|attr:"year" }}</span>
+        </div>
+        <div class="pp-keyspecs" style="margin:14px 0;">
+            <div><span class="pp-ks-k">Case Size</span><span class="pp-ks-v">{{ product|attr:"case_size"|default:"—" }}</span></div>
+            <div><span class="pp-ks-k">Movement</span><span class="pp-ks-v">{{ product|attr:"movement"|default:"—" }}</span></div>
+            <div><span class="pp-ks-k">Case Material</span><span class="pp-ks-v">{{ product|attr:"case_material"|default:"—" }}</span></div>
+            <div><span class="pp-ks-k">Water Resistance</span><span class="pp-ks-v">{{ product|attr:"water_resistance"|default:"—" }}</span></div>
+        </div>
+
+        {% if sr and sr.num_in_stock >= 1 %}
+        <form method="post" action="{% url 'basket:add' pk=product.id %}" class="pp-add-form" style="margin:0;">
+            {% csrf_token %}<input type="hidden" name="quantity" value="1">
+            <button class="pp-btn pp-btn--gold" type="submit" style="width:100%;">Add to Cart</button>
+        </form>
+        {% else %}
+        <p class="pp-chip" style="background:#8a1c1c;color:#fff;display:inline-block;">Sold</p>
+        {% endif %}
+        <a class="pp-btn pp-btn--outline" href="{{ product.get_absolute_url }}" style="width:100%;text-align:center;margin-top:10px;">View full details</a>
+    </div>
+</div>
+{% endwith %}

@@ -1,6 +1,7 @@
 {% extends "oscar/layout.html" %}
 {% load pp_tags %}
 {% load i18n %}
+{% load thumbnail %}
 {% load purchase_info_tags %}
 
 {% block title %}{{ product.title }} — {{ BRAND_NAME }}{% endblock %}
@@ -19,15 +20,19 @@
         <div class="pp-gallery">
             <div class="pp-gallery-main" style="background:#f7f4ef;border:1px solid #ece7dd;border-radius:3px;padding:20px;text-align:center;">
                 {% with first=product.primary_image %}
-                <img id="pp-main-image" src="{{ first.original.url }}" alt="{{ product.title }}" style="max-width:100%;">
+                {% thumbnail first.original "560" as fmain %}
+                <img id="pp-main-image" src="{{ fmain.url }}" alt="{{ product.title }}" style="max-width:100%;">
+                {% endthumbnail %}
                 {% endwith %}
             </div>
             <div class="pp-gallery-thumbs" style="display:flex;gap:12px;margin-top:14px;">
                 {% for image in product.images.all %}
-                <a href="#" class="pp-thumb" onclick="document.getElementById('pp-main-image').src='{{ image.original.url }}';return false;"
+                {% thumbnail image.original "560" as big %}
+                <a href="#" class="pp-thumb" onclick="document.getElementById('pp-main-image').src='{{ big.url }}';return false;"
                    style="flex:1;border:1px solid #ece7dd;border-radius:3px;padding:8px;background:#f7f4ef;">
-                    <img src="{{ image.original.url }}" alt="" style="width:100%;">
+                    {% thumbnail image.original "90x90" padding=True as th %}<img src="{{ th.url }}" alt="" style="width:100%;">{% endthumbnail %}
                 </a>
+                {% endthumbnail %}
                 {% endfor %}
             </div>
         </div>
@@ -50,6 +55,14 @@
             {% if sr and sr.num_in_stock < 1 %}<span class="pp-chip" style="background:#8a1c1c;color:#fff;">Sold</span>{% endif %}
         </div>
 
+        {# Key specs at a glance — above the fold, no scrolling to the table. #}
+        <div class="pp-keyspecs">
+            <div><span class="pp-ks-k">Case Size</span><span class="pp-ks-v">{{ product|attr:"case_size"|default:"—" }}</span></div>
+            <div><span class="pp-ks-k">Movement</span><span class="pp-ks-v">{{ product|attr:"movement"|default:"—" }}</span></div>
+            <div><span class="pp-ks-k">Case Material</span><span class="pp-ks-v">{{ product|attr:"case_material"|default:"—" }}</span></div>
+            <div><span class="pp-ks-k">Water Resistance</span><span class="pp-ks-v">{{ product|attr:"water_resistance"|default:"—" }}</span></div>
+        </div>
+
         <hr>
         {% block product_basket_form %}
             {% include "oscar/catalogue/partials/add_to_basket_form.html" %}
@@ -61,6 +74,17 @@
         </div>
     </div>
 </div>
+
+{# Sticky buy bar (mobile) — keeps price + add-to-cart in reach while scrolling. #}
+{% if sr and sr.num_in_stock >= 1 %}
+<div class="pp-buybar">
+    <span class="pp-buybar-price">{{ sr.price|money }}</span>
+    <form method="post" action="{% url 'basket:add' pk=product.id %}" class="pp-add-form" style="margin:0;flex:1;">
+        {% csrf_token %}<input type="hidden" name="quantity" value="1">
+        <button type="submit" class="pp-btn" style="width:100%;">Add to Cart</button>
+    </form>
+</div>
+{% endif %}
 
 {# ------------- Specifications ------------- #}
 <div class="pp-section-title" style="text-align:left;margin-top:50px;">
