@@ -1,0 +1,61 @@
+{% extends "oscar/layout.html" %}
+
+{% block title %}Terms &amp; Conditions — {{ BRAND_NAME }}{% endblock %}
+{% block headertext %}Terms &amp; Conditions{% endblock %}
+{% block breadcrumbs %}<li>Terms &amp; Conditions</li>{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8 offset-lg-2 col-12 pp-legal">
+        <p class="pp-muted">Last updated {% now "F Y" %}. These Terms &amp; Conditions govern your use of
+            {{ BRAND_NAME }} and any purchase you make through it. By using the site you agree to these terms.</p>
+
+        <h3>1. Accounts</h3>
+        <p class="pp-muted">You must register an account to place an order. You are responsible for keeping your
+            login details secure and for all activity under your account. Information you provide must be
+            accurate and current.</p>
+
+        <h3>2. Products &amp; pricing</h3>
+        <p class="pp-muted">We describe and price each piece as accurately as we can, but errors may occur. Prices
+            are shown in US dollars and may change without notice. Where a price is clearly incorrect, we are not
+            obliged to honour it and will notify you before proceeding.</p>
+
+        <h3>3. Orders &amp; acceptance</h3>
+        <p class="pp-muted">Your order is an offer to purchase. A contract is formed only when we confirm
+            acceptance and dispatch the item. We may decline or cancel an order — for example if an item is no
+            longer available or fails authentication — and will refund any amount paid.</p>
+
+        <h3>4. Payment</h3>
+        <p class="pp-muted">Payment is due in full at checkout via the methods offered. Title to the goods passes
+            to you once payment has cleared in full and the item has been dispatched.</p>
+
+        <h3>5. Shipping &amp; risk</h3>
+        <p class="pp-muted">Orders are dispatched fully insured and require signature on delivery. Risk passes to
+            you on delivery. Delivery timescales are estimates and not guaranteed.</p>
+
+        <h3>6. Returns</h3>
+        <p class="pp-muted">If you are not satisfied, you may return an item in its original, unworn condition with
+            all box and papers within the stated returns window for a refund, subject to inspection. Items showing
+            signs of wear or alteration may not be eligible.</p>
+
+        <h3>7. Authenticity</h3>
+        <p class="pp-muted">Every watch is independently authenticated before sale. Our authenticity guarantee is
+            described on the product and About pages.</p>
+
+        <h3>8. Liability</h3>
+        <p class="pp-muted">To the fullest extent permitted by law, our liability arising from your use of the site
+            or any purchase is limited to the amount you paid for the relevant item. Nothing in these terms
+            excludes liability that cannot lawfully be excluded.</p>
+
+        <h3>9. Governing law</h3>
+        <p class="pp-muted">These terms are governed by the laws of the jurisdiction in which we operate, and any
+            disputes are subject to the exclusive jurisdiction of its courts.</p>
+
+        <h3>10. Contact</h3>
+        <p class="pp-muted">Questions about these terms? Please <a class="text-gold" href="{% url 'pages:contact' %}">contact us</a>.</p>
+
+        <p class="pp-muted pp-fineprint mt-3">{{ BRAND_DEMO_DISCLAIMER }} These terms are illustrative sample
+            content for a demonstration store and are not legal advice.</p>
+    </div>
+</div>
+{% endblock %}

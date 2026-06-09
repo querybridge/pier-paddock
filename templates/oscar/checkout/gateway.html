@@ -1,0 +1,57 @@
+{% extends "oscar/layout.html" %}
+{% load i18n %}
+
+{% block title %}Sign in to complete your purchase — {{ BRAND_NAME }}{% endblock %}
+{% block headertext %}Complete Your Purchase{% endblock %}
+{% block breadcrumbs %}<li><a href="{% url 'basket:summary' %}">Cart</a></li><li>Checkout</li>{% endblock %}
+
+{% block content %}
+<p class="pp-muted text-center mb-40" style="max-width:680px;margin-left:auto;margin-right:auto;">
+    For the security of high-value transactions, purchases are made through a
+    Pier &amp; Paddock account. Sign in or register below to continue to shipping.
+</p>
+
+<div class="row">
+    {# ---------------- Log In ---------------- #}
+    <div class="col-lg-6 col-12 mb-4 login_form">
+        <div class="pp-form-card">
+            <h3>Log In to Complete Purchase</h3>
+            <p class="pp-muted">Already have an account? Sign in to continue to checkout.</p>
+            <form id="login_form" action="{% url 'checkout:index' %}" method="post">
+                {% csrf_token %}
+                {% include "oscar/partials/form_fields.html" with form=login_form %}
+                <p><a href="{% url 'password-reset' %}" class="text-gold">I've forgotten my password</a></p>
+                <button name="login_submit" type="submit" value="Log In" class="pp-btn">Log In &amp; Continue</button>
+            </form>
+            <div class="pp-demo-notice mt-3" style="font-size:13px;">
+                <strong>Demo account:</strong> {{ DEMO_USER_EMAIL|default:"demo@example.com" }} / Demo1234!
+            </div>
+        </div>
+    </div>
+
+    {# ---------------- Register ---------------- #}
+    <div class="col-lg-6 col-12 mb-4 register_form">
+        <div class="pp-form-card">
+            <h3>Register</h3>
+            <p class="pp-muted">New to Pier &amp; Paddock? An account is required to purchase — it
+                takes a moment, and your acquisitions are added to your Vault automatically.</p>
+            <form id="register_form" action="{% url 'checkout:index' %}" method="post">
+                {% csrf_token %}
+                {% include "oscar/partials/form_fields.html" with form=registration_form %}
+                <button name="registration_submit" type="submit" value="Register" class="pp-btn">Register &amp; Continue</button>
+            </form>
+            <p class="pp-muted mt-3" style="font-size:12px;">Membership communications are optional — leave the
+                box unticked to register without them.</p>
+        </div>
+    </div>
+</div>
+
+{# Legal / help links between the forms and the footer #}
+<div class="pp-checkout-legal text-center">
+    <a href="{% url 'pages:privacy' %}">Privacy Policy</a>
+    <span>·</span>
+    <a href="{% url 'pages:terms' %}">Terms &amp; Conditions</a>
+    <span>·</span>
+    <a href="{% url 'pages:contact' %}">Contact</a>
+</div>
+{% endblock %}

@@ -1,11 +1,74 @@
 from django.contrib import messages
+from django.contrib.auth import authenticate, login
+from django.shortcuts import redirect, render
+from django.urls import reverse_lazy
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from oscar.apps.checkout import views as core_views
+from oscar.apps.customer.forms import EmailAuthenticationForm
 
 # Re-export everything from Oscar's checkout views so this module is a complete
 # stand-in (get_class('checkout.views', X) resolves against this module).
 from oscar.apps.checkout.views import *  # noqa: F401,F403
+
+from .forms import CheckoutRegistrationForm
+
+
+class IndexView(core_views.IndexView):
+    """Checkout gateway — purchasing requires an account (no guest checkout).
+
+    Anonymous shoppers see a two-column Log In / Register page (styled like the
+    account page) before the shipping step. Registration is mandatory; the
+    membership-communications opt-in on the register form is not. Signed-in
+    users skip straight to the shipping address step.
+    """
+
+    template_name = "oscar/checkout/gateway.html"
+    success_url = reverse_lazy("checkout:shipping-address")
+
+    def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return self.get_success_response()
+        return render(request, self.template_name, self._context())
+
+    def post(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return self.get_success_response()
+        if "registration_submit" in request.POST:
+            return self._register(request)
+        return self._login(request)
+
+    # -- helpers ----------------------------------------------------------
+    def _context(self, login_form=None, registration_form=None):
+        host = self.request.get_host()
+        return {
+            "login_form": login_form or EmailAuthenticationForm(host=host),
+            "registration_form": registration_form or CheckoutRegistrationForm(host=host),
+        }
+
+    def _login(self, request):
+        form = EmailAuthenticationForm(host=request.get_host(), data=request.POST)
+        if form.is_valid():
+            login(request, form.get_user())
+            return redirect(self.get_success_url())
+        return render(request, self.template_name, self._context(login_form=form))
+
+    def _register(self, request):
+        form = CheckoutRegistrationForm(host=request.get_host(), data=request.POST)
+        if form.is_valid():
+            form.save()
+            user = authenticate(
+                request,
+                username=form.cleaned_data["email"],
+                password=form.cleaned_data["password1"],
+            )
+            if user is not None:
+                login(request, user)
+                if form.cleaned_data.get("marketing_opt_in"):
+                    from apps.loyalty import services
+                    services.set_marketing_opt_in(user, True)
+            return redirect(self.get_success_url())
+        return render(request, self.template_name, self._context(registration_form=form))
 
 
 class PaymentDetailsView(core_views.PaymentDetailsView):

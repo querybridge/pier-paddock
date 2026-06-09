@@ -202,7 +202,10 @@ OSCAR_SHOP_NAME = BRAND_NAME
 OSCAR_SHOP_TAGLINE = BRAND_TAGLINE
 OSCAR_DEFAULT_CURRENCY = "USD"
 OSCAR_PRODUCTS_PER_PAGE = 12
-OSCAR_ALLOW_ANON_CHECKOUT = True
+# Given the size of these transactions, purchasing requires an account — no
+# guest checkout. The checkout gateway (forked IndexView) collects login OR
+# registration before the shipping step.
+OSCAR_ALLOW_ANON_CHECKOUT = False
 
 # Search — the lightweight in-memory backend is plenty for a demo and needs
 # no external service or index rebuild. Faceted shop filtering is handled by

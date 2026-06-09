@@ -16,6 +16,14 @@ class FaqView(TemplateView):
     template_name = "pages/faq.html"
 
 
+class PrivacyView(TemplateView):
+    template_name = "pages/privacy.html"
+
+
+class TermsView(TemplateView):
+    template_name = "pages/terms.html"
+
+
 class ContactView(FormView):
     template_name = "pages/contact.html"
     form_class = ContactForm
