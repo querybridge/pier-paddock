@@ -56,8 +56,8 @@ class StaffConsoleMixin(UserPassesTestMixin):
 
     @staticmethod
     def _is_merchant(user):
-        from apps.merchant.models import MerchantProfile
-        return MerchantProfile.objects.filter(partner__users=user).exists()
+        from apps.merchant.models import is_merchant
+        return is_merchant(user)
 
     def handle_no_permission(self):
         messages.error(self.request, "The Operator Console is staff-only.")

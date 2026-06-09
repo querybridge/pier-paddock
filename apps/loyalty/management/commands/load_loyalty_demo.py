@@ -338,6 +338,8 @@ class Command(BaseCommand):
         user.is_active = True
         user.save()
         partner.users.add(user)
+        # Merchants are not members — drop any membership the signal auto-created.
+        Membership.objects.filter(user=user).delete()
 
         # Seeded sales history (idempotent: drop prior seeded rows first).
         DemoPurchase.objects.filter(note=MERCHANT_SALE_NOTE).delete()
@@ -368,10 +370,16 @@ class Command(BaseCommand):
                           % (MERCHANT_EMAIL, MERCHANT_NAME, made))
 
     def _ensure_all_memberships(self):
-        """Every user (incl. pre-existing demo/collector/admin accounts created
-        before the membership signal) gets a Membership, recomputed."""
+        """Every customer (incl. pre-existing demo/collector/admin accounts
+        created before the membership signal) gets a Membership, recomputed.
+        Merchants are excluded — they're suppliers, not members."""
+        from apps.merchant.models import is_merchant
+
         created = 0
         for u in User.objects.all():
+            if u.is_staff and is_merchant(u):
+                Membership.objects.filter(user=u).delete()
+                continue
             ms, was_created = Membership.objects.get_or_create(user=u)
             if was_created:
                 # Pre-existing collectors: opt them in so the tier counts look alive.
