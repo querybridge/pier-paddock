@@ -436,7 +436,9 @@ a:hover { color: var(--pp-gold); }
 .pp-footer ul li { margin-bottom:10px; font-size:13px; }
 .pp-footer a { color:#b9b0a0; }
 .pp-footer a:hover { color:var(--pp-gold); }
-.pp-footer .social-icon-style-2 a { color:#b9b0a0; margin-right:14px; font-size:16px; }
+/* Footer social icons match the header: plain cream marks, gold on hover. */
+.pp-footer .social-icon-style a { color:#d8cfbd; }
+.pp-footer .social-icon-style a:hover { color: var(--pp-gold); }
 .pp-footer-top { padding-bottom:40px; border-bottom:1px solid #2e2a24; }
 .pp-footer-bottom { padding:26px 0; }
 .pp-footer-bottom p { margin:0; font-size:12px; letter-spacing:.5px; }
