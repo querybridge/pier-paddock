@@ -148,3 +148,56 @@ def _to_decimal(value):
         return Decimal(str(value))
     except (ValueError, ArithmeticError):
         return None
+
+
+# ---------------------------------------------------------------------------
+# AJAX endpoints powering the mini-cart drawer and quick-view modal.
+# Both degrade gracefully: without JS the storefront's normal links/forms still
+# work (card/PDP forms post to Oscar's basket:add; the quick-view trigger is a
+# real link to the product page).
+# ---------------------------------------------------------------------------
+def _minicart_payload(request):
+    from django.template.loader import render_to_string
+
+    basket = request.basket
+    total = basket.total_incl_tax if basket.is_tax_known else basket.total_excl_tax
+    return {
+        "ok": True,
+        "num_items": basket.num_items,
+        "total": str(total),
+        "drawer_html": render_to_string(
+            "partials/_minicart_body.html", {"basket": basket}, request=request
+        ),
+    }
+
+
+def cart_add(request, pk):
+    """Add a watch to the basket; return the mini-cart state as JSON."""
+    from django.http import JsonResponse
+    from django.shortcuts import get_object_or_404
+
+    if request.method != "POST":
+        return JsonResponse({"ok": False, "error": "method"}, status=405)
+    product = get_object_or_404(Product, pk=pk)
+    try:
+        qty = max(1, int(request.POST.get("quantity", 1)))
+    except (TypeError, ValueError):
+        qty = 1
+    sr = product.stockrecords.first()
+    if not sr or (sr.num_in_stock or 0) < 1:
+        return JsonResponse({"ok": False, "error": "out_of_stock"}, status=400)
+    request.basket.add_product(product, quantity=qty)
+    payload = _minicart_payload(request)
+    payload["added"] = {
+        "brand": getattr(product.attr, "brand", ""),
+        "model": getattr(product.attr, "model", ""),
+    }
+    return JsonResponse(payload)
+
+
+def quick_view(request, pk):
+    """Return the quick-view card HTML for a product (modal body)."""
+    from django.shortcuts import get_object_or_404, render
+
+    product = get_object_or_404(Product.objects.browsable(), pk=pk)
+    return render(request, "partials/_quickview.html", {"product": product})

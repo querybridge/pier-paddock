@@ -7,9 +7,11 @@
 {% block breadcrumbs %}<li><a href="{% url 'shop:browse' %}">Shop</a></li>{% endblock %}
 
 {% block content %}
+<div class="pp-filter-backdrop" id="ppFilterBackdrop" onclick="ppCloseFilters()"></div>
 <div class="row">
     {# ---------------- Sidebar ---------------- #}
-    <div class="col-lg-3 col-12 pp-shop-sidebar">
+    <div class="col-lg-3 col-12 pp-shop-sidebar" id="ppShopSidebar">
+        <button type="button" class="pp-sidebar-close" aria-label="Close filters" onclick="ppCloseFilters()">&times;</button>
         <form method="get" action="{% url 'shop:browse' %}">
             {% if selected.q %}<input type="hidden" name="q" value="{{ selected.q }}">{% endif %}
 
@@ -81,9 +83,10 @@
     {# ---------------- Results ---------------- #}
     <div class="col-lg-9 col-12">
         <div class="pp-shop-toolbar">
-            <div class="pp-muted">
-                {{ paginator.count }} timepiece{{ paginator.count|pluralize }}
-                {% if selected.q %}for &ldquo;{{ selected.q }}&rdquo;{% endif %}
+            <div class="pp-muted pp-toolbar-left">
+                <button type="button" class="pp-filter-toggle" onclick="ppOpenFilters()"><i class="fa fa-sliders"></i> Filters</button>
+                <span class="pp-result-count">{{ paginator.count }} timepiece{{ paginator.count|pluralize }}
+                {% if selected.q %}for &ldquo;{{ selected.q }}&rdquo;{% endif %}</span>
             </div>
             <form method="get" action="{% url 'shop:browse' %}" id="sortForm">
                 {% for k, v in selected.items %}{% if v and k != 'sort' %}<input type="hidden" name="{{ k }}" value="{{ v }}">{% endif %}{% endfor %}
@@ -96,10 +99,24 @@
             </form>
         </div>
 
+        {# ---------------- Active filter chips ---------------- #}
+        {% if selected.brand or selected.collection or selected.material or selected.condition or selected.min_price or selected.max_price or selected.q %}
+        <div class="pp-active-filters">
+            {% if selected.q %}<a class="pp-chip-filter" href="{% query_toggle q=selected.q %}">&ldquo;{{ selected.q }}&rdquo; <i class="fa fa-times"></i></a>{% endif %}
+            {% if selected.brand %}{% for b in brands %}{% if b.slug == selected.brand %}<a class="pp-chip-filter" href="{% query_toggle brand=selected.brand %}">{{ b.name }} <i class="fa fa-times"></i></a>{% endif %}{% endfor %}{% endif %}
+            {% if selected.collection %}{% for c in collections %}{% if c.slug == selected.collection %}<a class="pp-chip-filter" href="{% query_toggle collection=selected.collection %}">{{ c.name }} <i class="fa fa-times"></i></a>{% endif %}{% endfor %}{% endif %}
+            {% if selected.material %}<a class="pp-chip-filter" href="{% query_toggle material=selected.material %}">{{ selected.material }} <i class="fa fa-times"></i></a>{% endif %}
+            {% if selected.condition %}<a class="pp-chip-filter" href="{% query_toggle condition=selected.condition %}">{{ selected.condition }} <i class="fa fa-times"></i></a>{% endif %}
+            {% if selected.min_price %}<a class="pp-chip-filter" href="{% query_toggle min_price=selected.min_price %}">Min {{ selected.min_price|money }} <i class="fa fa-times"></i></a>{% endif %}
+            {% if selected.max_price %}<a class="pp-chip-filter" href="{% query_toggle max_price=selected.max_price %}">Max {{ selected.max_price|money }} <i class="fa fa-times"></i></a>{% endif %}
+            <a class="pp-chip-clear" href="{% url 'shop:browse' %}">Clear all</a>
+        </div>
+        {% endif %}
+
         {% if products %}
         <div class="row">
             {% for product in products %}
-            <div class="col-lg-4 col-sm-6 col-12 mb-40">
+            <div class="col-lg-4 col-6 mb-40">
                 {% include "partials/_product_wrap.html" %}
             </div>
             {% endfor %}

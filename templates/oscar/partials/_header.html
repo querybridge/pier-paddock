@@ -98,13 +98,13 @@
                                     </a>
                                 </div>
                                 <div class="same-style same-style-mrg-dec">
-                                    <a href="{% url 'vault:index' %}" title="Your Vault"><i class="fa fa-lock"></i>
+                                    <a href="{% url 'vault:index' %}" title="Your Vault">{% include "partials/_icon_vault.html" %}
                                         <span class="mini-cart-items">{{ vault_count }}</span>
                                     </a>
                                 </div>
                                 <div class="same-style same-style-mrg-dec">
-                                    <a href="{% url 'basket:summary' %}"><i class="ti-shopping-cart"></i>
-                                        <span class="mini-cart-items">{{ request.basket.num_items|default:0 }}</span>
+                                    <a class="js-cart-toggle" href="{% url 'basket:summary' %}" title="Your Cart"><i class="ti-shopping-cart"></i>
+                                        <span class="mini-cart-items js-cart-count">{{ request.basket.num_items|default:0 }}</span>
                                     </a>
                                 </div>
                             </div>
@@ -128,7 +128,9 @@
                             <a class="search-active" href="#"><i class="fa fa-search" aria-hidden="true"></i></a>
                         </div>
                         <div class="same-style same-style-mrg-dec">
-                            <a href="{% url 'basket:summary' %}"><i class="ti-shopping-cart"></i></a>
+                            <a class="js-cart-toggle" href="{% url 'basket:summary' %}" title="Your Cart"><i class="ti-shopping-cart"></i>
+                                <span class="mini-cart-items js-cart-count">{{ request.basket.num_items|default:0 }}</span>
+                            </a>
                         </div>
                         <div class="same-style">
                             <a class="mobile-menu-button-active" href="#"><i class="fa fa-bars"></i></a>

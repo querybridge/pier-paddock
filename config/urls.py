@@ -22,6 +22,8 @@ urlpatterns = [
     path("account/", include("apps.loyalty.urls")),
     path("membership/", PublicMembershipView.as_view(), name="membership_public"),
     path("console/", include("apps.loyalty.console_urls")),
+    # Merchant Portal — the supplier/merchant back office (listings, XML feed, sales).
+    path("merchant/", include("apps.merchant.urls")),
     # The Vault moved under the member area; keep the old path working.
     path("vault/", RedirectView.as_view(pattern_name="vault:index", permanent=False)),
     path("blog/", include("apps.blog.urls")),

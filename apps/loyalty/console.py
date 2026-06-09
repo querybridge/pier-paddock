@@ -46,7 +46,18 @@ class StaffConsoleMixin(UserPassesTestMixin):
 
     def test_func(self):
         u = self.request.user
-        return bool(u.is_authenticated and u.is_staff)
+        if not (u.is_authenticated and u.is_staff):
+            return False
+        # Keep the personas clean: a merchant/listing-partner uses the Merchant
+        # Portal, not the loyalty console (superusers see both).
+        if not u.is_superuser and self._is_merchant(u):
+            return False
+        return True
+
+    @staticmethod
+    def _is_merchant(user):
+        from apps.merchant.models import MerchantProfile
+        return MerchantProfile.objects.filter(partner__users=user).exists()
 
     def handle_no_permission(self):
         messages.error(self.request, "The Operator Console is staff-only.")

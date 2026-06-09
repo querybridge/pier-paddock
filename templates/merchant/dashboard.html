@@ -1,0 +1,46 @@
+{% extends "merchant/base.html" %}
+{% load pp_tags %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<h1 class="cns-h1">{{ merchant }}</h1>
+<p class="cns-muted">Your listings and sales on {{ BRAND_NAME }}.</p>
+
+<div class="cns-stat-row">
+    <div class="cns-stat"><span class="cns-stat-num">{{ summary.month_units }}</span><span class="cns-stat-lbl">Sold this month</span></div>
+    <div class="cns-stat cns-stat--gold"><span class="cns-stat-num">{{ summary.month_gross|money }}</span><span class="cns-stat-lbl">Revenue this month</span></div>
+    <div class="cns-stat cns-stat--plain"><span class="cns-stat-num">{{ summary.life_units }}</span><span class="cns-stat-lbl">Lifetime units</span></div>
+    <div class="cns-stat cns-stat--plain"><span class="cns-stat-num">{{ summary.life_gross|money }}</span><span class="cns-stat-lbl">Lifetime revenue</span></div>
+</div>
+
+<div class="cns-grid2">
+    <section class="cns-panel">
+        <h2 class="cns-h2">Top sellers</h2>
+        {% if top %}
+        <table class="cns-table">
+            <thead><tr><th>Piece</th><th class="cns-right">Units</th><th class="cns-right">Revenue</th></tr></thead>
+            <tbody>
+            {% for r in top %}
+            <tr><td>{{ r.product__title }}</td><td class="cns-right"><strong>{{ r.units }}</strong></td><td class="cns-right">{{ r.gross|money }}</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        {% else %}<p class="cns-muted">No sales recorded yet.</p>{% endif %}
+    </section>
+
+    <section class="cns-panel">
+        <h2 class="cns-h2">At a glance</h2>
+        <ul class="cns-list">
+            <li>{{ listing_count }} active listing{{ listing_count|pluralize }} — <a href="{% url 'merchant:listings' %}">manage</a></li>
+            <li>XML feed:
+                {% if feed_connected %}<span class="cns-tag cns-tag--gold">connected</span>{% else %}<span class="cns-tag">not connected</span>{% endif %}
+                {% if profile.last_synced %}<span class="cns-muted">· last synced {{ profile.last_synced|date:"M j, g:i a" }}</span>{% endif %}
+                — <a href="{% url 'merchant:feed' %}">configure</a></li>
+            <li>Full sales monitor — <a href="{% url 'merchant:sales' %}">open</a></li>
+        </ul>
+        <p class="cns-muted" style="margin-top:14px;font-size:12px;">Sales reflect simulated demo activity (checkout is disabled). A
+            "Simulate purchase" in the Operator Console on one of your pieces updates these figures live.</p>
+    </section>
+</div>
+{% endblock %}
