@@ -132,14 +132,41 @@ create your own with `python manage.py createsuperuser`.)
 
 ## Updating the live demo later
 
+Run these in a **PythonAnywhere Bash console**, then click **Reload** in the Web tab.
+
 ```bash
 cd ~/pier-paddock
-git pull
-workon pier-paddock && pip install -r requirements.txt
-python manage.py migrate
-python manage.py collectstatic --noinput
-# then click Reload in the Web tab
+
+# 1. Pull the latest main. Discard the live DB's runtime churn first, or the
+#    pull will conflict on db.sqlite3 (it's modified as the site runs).
+git checkout -- db.sqlite3
+git checkout main
+git pull                                   # FULL pull — gets settings.py changes too
+
+# 2. Sanity-check the settings actually updated (a partial checkout that misses
+#    config/settings.py causes "model … isn't in an application in INSTALLED_APPS")
+grep -n "apps.merchant" config/settings.py
+
+# 3. Virtualenv + dependencies
+workon pier-paddock
+pip install -r requirements.txt            # no-op if deps unchanged; safe
+
+# 4. Database, static files, thumbnails
+python manage.py migrate                   # applies any new app tables (no-op if the shipped DB has them)
+python manage.py collectstatic --noinput   # picks up new/changed CSS, JS and the crest favicon
+python manage.py thumbnail clear           # clear the thumbnail cache so images regenerate
+python manage.py check                     # should report "no issues"
 ```
+
+Then **Reload** the web app (Web tab → green button — this loads new
+settings/middleware), and **hard-refresh** your browser (Cmd/Ctrl+Shift+R), since
+browsers cache CSS and broken images.
+
+> **Why each step matters:** `git checkout -- db.sqlite3` avoids the pull
+> conflict; the full `git pull` (not a partial `git checkout <files>`) ensures
+> `config/settings.py` is updated; `migrate` adds any new app tables;
+> `collectstatic` is required whenever CSS/JS changed; `thumbnail clear` fixes
+> "missing images on shop/home" after the cache or DB changed.
 
 ---
 
@@ -158,6 +185,15 @@ python manage.py collectstatic --noinput
   works either way.
 - **Broken product images** → the `/media/` mapping is wrong; it must point to
   `/home/USERNAME/pier-paddock/media`.
+- **`Model class … isn't in an application in INSTALLED_APPS`** (e.g.
+  `MerchantProfile`) → `config/settings.py` is stale, so the app isn't
+  registered. This happens after a partial `git checkout <files>` that skipped
+  settings. Fix with a full pull (or `git checkout main -- config/settings.py`),
+  clear stale bytecode, and Reload:
+  ```bash
+  git checkout main -- config/settings.py
+  find . -path '*/apps/*' -name __pycache__ -exec rm -rf {} +
+  ```
 - **CSRF "Forbidden" on login / add-to-cart / checkout** → make sure
   `DJANGO_ALLOWED_HOSTS` in the WSGI file is your real domain. CSRF already trusts
   `https://*.pythonanywhere.com` by default.
