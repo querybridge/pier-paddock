@@ -5,7 +5,7 @@ from django.contrib import admin
 from django.urls import include, path
 from django.views.generic import RedirectView
 
-from apps.core.views import HomeView, OperationsLoginView
+from apps.core.views import HomeView, OperationsLoginView, operations_logout
 from apps.loyalty.views import PublicMembershipView
 
 urlpatterns = [
@@ -23,6 +23,7 @@ urlpatterns = [
     path("membership/", PublicMembershipView.as_view(), name="membership_public"),
     # Staff sign-in gateway — routes operators to the console, merchants to the portal.
     path("operations/", OperationsLoginView.as_view(), name="operations"),
+    path("operations/logout/", operations_logout, name="operations_logout"),
     path("console/", include("apps.loyalty.console_urls")),
     # Merchant Portal — the supplier/merchant back office (listings, XML feed, sales).
     path("merchant/", include("apps.merchant.urls")),

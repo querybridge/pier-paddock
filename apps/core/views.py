@@ -1,4 +1,4 @@
-from django.contrib.auth import login
+from django.contrib.auth import login, logout as auth_logout
 from django.shortcuts import redirect, render
 from django.views.generic import TemplateView, View
 from oscar.apps.customer.forms import EmailAuthenticationForm
@@ -78,3 +78,9 @@ class OperationsLoginView(View):
             return nxt
         # No (valid) next — route by role.
         return operations_home_url(user) or "/"
+
+
+def operations_logout(request):
+    """Sign a staff user out and return them to the Operations sign-in page."""
+    auth_logout(request)
+    return redirect("operations")
