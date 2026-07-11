@@ -298,6 +298,18 @@ reports pending while disabled. `check` clean.
   in gold** — Facebook, X, Instagram, YouTube, LinkedIn (`partials/_social_icons.html`,
   used by the shared footer so both properties match). SVG (not FA) so they render
   on the FA4 storefront and the FA6 magazine alike.
+- **2026-07-11 — Brand parity pass (logo, top banner, members strip, nav rollover):**
+  (1) Magazine logo mark set to all-caps **PIER & PADDOCK** to match the storefront
+  wordmark (`pp-lifestyle-logo.svg`, 23px Georgia, 1.5 letter-spacing). (2) Added a
+  **dark top banner** to the magazine header (`.ppl-topbar` in `base.html` +
+  `pp-lifestyle.css`) mirroring the storefront `header-top bg-main2` strip — inline-SVG
+  social (left), "Insured Delivery | Authenticity Guaranteed | Signature Service"
+  trust line (center), account/login (right). (3) Extracted the **"Join Pier & Paddock
+  Members" strip** into shared `partials/_members_strip.html`, now rendered above the
+  footer on both the magazine (`base.html`) and the storefront (`oscar/layout.html`);
+  strip styling added to shared `pierpaddock.css` (magazine `pp-lifestyle.css` refines
+  it). (4) Magazine primary nav now uses the storefront **rollover treatment** —
+  gold-text hover, no red fill (overrode the iNews `.menu li a:hover` red background).
 
 ---
 

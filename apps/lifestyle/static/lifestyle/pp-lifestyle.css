@@ -27,9 +27,22 @@ a { color: var(--ppl-navy); }
 a:hover { color: var(--ppl-gold); }
 .topbar .header-social a:hover, .topmenu a:hover { color: var(--ppl-gold); }
 
-/* Primary nav */
+/* Dark top banner — mirrors the storefront's header-top bg-main2 strip. */
+.ppl-topbar { background: var(--ppl-navy); padding: 8px 0; }
+.ppl-topbar .pp-social-svg { display: flex; gap: 14px; margin: 0; }
+.ppl-topbar .pp-social-svg a { color: #d8cfbd; }
+.ppl-topbar .pp-social-svg a:hover { color: var(--ppl-gold); }
+.ppl-topbar .pp-social-svg svg { width: 16px; height: 16px; }
+.ppl-topbar-trust { color: #d8cfbd; font-size: 12px; letter-spacing: 1px; }
+.ppl-topbar-account a { color: #d8cfbd; font-size: 12px; letter-spacing: 1px; }
+.ppl-topbar-account a:hover { color: var(--ppl-gold); }
+
+/* Primary nav — same rollover treatment as the storefront (gold text, no fill). */
 .main-menu .menu > li > a:hover,
 .main-menu .menu > li.active > a { color: var(--ppl-gold); }
+.main-menu .menu-container .menu li a { letter-spacing: 1px; font-weight: 500; color: #1a1a1a; }
+.main-menu .menu-container .menu li a:hover,
+.main-menu .menu-container .menu > li.active > a { background: transparent; color: var(--ppl-gold-dark); }
 
 /* Section/widget title accent rules → gold */
 .widget-title2 h4 span, .section-title h2 span { border-color: var(--ppl-gold); }

@@ -490,3 +490,18 @@ a:hover { color: var(--pp-gold); }
 .pp-footer .pp-social-svg a { color:#9A7B43; line-height:0; }
 .pp-footer .pp-social-svg a:hover { color:#c8a86a; }
 .pp-footer .pp-social-svg svg { width:18px; height:18px; display:block; }
+
+/* P&P Members subscribe strip — shared strip rendered above the footer on the
+   storefront (the magazine's pp-lifestyle.css, loaded later, refines it there). */
+.ppl-subscribe-strip { background:#1B2A41; color:#fff; padding:40px 0; }
+.ppl-subscribe-strip h3 { color:#fff; font-family:Georgia,'GFS Baskerville',serif; }
+.ppl-subscribe-strip p { color:#c7cdd9; margin:0; }
+.ppl-subscribe-strip .ppl-subscribe-title,
+.ppl-subscribe-strip .ppl-subscribe-blurb { display:none; }
+.ppl-subscribe-strip .ppl-hp { position:absolute; left:-9999px; }
+.ppl-subscribe-strip .input-group { display:flex; }
+.ppl-subscribe-strip .form-control { flex:1; border:1px solid #d9d5cc; padding:9px 12px; border-radius:3px 0 0 3px; }
+.ppl-subscribe-strip .btn { border-radius:0 3px 3px 0; background:var(--pp-gold); border-color:var(--pp-gold); color:#14110e; font-weight:600; }
+.ppl-subscribe-strip .btn:hover { background:var(--pp-gold-dark); border-color:var(--pp-gold-dark); }
+.ppl-subscribe-strip .ppl-consent { display:block; margin-top:8px; font-size:12px; color:#aeb6c4; }
+.ppl-subscribe-strip .ppl-consent a { color:var(--pp-gold); }

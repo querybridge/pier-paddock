@@ -1,0 +1,15 @@
+{% comment %}Shared "Join Pier & Paddock Members" strip — rendered above the footer
+on both the storefront (oscar/layout.html) and the magazine (lifestyle/base.html).{% endcomment %}
+<div class="ppl-subscribe-strip">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h3>Join Pier &amp; Paddock Members</h3>
+                <p>Early access to new drops, the quarterly market brief, and the Vault — the reasons to have an account.</p>
+            </div>
+            <div class="col-lg-6">
+                {% include "lifestyle/includes/_subscribe.html" with source="footer" hide_heading=1 %}
+            </div>
+        </div>
+    </div>
+</div>

@@ -25,6 +25,30 @@
     <!--Header Start-->
     <header>
 
+        <!--Top Banner Start (mirrors the storefront dark header-top) -->
+        <div class="ppl-topbar">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-lg-4 col-6">
+                        {% include "partials/_social_icons.html" %}
+                    </div>
+                    <div class="col-lg-4 d-none d-lg-block">
+                        <div class="ppl-topbar-trust text-center">Insured Delivery <span>| Authenticity Guaranteed | Signature Service</span></div>
+                    </div>
+                    <div class="col-lg-4 col-6 text-end">
+                        <div class="ppl-topbar-account">
+                            {% if request.user.is_authenticated %}
+                            <a href="{% url 'customer:summary' %}">My Account</a>
+                            {% else %}
+                            <a href="{% url 'customer:login' %}">Login / Register</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--Top Banner End-->
+
         <!--Main Header Start-->
         <div class="main-header">
             <div class="container">
@@ -75,20 +99,8 @@
 
     {% block content %}{% endblock %}
 
-    {# Members subscribe strip (magazine footer area). #}
-    <div class="ppl-subscribe-strip">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-6">
-                    <h3>Join Pier &amp; Paddock Members</h3>
-                    <p>Early access to new drops, the quarterly market brief, and the Vault — the reasons to have an account.</p>
-                </div>
-                <div class="col-lg-6">
-                    {% include "lifestyle/includes/_subscribe.html" with source="footer" hide_heading=1 %}
-                </div>
-            </div>
-        </div>
-    </div>
+    {# Members subscribe strip (shared with the storefront, above the footer). #}
+    {% include "partials/_members_strip.html" %}
 
     {# Shared Pier & Paddock storefront footer, rendered from the one zwat source. #}
     {% include "oscar/partials/_footer.html" %}
