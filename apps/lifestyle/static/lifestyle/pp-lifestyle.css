@@ -10,7 +10,9 @@
     --ppl-cream: #F6F3EE;
 }
 
-body { background: var(--ppl-cream); }
+body { background: #FFFFFF; }
+/* Keep the warm cream on the primary-nav bar only. */
+.navigation { background: var(--ppl-cream); }
 
 /* Serif display for headings (GFS Baskerville / Georgia fallback) */
 h1, h2, h3, h4, .widget-title h4, .widget-title2 h4,
