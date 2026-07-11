@@ -1,0 +1,10 @@
+{% load wagtailcore_tags %}
+<div class="ppl-faq">
+    <h3>Frequently Asked</h3>
+    {% for item in value.items %}
+    <details class="ppl-faq-item">
+        <summary>{{ item.question }}</summary>
+        <div class="ppl-faq-answer">{{ item.answer|richtext }}</div>
+    </details>
+    {% endfor %}
+</div>

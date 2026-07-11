@@ -1,0 +1,4 @@
+{% load wagtailimages_tags %}
+<div class="ppl-body-gallery gallery">
+    {% for item in value.images %}{% image item.image fill-400x300 alt=item.alt %}{% endfor %}
+</div>

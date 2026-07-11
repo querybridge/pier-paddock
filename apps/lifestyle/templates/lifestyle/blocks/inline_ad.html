@@ -1,0 +1,7 @@
+{% load lifestyle_tags %}
+{% if value.zone %}
+<div class="ppl-inline-ad text-center my-4">
+    <span class="ppl-ad-label">- Advertisement -</span>
+    {% ad_zone value.zone %}
+</div>
+{% endif %}

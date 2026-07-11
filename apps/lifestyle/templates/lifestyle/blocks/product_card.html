@@ -1,0 +1,14 @@
+{% load thumbnail %}
+{% if product %}
+<div class="ppl-inline-product">
+    <div class="inews-post-thumb"><a href="{{ product.get_absolute_url }}">
+        {% with img=product.primary_image %}{% if img %}{% thumbnail img.original "260x200" padding=True as t %}<img src="{{ t.url }}" alt="{{ product.title }}">{% endthumbnail %}{% endif %}{% endwith %}
+    </a></div>
+    <div class="ppl-inline-product-body">
+        <div class="ppl-cat">From the Shop</div>
+        <h4><a href="{{ product.get_absolute_url }}">{{ product.title }}</a></h4>
+        {% if value.blurb %}<p>{{ value.blurb }}</p>{% endif %}
+        <a class="ppl-shop-cta" href="{{ product.get_absolute_url }}">View at Pier &amp; Paddock →</a>
+    </div>
+</div>
+{% endif %}

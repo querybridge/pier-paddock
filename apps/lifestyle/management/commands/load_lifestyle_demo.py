@@ -151,7 +151,7 @@ class Command(BaseCommand):
                 hero_alt_text="%s — %s" % (title, cat.title),
                 hero_credit="Pier & Paddock",
                 publish_display_date=dt.date(),
-                body=[("paragraph", p) for p in BODY],
+                body=self._rich_body(random.choice(products).id if products else None),
                 lead_video_url=YOUTUBE_EMBED if ptype == "video" else "",
                 lead_audio_url=SOUNDCLOUD_EMBED if ptype == "audio" else "",
             )
@@ -176,6 +176,36 @@ class Command(BaseCommand):
         self.stdout.write(self.style.SUCCESS("Lifestyle demo seeded."))
 
     # -- helpers ----------------------------------------------------------
+    def _rich_body(self, product_id):
+        """A body that exercises the Phase 3 block set."""
+        body = [
+            ("paragraph", BODY[0]),
+            ("key_takeaways", {"title": "Key takeaways", "points": [
+                "The enthusiast market rewards provenance over price.",
+                "Completeness — box, papers, history — is worth more than ever.",
+                "Patience beats FOMO in a normalising market.",
+            ]}),
+            ("paragraph", BODY[1]),
+            ("pull_quote", {"quote": "The people who get it right are rarely the ones "
+                                     "shouting about it.",
+                            "attribution": "A dealer, off the record"}),
+            ("paragraph", BODY[2]),
+        ]
+        if product_id:
+            body.append(("product", {"product_id": product_id,
+                                     "blurb": "A fitting companion for the story above."}))
+        body += [
+            ("faq", {"items": [
+                {"question": "Where do I start as a new collector?",
+                 "answer": "<p>Buy the seller first: provenance, condition and a name you trust.</p>"},
+                {"question": "Is now a good time to buy?",
+                 "answer": "<p>For the patient, yes — the market has normalised from its peak.</p>"},
+            ]}),
+            ("divider", None),
+            ("inline_ad", {"zone": "in_content"}),
+        ]
+        return body
+
     def _image(self, title, label, w, h, color):
         im = Image.new("RGB", (w, h), color)
         d = ImageDraw.Draw(im)

@@ -1,0 +1,5 @@
+{% load wagtailimages_tags %}
+<figure class="ppl-fullbleed">
+    {% image value.image width-1100 alt=value.alt %}
+    {% if value.caption or value.credit %}<figcaption>{{ value.caption }}{% if value.credit %} <span class="ppl-credit">— {{ value.credit }}</span>{% endif %}</figcaption>{% endif %}
+</figure>

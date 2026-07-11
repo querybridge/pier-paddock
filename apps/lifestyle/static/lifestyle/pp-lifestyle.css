@@ -114,3 +114,32 @@ a:hover { color: var(--ppl-gold); }
 .ppl-author-box .rounded-circle { border-radius:50%; flex:0 0 80px; }
 .ppl-author-box-body h4 { margin:0 0 2px; }
 .ppl-author-box-bio { font-size:14px; color:#4a4f5a; margin-top:6px; }
+
+/* ---------- Phase 3: StreamField body blocks ---------- */
+.ppl-pullquote { border-left:4px solid var(--ppl-gold); padding:6px 0 6px 22px; margin:28px 0;
+    font-family:"GFS Baskerville",Georgia,serif; font-size:24px; font-style:italic; color:var(--ppl-navy); }
+.ppl-pullquote span { display:block; font-size:14px; font-style:normal; color:var(--ppl-gold); margin-top:8px; }
+.ppl-fullbleed { margin:28px 0; }
+.ppl-fullbleed img { width:100%; height:auto; }
+.ppl-fullbleed figcaption { font-size:12.5px; color:#8a847a; margin-top:6px; }
+.ppl-body-gallery { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin:28px 0; }
+.ppl-body-gallery img { width:100%; height:auto; }
+.ppl-inline-product { display:flex; gap:18px; align-items:center; background:#efe9dd; border-radius:4px; padding:16px; margin:28px 0; }
+.ppl-inline-product .inews-post-thumb { flex:0 0 200px; }
+.ppl-inline-product img { width:100%; }
+.ppl-inline-product h4 { margin:4px 0; }
+.ppl-takeaways { background:#f6f3ee; border:1px solid #e6ded0; border-left:4px solid var(--ppl-gold);
+    border-radius:4px; padding:18px 22px; margin:28px 0; }
+.ppl-takeaways h4 { margin:0 0 10px; color:var(--ppl-navy); }
+.ppl-takeaways ul { margin:0; padding-left:18px; } .ppl-takeaways li { margin-bottom:6px; }
+.ppl-faq { margin:28px 0; }
+.ppl-faq-item { border-top:1px solid #e6ded0; padding:12px 0; }
+.ppl-faq-item summary { font-weight:600; cursor:pointer; color:var(--ppl-navy); }
+.ppl-faq-answer { margin-top:8px; color:#4a4f5a; }
+.ppl-divider { border:0; border-top:2px solid #e6ded0; width:80px; margin:34px auto; }
+.ppl-embed { position:relative; padding-bottom:56.25%; height:0; margin:28px 0; }
+.ppl-embed iframe { position:absolute; inset:0; width:100%; height:100%; border:0; }
+.ppl-inline-ad { margin:28px 0; }
+.ppl-table { margin:28px 0; }
+.ppl-table table { width:100%; border-collapse:collapse; }
+.ppl-table th, .ppl-table td { border:1px solid #e6ded0; padding:8px 12px; text-align:left; }

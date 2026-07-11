@@ -195,9 +195,28 @@ Phase 3 (full StreamField block set) is still pending.
 quote (`<q>` title, quote class), audio (iframe). Screenshot confirmed the
 gallery single-post matches iNews. `check` clean.
 
-**Still pending in Phase 3:** the full StreamField block set (pull quote, image
-gallery block, video/oEmbed block, product-card block, FAQ, key-takeaways, table,
-divider, inline ad). The `body` StreamField currently has paragraph + image only.
+---
+
+## Phase 3 (complete) — StreamField block set — 2026-07-11 ✅
+
+**Built** (`apps/lifestyle/blocks.py` + `templates/lifestyle/blocks/*`)
+- `ArticleBodyBlock` with: **rich paragraph** (curated features), **pull quote**,
+  **full-bleed image** (alt required), **image gallery**, **video** (Wagtail
+  `EmbedBlock`/oEmbed), **product card** (Oscar product → image/name/"View at
+  Pier & Paddock", never price-led), **FAQ** (Q/A `<details>`), **key takeaways**,
+  **table** (HTML), **divider**, **inline ad** (drops an `AdZone` in-content).
+- `ArticlePage.body` now uses the full block set (migration `0005`); block CSS
+  appended to `pp-lifestyle.css`; seed enriched so every article body exercises
+  key-takeaways / pull-quote / product-card / FAQ / divider / inline-ad.
+
+**Verify:** all blocks render in a seeded article (key takeaways, pull quote,
+product card with "View at Pier & Paddock" CTA, FAQ, divider, inline ad placeholder).
+`check` clean.
+
+**Deviations:** `table` uses a RawHTMLBlock (not `wagtail.contrib.table_block`) to
+avoid another app; the in-body `product` block uses an IntegerBlock product-id (no
+generic Oscar model chooser out of the box). FAQPage/schema emission for the FAQ
+block lands in Phase 6.
 
 ---
 

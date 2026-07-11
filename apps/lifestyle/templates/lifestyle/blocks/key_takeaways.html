@@ -1,0 +1,4 @@
+<aside class="ppl-takeaways">
+    <h4>{{ value.title|default:"Key takeaways" }}</h4>
+    <ul>{% for p in value.points %}<li>{{ p }}</li>{% endfor %}</ul>
+</aside>

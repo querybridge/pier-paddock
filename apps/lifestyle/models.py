@@ -20,6 +20,8 @@ from wagtail.admin.panels import FieldPanel, InlinePanel, MultiFieldPanel
 from wagtail.fields import RichTextField, StreamField
 from wagtail.images.blocks import ImageChooserBlock
 from wagtail.models import Orderable, Page
+
+from .blocks import ArticleBodyBlock
 from wagtail.search import index
 from wagtail.snippets.models import register_snippet
 
@@ -234,10 +236,7 @@ class ArticlePage(Page):
         "self", blank=True, symmetrical=False, related_name="+",
         help_text="Manual override; otherwise auto by tag/category.")
 
-    body = StreamField([
-        ("paragraph", blocks.RichTextBlock()),
-        ("image", ImageChooserBlock()),
-    ], blank=True)
+    body = StreamField(ArticleBodyBlock(), blank=True)
 
     # SEO extras (Wagtail already provides seo_title + search_description).
     canonical_url = models.URLField(blank=True)
