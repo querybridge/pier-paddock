@@ -321,6 +321,21 @@ reports pending while disabled. `check` clean.
   submenu accents (caret + border) recoloured gold. The storefront `_header.html` was
   **not** modified — the nav was duplicated into the magazine, not refactored into a
   shared partial, to keep the storefront untouched.
+- **2026-07-11 — Magazine header rebuilt as four bands to mirror the shop:** the header
+  now stacks (1) a **dark band** (#14110E, `.ppl-topbar`) with styled social icons +
+  trust line + account, (2) a **white band** (`.ppl-white-band`) with the brand wordmark
+  (shared `.brand-wordmark`, pierpaddock.css → identical to the shop), the **primary nav**
+  (Home, Shop ▾, Brands ▾, Lifestyle, About, FAQ, Contact) centred, and **account / vault /
+  cart** icons on the right (vault = shared inline-SVG `_icon_vault.html`; account/cart =
+  FA6 since the magazine can't load the shop's themify/FA4 fonts), (3) an **ad band**
+  (`.ppl-ad-band`, centred `leaderboard_top`), then (4) a **cream band** (`.ppl-cat-band`)
+  holding the restored **Lifestyle category nav as a secondary nav** (Latest + Fashion,
+  Motorsports, Watersports, Business, Entertainment, Health) plus the magazine search.
+  Primary-nav dropdowns/mobile-meanmenu/search reuse the working iNews machinery. Deviation:
+  the dark/white bands are *visually* matched (duplicated markup styled by the shared
+  pierpaddock.css) rather than a single shared partial, because the storefront header depends
+  on the zwat theme CSS + themify/FA4 icon fonts that aren't (and can't safely be) loaded on
+  the iNews magazine. Storefront `_header.html` left untouched.
 
 ---
 

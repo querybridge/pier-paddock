@@ -49,46 +49,78 @@
         </div>
         <!--Top Banner End-->
 
-        <!--Main Header Start (logo dropped; ad placement centred) -->
-        <div class="main-header">
+        <!--White Band Start: logo + primary nav + account/vault/cart (mirrors the shop's white header-middle) -->
+        <div class="main-header ppl-white-band">
+            <div class="container">
+                <div class="ppl-white-inner">
+                    <div class="ppl-brand">
+                        <a class="brand-wordmark" href="/lifestyle/">
+                            <span class="brand-name">{{ BRAND_NAME }}</span>
+                            <span class="brand-tagline">{{ BRAND_TAGLINE }}</span>
+                        </a>
+                    </div>
+                    <div class="ppl-primary-nav">
+                        <nav class="main-menu menu-bar">
+                            <div class="menu-container" id="desktop-menu">
+                                {# Primary nav duplicated from the storefront for consistent
+                                   cross-site navigation (nav_collections / nav_brands come from
+                                   the global apps.core.context_processors.navigation). #}
+                                <ul class="menu">
+                                    <li><a href="{% url 'home' %}">Home</a></li>
+                                    <li class="has-submenu"><a href="{% url 'shop:browse' %}">Shop</a>
+                                        <ul class="submenu">
+                                            <li><a href="{% url 'shop:browse' %}">All Watches</a></li>
+                                            {% for c in nav_collections %}
+                                            <li><a href="{% url 'shop:browse' %}?collection={{ c.slug }}">{{ c.name }}</a></li>
+                                            {% endfor %}
+                                        </ul>
+                                    </li>
+                                    <li class="has-submenu"><a href="{% url 'shop:browse' %}">Brands</a>
+                                        <ul class="submenu">
+                                            {% for b in nav_brands %}
+                                            <li><a href="{% url 'shop:browse' %}?brand={{ b.slug }}">{{ b.name }}</a></li>
+                                            {% empty %}
+                                            <li><a href="{% url 'shop:browse' %}">All Brands</a></li>
+                                            {% endfor %}
+                                        </ul>
+                                    </li>
+                                    <li><a href="/lifestyle/">Lifestyle</a></li>
+                                    <li><a href="{% url 'pages:about' %}">About</a></li>
+                                    <li><a href="{% url 'pages:faq' %}">FAQ</a></li>
+                                    <li><a href="{% url 'pages:contact' %}">Contact</a></li>
+                                </ul>
+                            </div>
+                            <div id="mobile-menu"></div>
+                        </nav>
+                    </div>
+                    <div class="ppl-header-icons">
+                        <a href="{% if request.user.is_authenticated %}{% url 'customer:summary' %}{% else %}{% url 'customer:login' %}{% endif %}" title="Account" aria-label="Account"><i class="fas fa-user"></i></a>
+                        <a href="{% url 'vault:index' %}" title="Your Vault" aria-label="Your Vault">{% include "partials/_icon_vault.html" %}<span class="ppl-icon-count">{{ vault_count|default:0 }}</span></a>
+                        <a href="{% url 'basket:summary' %}" title="Your Cart" aria-label="Your Cart"><i class="fas fa-shopping-cart"></i><span class="ppl-icon-count">{{ request.basket.num_items|default:0 }}</span></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--White Band End-->
+
+        <!--Ad Placement Band-->
+        <div class="ppl-ad-band">
             <div class="container">
                 <div class="ppl-header-ad">{% ad_zone "leaderboard_top" %}</div>
             </div>
         </div>
 
-        <div class="navigation border-bottom border-top">
+        <!--Cream Band Start: Lifestyle category secondary nav + search-->
+        <div class="navigation ppl-cat-band border-bottom border-top">
             <div class="container">
-                <nav class="main-menu menu-bar">
-                    <div class="menu-container" id="desktop-menu">
-                        {# Primary nav duplicated from the storefront for consistent
-                           cross-site navigation (nav_collections / nav_brands come from
-                           the global apps.core.context_processors.navigation). #}
-                        <ul class="menu">
-                            <li><a href="{% url 'home' %}">Home</a></li>
-                            <li class="has-submenu"><a href="{% url 'shop:browse' %}">Shop</a>
-                                <ul class="submenu">
-                                    <li><a href="{% url 'shop:browse' %}">All Watches</a></li>
-                                    {% for c in nav_collections %}
-                                    <li><a href="{% url 'shop:browse' %}?collection={{ c.slug }}">{{ c.name }}</a></li>
-                                    {% endfor %}
-                                </ul>
-                            </li>
-                            <li class="has-submenu"><a href="{% url 'shop:browse' %}">Brands</a>
-                                <ul class="submenu">
-                                    {% for b in nav_brands %}
-                                    <li><a href="{% url 'shop:browse' %}?brand={{ b.slug }}">{{ b.name }}</a></li>
-                                    {% empty %}
-                                    <li><a href="{% url 'shop:browse' %}">All Brands</a></li>
-                                    {% endfor %}
-                                </ul>
-                            </li>
-                            <li><a href="/lifestyle/">Lifestyle</a></li>
-                            <li><a href="{% url 'pages:about' %}">About</a></li>
-                            <li><a href="{% url 'pages:faq' %}">FAQ</a></li>
-                            <li><a href="{% url 'pages:contact' %}">Contact</a></li>
-                        </ul>
-                    </div>
-                    <div id="mobile-menu"></div>
+                <div class="ppl-cat-inner">
+                    <ul class="ppl-cat-nav">
+                        <li><a href="/lifestyle/">Latest</a></li>
+                        {% lifestyle_nav as nav_items %}
+                        {% for item in nav_items %}{% if item.title != "Shop" %}
+                        <li><a href="{{ item.url }}">{{ item.title }}</a></li>
+                        {% endif %}{% endfor %}
+                    </ul>
                     <div class="header-search">
                         <div class="search-icon text-end"><i class="fas fa-search"></i></div>
                         <div class="searchbox">
@@ -100,10 +132,10 @@
                             </form>
                         </div>
                     </div>
-                </nav>
+                </div>
             </div>
         </div>
-        <!--Main Header End-->
+        <!--Cream Band End-->
     </header>
     <!--Header End-->
 
