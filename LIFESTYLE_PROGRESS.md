@@ -292,6 +292,12 @@ reports pending while disabled. `check` clean.
   categories, data-driven via `{% lifestyle_nav %}`); moved **Terms & Conditions,
   Privacy, Advertise** into **Customer Care**; removed the **Journal** link and the
   redundant bottom legal row. Now a 5-column footer.
+- **2026-07-11 — Magazine header topbar removed + social relocated:** dropped the
+  magazine header topbar (Terms/Privacy/Advertise links + its social icons).
+  Social icons now live in the footer's first (brand) column as **inline-SVG icons
+  in gold** — Facebook, X, Instagram, YouTube, LinkedIn (`partials/_social_icons.html`,
+  used by the shared footer so both properties match). SVG (not FA) so they render
+  on the FA4 storefront and the FA6 magazine alike.
 
 ---
 

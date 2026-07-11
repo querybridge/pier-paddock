@@ -484,3 +484,9 @@ a:hover { color: var(--pp-gold); }
 .owl-item.active .slider-03 .main-slider-content h1               { animation: ppSlideUp .9s ease .45s backwards; }
 .owl-item.active .slider-03 .main-slider-content > span           { animation: ppSlideUp .9s ease .70s backwards; }
 .owl-item.active .slider-03 .main-slider-content .btn-style-3     { animation: ppSlideUp .9s ease .95s backwards; }
+
+/* Footer social — inline-SVG icons in gold (shared storefront + magazine). */
+.pp-footer .pp-social-svg { display:flex; gap:16px; margin-top:16px; }
+.pp-footer .pp-social-svg a { color:#9A7B43; line-height:0; }
+.pp-footer .pp-social-svg a:hover { color:#c8a86a; }
+.pp-footer .pp-social-svg svg { width:18px; height:18px; display:block; }
