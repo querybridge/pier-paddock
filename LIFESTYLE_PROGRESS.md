@@ -348,6 +348,24 @@ reports pending while disabled. `check` clean.
   icon hover + count badge aligned to the shop's `--pp-gold-dark`. (d) Fixed the nav dropdown
   chevrons that rendered as broken boxes (iNews pointed them at a Font Awesome 5 glyph the magazine
   doesn't ship) — now drawn as a pure-CSS triangle in `currentColor`.
+- **2026-07-11 — Closer shop parity + band reorder:** social icons given the shop's **gold
+  boxes** (25×25, 1px `#A67314` border, gold fill on hover); the **"Insured Delivery" trust
+  line** now uses an explicit Jost/sans stack (12px / uppercase / 1px tracking / `#d8cfbd`)
+  instead of the iNews heading font; the **vault/cart counters** rebuilt as the shop's inline
+  gold **`.mini-cart-items` tag** (with the little left pointer tail) rather than a circular
+  badge; header icons sized to the shop's 16px. **Band order swapped** to dark → white →
+  **cream → ad**.
+- **DECISION (2026-07-11) — mirror the header on the Lifestyle side; do NOT share a partial
+  with the storefront.** The shop header can't be `{% include %}`d on the magazine because it
+  depends on the zwat theme `style.css` + themify/FA4 icon fonts, which collide with the iNews
+  theme + FA6 the magazine loads. A true shared header would require a theme-independent
+  partial + stylesheet + inline-SVG icons and a **refactor of the live storefront header**
+  (cart JS, search overlay, account/crest dropdown, mobile menu). The user chose to keep the
+  storefront header untouched and mirror it on the magazine via `pp-lifestyle.css` instead.
+  So: magazine header parity is maintained by re-deriving the shop's values into
+  `pp-lifestyle.css` (reusing shop class names where possible so shared `pierpaddock.css`
+  colours apply). Future header changes must be made in **both** `_header.html` (shop) and
+  `lifestyle/base.html` + `pp-lifestyle.css` (magazine).
 
 ---
 
