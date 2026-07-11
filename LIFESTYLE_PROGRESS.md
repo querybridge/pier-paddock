@@ -336,6 +336,18 @@ reports pending while disabled. `check` clean.
   pierpaddock.css) rather than a single shared partial, because the storefront header depends
   on the zwat theme CSS + themify/FA4 icon fonts that aren't (and can't safely be) loaded on
   the iNews magazine. Storefront `_header.html` left untouched.
+- **2026-07-11 — Header parity fixes (dark/white bands truly match the shop):** (a) fixed a
+  leaked template comment — a multi-line `{# … #}` (single-line only in Django) was rendering
+  as literal text in the nav; switched both header comments to `{% comment %}`. (b) The dark
+  band now uses the **shop's exact class names** (`header-top bg-main2 / social-icon-style /
+  free-delivery / setting-wrap same-style-2`) so the shared `pierpaddock.css` colours it
+  identically; pp-lifestyle.css only supplies the zwat base layout (padding/sizing) the magazine
+  otherwise lacks. Social icons are inline SVG (Facebook, Twitter, Instagram — matching the shop's
+  three) since the magazine can't load the shop's FA4 fonts. (c) White-band account/cart icons
+  switched from FA6 glyphs to **inline SVG** matching the shop (vault already shared the same SVG);
+  icon hover + count badge aligned to the shop's `--pp-gold-dark`. (d) Fixed the nav dropdown
+  chevrons that rendered as broken boxes (iNews pointed them at a Font Awesome 5 glyph the magazine
+  doesn't ship) — now drawn as a pure-CSS triangle in `currentColor`.
 
 ---
 

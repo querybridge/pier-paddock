@@ -29,15 +29,17 @@ a { color: var(--ppl-navy); }
 a:hover { color: var(--ppl-gold); }
 .topbar .header-social a:hover, .topmenu a:hover { color: var(--ppl-gold); }
 
-/* Dark top banner — mirrors the storefront's header-top bg-main2 strip. */
-.ppl-topbar { background: #14110E; padding: 8px 0; }
-.ppl-topbar .pp-social-svg { display: flex; gap: 14px; margin: 0; }
-.ppl-topbar .pp-social-svg a { color: #d8cfbd; }
-.ppl-topbar .pp-social-svg a:hover { color: var(--ppl-gold); }
-.ppl-topbar .pp-social-svg svg { width: 16px; height: 16px; }
-.ppl-topbar-trust { color: #d8cfbd; font-size: 12px; letter-spacing: 1px; }
-.ppl-topbar-account a { color: #d8cfbd; font-size: 12px; letter-spacing: 1px; }
-.ppl-topbar-account a:hover { color: var(--ppl-gold); }
+/* Dark band — uses the shop's header-top class names so the shared pierpaddock.css
+   colours it identically; these rules only supply the zwat base layout (that theme's
+   style.css isn't loaded on the magazine). */
+.header-top { padding: 10px 0; }
+.header-top .social-icon-style { display: flex; align-items: center; gap: 16px; }
+.header-top .social-icon-style a { display: inline-flex; line-height: 0; }
+.header-top .social-icon-style svg { width: 14px; height: 14px; }
+.header-top .free-delivery h4 { font-weight: 400; text-transform: uppercase; margin: 0; }
+.header-top .setting-wrap { text-align: right; }
+.header-top .setting-wrap ul { list-style: none; margin: 0; padding: 0; }
+.header-top .setting-wrap ul li a:hover { color: var(--ppl-gold); }
 
 /* Primary nav — same rollover treatment as the storefront (gold text, no fill). */
 .main-menu .menu > li > a:hover,
@@ -45,8 +47,12 @@ a:hover { color: var(--ppl-gold); }
 .main-menu .menu-container .menu li a { letter-spacing: 1px; font-weight: 500; color: #1a1a1a; }
 .main-menu .menu-container .menu li a:hover,
 .main-menu .menu-container .menu > li.active > a { background: transparent; color: var(--ppl-gold-dark); }
-/* Shop-style dropdowns on the magazine nav: gold caret + border (was iNews red). */
-.main-menu .menu-container .menu .has-submenu > a:after { color: var(--ppl-gold-dark); }
+/* Shop-style dropdowns: draw the caret as a CSS triangle (the iNews rule points at a
+   Font Awesome 5 glyph the magazine doesn't ship, which rendered as a broken box). */
+.main-menu .menu-container .menu .has-submenu > a:after {
+    content: ""; width: 0; height: 0; margin-left: 7px; display: inline-block; vertical-align: middle;
+    position: relative; top: -1px; border-left: 4px solid transparent; border-right: 4px solid transparent;
+    border-top: 5px solid currentColor; font-family: inherit; }
 .main-menu .menu-container .menu .has-submenu .submenu { border-top-color: var(--ppl-gold); }
 
 /* ---------- Header bands (mirror the shop: dark → white → ad → cream) ---------- */
@@ -58,9 +64,9 @@ a:hover { color: var(--ppl-gold); }
 .ppl-primary-nav .menu-bar { justify-content: center; }
 .ppl-header-icons { flex: 0 0 auto; display: flex; align-items: center; gap: 22px; }
 .ppl-header-icons > a { position: relative; color: #1a1a1a; font-size: 17px; line-height: 1; display: inline-flex; align-items: center; }
-.ppl-header-icons > a:hover { color: var(--ppl-gold-dark); }
+.ppl-header-icons > a:hover { color: var(--pp-gold-dark); }
 .ppl-header-icons svg { width: 19px; height: 19px; }
-.ppl-icon-count { position: absolute; top: -9px; right: -11px; background: var(--ppl-gold); color: #fff;
+.ppl-icon-count { position: absolute; top: -9px; right: -11px; background: var(--pp-gold-dark); color: #fff;
     font-size: 10px; min-width: 16px; height: 16px; line-height: 16px; text-align: center; border-radius: 50%; padding: 0 3px; }
 
 /* Ad placement band. */
