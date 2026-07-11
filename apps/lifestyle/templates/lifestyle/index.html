@@ -1,0 +1,25 @@
+{% extends "lifestyle/base.html" %}
+{% load lifestyle_tags wagtailcore_tags %}
+
+{% comment %}Magazine landing base (iNews "Home Page 3"). Phase 1 = chrome +
+scaffold; Phase 2 wires the hero / per-category rails / latest grid to Wagtail
+content via overridable blocks.{% endcomment %}
+
+{% block content %}
+<div class="post-block">
+    <div class="container">
+        {% block hero %}
+        <div class="section-title mb-4"><h2><span>{{ page.title|default:"Pier & Paddock Lifestyle" }}</span></h2></div>
+        {% if page.intro %}<div class="lead mb-3">{{ page.intro|richtext }}</div>{% endif %}
+        <p class="text-muted">The harbor and the grid — F1, sailing, luxury autos and watch collecting.
+            The full Home&nbsp;3 layout is wired to Wagtail content in Phase&nbsp;2.</p>
+        {% endblock %}
+
+        {% block rails %}{% endblock %}
+
+        <div class="my-5 text-center">{% ad_zone "in_content" %}</div>
+
+        {% block latest_grid %}{% endblock %}
+    </div>
+</div>
+{% endblock %}

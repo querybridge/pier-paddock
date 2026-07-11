@@ -10,6 +10,7 @@ from wagtail.admin import urls as wagtailadmin_urls
 from wagtail.documents import urls as wagtaildocs_urls
 
 from apps.core.views import HomeView, OperationsLoginView, operations_logout
+from apps.lifestyle.views import AdvertiseStubView
 from apps.loyalty.views import PublicMembershipView
 
 urlpatterns = [
@@ -46,6 +47,8 @@ urlpatterns = [
             RedirectView.as_view(url="/lifestyle/%(rest)s", permanent=True)),
     path("blog/", include("apps.blog.urls")),
     path("pages/", include("apps.pages.urls")),
+    # Magazine advertise page (Phase 1 stub; full form in Phase 5).
+    path("advertise/", AdvertiseStubView.as_view(), name="advertise"),
     # The Wagtail magazine. All CMS pages live under /lifestyle/.
     path("lifestyle/", include(wagtail_urls)),
     # Everything else (catalogue, basket, checkout, accounts, search,

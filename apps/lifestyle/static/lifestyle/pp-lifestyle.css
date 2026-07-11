@@ -1,0 +1,57 @@
+/* ==========================================================================
+   Pier & Paddock Lifestyle — brand overrides on top of the iNews skin.
+   Recolours iNews's red accent to the P&P palette (navy #1B2A41, gold #9A7B43,
+   warm off-white #F6F3EE) and styles the stacked storefront footer.
+   ========================================================================== */
+:root {
+    --ppl-navy: #1B2A41;
+    --ppl-gold: #9A7B43;
+    --ppl-gold-dark: #7c6231;
+    --ppl-cream: #F6F3EE;
+}
+
+body { background: var(--ppl-cream); }
+
+/* Serif display for headings (GFS Baskerville / Georgia fallback) */
+h1, h2, h3, h4, .widget-title h4, .widget-title2 h4,
+.inews-post-title h3, .section-title h2 {
+    font-family: "GFS Baskerville", Georgia, "Times New Roman", serif;
+}
+
+/* Recolour the template's red accent → gold/navy */
+.btn-danger { background: var(--ppl-gold); border-color: var(--ppl-gold); }
+.btn-danger:hover, .btn-danger:focus { background: var(--ppl-gold-dark); border-color: var(--ppl-gold-dark); }
+.text-danger { color: var(--ppl-gold) !important; }
+.bg-danger { background: var(--ppl-navy) !important; }
+a { color: var(--ppl-navy); }
+a:hover { color: var(--ppl-gold); }
+.topbar .header-social a:hover, .topmenu a:hover { color: var(--ppl-gold); }
+
+/* Primary nav */
+.main-menu .menu > li > a:hover,
+.main-menu .menu > li.active > a { color: var(--ppl-gold); }
+
+/* Section/widget title accent rules → gold */
+.widget-title2 h4 span, .section-title h2 span { border-color: var(--ppl-gold); }
+
+/* Logo bar / leaderboard ad */
+.logobar { display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
+.pp-ad-zone { display: inline-block; line-height: 0; }
+.pp-ad-zone img { max-width: 100%; height: auto; }
+.header-ads { text-align: right; }
+
+/* ---------- Stacked Pier & Paddock storefront footer (shared partial) ----------
+   The zwat footer relies on theme classes (bg-main3, brand-name, …) that live in
+   the storefront theme CSS, which the magazine doesn't load. Restyle just enough
+   so the shared footer reads as intentional below the magazine footer. */
+.pp-footer.footer-home-03 { background: #1a1a1a; color: #cfc9bd; padding: 56px 0 22px; }
+.pp-footer .brand-name { font-family: "GFS Baskerville", Georgia, serif; font-size: 24px; color: #fff; margin-bottom: 4px; }
+.pp-footer .brand-tagline { color: var(--ppl-gold); letter-spacing: 2px; text-transform: uppercase; font-size: 12px; }
+.pp-footer p, .pp-footer li { color: #b9b0a0; }
+.pp-footer h4 { color: #fff; font-size: 16px; margin-bottom: 16px; }
+.pp-footer a { color: #cfc9bd; }
+.pp-footer a:hover { color: var(--ppl-gold); }
+.pp-footer .pp-footer-top { border-bottom: 1px solid #2e2a24; padding-bottom: 36px; margin-bottom: 22px; }
+.pp-footer .social-icon-style a { color: #d8cfbd; margin-right: 12px; font-size: 16px; }
+.pp-footer .pp-footer-legal a { color: #cfc9bd; margin: 0 9px; }
+.pp-footer .text-copyright, .pp-footer .pp-demo-disclaimer { color: #8a8175; font-size: 13px; }

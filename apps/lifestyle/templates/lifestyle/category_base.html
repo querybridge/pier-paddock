@@ -1,0 +1,15 @@
+{% extends "lifestyle/base.html" %}
+{% load lifestyle_tags %}
+
+{% comment %}Category/archive base. Intro + featured + reverse-chron listing are
+wired in Phase 2.{% endcomment %}
+
+{% block content %}
+<div class="post-block">
+    <div class="container">
+        <div class="section-title mb-4"><h2><span>{{ page.title }}</span></h2></div>
+        {% block category_body %}{% endblock %}
+        <div class="my-4 text-center">{% ad_zone "in_content" %}</div>
+    </div>
+</div>
+{% endblock %}
