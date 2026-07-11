@@ -29,6 +29,8 @@ POST_TYPE_CHOICES = [
     ("feature", "Long-form Feature"),
     ("gallery", "Photo Gallery"),
     ("video", "Video Feature"),
+    ("audio", "Audio / Podcast"),
+    ("quote", "Quote"),
     ("interview", "Interview / Profile"),
     ("review", "Review"),
     ("guide", "Guide / How-To"),
@@ -186,6 +188,15 @@ class ArticleProduct(Orderable):
     panels = [FieldPanel("product")]
 
 
+class ArticleGalleryImage(Orderable):
+    """An image in the lead gallery carousel (gallery post type)."""
+    page = ParentalKey("lifestyle.ArticlePage", on_delete=models.CASCADE,
+                       related_name="gallery_images")
+    image = models.ForeignKey("wagtailimages.Image", on_delete=models.CASCADE, related_name="+")
+    caption = models.CharField(max_length=255, blank=True)
+    panels = [FieldPanel("image"), FieldPanel("caption")]
+
+
 class ArticlePage(Page):
     """A magazine article. ``post_type`` (required) drives the template variant,
     schema.org type and card badge."""
@@ -201,6 +212,13 @@ class ArticlePage(Page):
         max_length=255, blank=True, help_text="Required when a hero image is set.")
     hero_caption = models.CharField(max_length=255, blank=True)
     hero_credit = models.CharField(max_length=120, blank=True)
+
+    # Lead media by post type (iNews single-post variants).
+    lead_video_url = models.URLField(
+        blank=True, help_text="Video post type — YouTube/Vimeo embed URL "
+                              "(e.g. https://www.youtube.com/embed/ID).")
+    lead_audio_url = models.URLField(
+        blank=True, help_text="Audio post type — embed URL (SoundCloud, etc.).")
 
     authors = ParentalManyToManyField("lifestyle.AuthorPage", blank=True, related_name="articles")
     publish_display_date = models.DateField(null=True, blank=True)
@@ -234,6 +252,10 @@ class ArticlePage(Page):
             FieldPanel("hero_image"), FieldPanel("hero_alt_text"),
             FieldPanel("hero_caption"), FieldPanel("hero_credit"),
         ], heading="Hero"),
+        MultiFieldPanel([
+            FieldPanel("lead_video_url"), FieldPanel("lead_audio_url"),
+            InlinePanel("gallery_images", label="Gallery images"),
+        ], heading="Lead media (video / audio / gallery post types)"),
         FieldPanel("authors", widget=forms.CheckboxSelectMultiple),
         MultiFieldPanel([
             FieldPanel("publish_display_date"), FieldPanel("updated_date"),

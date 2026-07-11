@@ -18,8 +18,8 @@ from PIL import Image, ImageDraw, ImageFont
 from wagtail.images import get_image_model
 
 from apps.lifestyle.models import (
-    ArticlePage, ArticleProduct, AuthorIndexPage, AuthorPage, CategoryPage,
-    LifestyleIndexPage,
+    ArticleGalleryImage, ArticlePage, ArticleProduct, AuthorIndexPage, AuthorPage,
+    CategoryPage, LifestyleIndexPage,
 )
 
 WagtailImage = get_image_model()
@@ -56,7 +56,15 @@ ARTICLES = [
     ("entertainment", "The Directors Who Collect", "Hollywood's quiet horology habit.", "interview", ["culture", "watches"], 0, 16, False),
     ("health", "The Sailor's Guide to Sea-Legs and Sleep", "Staying sharp on a long passage.", "guide", ["wellness", "sailing"], 2, 6, False),
     ("health", "Grip, Grit and the Racing Driver's Body", "The fitness behind the wheel.", "standard", ["fitness", "motorsport"], 1, 13, False),
+    # Media variants (iNews video / audio / quote templates)
+    ("motorsports", "In Conversation: A Team Principal on the Season Ahead", "Twelve minutes in the paddock.", "video", ["f1", "interview"], 1, 8, False),
+    ("entertainment", "The Pier & Paddock Podcast, Episode One", "The harbor and the grid, in your ears.", "audio", ["podcast", "culture"], 0, 10, False),
+    ("business", "“Buy the seller, not the watch”", "A veteran dealer's rule for a nervous market.", "quote", ["watches", "market"], 0, 12, False),
 ]
+
+YOUTUBE_EMBED = "https://www.youtube.com/embed/2Gg6Seob5Mg"
+SOUNDCLOUD_EMBED = ("https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/"
+                    "tracks/51057943&color=%239A7B43&auto_play=false&show_user=true")
 
 BODY = [
     "<p>There is a particular pleasure in the details — the click of a bezel, the "
@@ -144,11 +152,18 @@ class Command(BaseCommand):
                 hero_credit="Pier & Paddock",
                 publish_display_date=dt.date(),
                 body=[("paragraph", p) for p in BODY],
+                lead_video_url=YOUTUBE_EMBED if ptype == "video" else "",
+                lead_audio_url=SOUNDCLOUD_EMBED if ptype == "audio" else "",
             )
             cat.add_child(instance=art)
             art.authors.set([authors[aidx]])
             for t in tags:
                 art.tags.add(t)
+            if ptype == "gallery":
+                for i in range(4):
+                    art.gallery_images.add(ArticleGalleryImage(
+                        image=self._image("%s frame %d" % (title, i + 1), cat.title, 1000, 620, color),
+                        caption="%s — frame %d" % (cat.title, i + 1)))
             # Shoppable products on watch-tagged stories
             if "watches" in tags or "chronograph" in tags:
                 for p in random.sample(products, 3):

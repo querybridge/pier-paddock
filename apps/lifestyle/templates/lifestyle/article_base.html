@@ -1,22 +1,27 @@
 {% extends "lifestyle/base.html" %}
 {% load lifestyle_tags %}
 
-{% comment %}Single-post base (iNews "standard"). Article body fills article_main;
-the left rail (Latest News + Sponsored Products) is built in Phase 4.{% endcomment %}
+{% comment %}Single-post base — iNews ".main-content" two-column layout. The
+article body fills article_main; the left rail (Latest News + Sponsored Products)
+is built in Phase 4.{% endcomment %}
 
 {% block content %}
-<div class="post-block">
+<div class="main-content">
     <div class="container">
         <div class="row">
             <div class="col-lg-8">
                 {% block article_main %}{% endblock %}
-                <div class="my-4 text-center">{% ad_zone "in_content" %}</div>
             </div>
-            <aside class="col-lg-4">
-                {% block article_sidebar %}
-                <div class="text-center mb-4">{% ad_zone "sidebar" %}</div>
-                {% endblock %}
-            </aside>
+            <div class="col-lg-4">
+                <div class="sidebar">
+                    {% block article_sidebar %}
+                    <div class="sidebar-widget text-center">
+                        <span class="ppl-ad-label">- Advertisement -</span>
+                        {% ad_zone "sidebar" %}
+                    </div>
+                    {% endblock %}
+                </div>
+            </div>
         </div>
     </div>
 </div>

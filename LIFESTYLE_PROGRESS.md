@@ -161,6 +161,44 @@ Wagtail CMS admin: **`/cms-admin/`** (log in as a superuser — `admin@example.c
 **Deploy note:** after `migrate` + `lifestyle_bootstrap` + `lifestyle_ads`, run
 `python manage.py load_lifestyle_demo` (or pull the committed db + originals).
 
+## Phase 3 (part) — article post-type template variants — 2026-07-11 ✅
+
+Built the **post-type → template variant** portion of Phase 3 at the owner's
+request (article templates matching the iNews single-post pages). The rest of
+Phase 3 (full StreamField block set) is still pending.
+
+**Built**
+- Article templates rebuilt to the iNews `.main-content` / `.single-post`
+  structure (`article_base.html` two-column + `article_page.html` with lead media,
+  title, meta/byline, body, share box, shoppable "From the Shop", author box,
+  related reading).
+- **Lead media per post type**, matching the iNews templates:
+  - `standard` (+ feature/interview/review/guide/event/list) → hero image
+  - `video` → `.inews-post-video` iframe (from new `lead_video_url`)
+  - `audio` → `.inews-post-audio` iframe (from new `lead_audio_url`)
+  - `gallery` → `.gallery-slider` owl carousel (from new `ArticleGalleryImage`
+    inline; owl init added)
+  - `quote` → `.single-post.quote`, headline leads as `<q>` then image
+- Added **`quote`** and **`audio`** to `POST_TYPE_CHOICES`; new fields
+  `lead_video_url`, `lead_audio_url`, and the `ArticleGalleryImage` orderable
+  (migration `0004`). Phase 3 CSS appended.
+- Seed extended: video / audio / quote demo articles + gallery images (15 total).
+
+**Files touched**
+- `apps/lifestyle/models.py`, `migrations/0004_*.py`,
+  `templates/lifestyle/{article_base,article_page}.html`,
+  `static/lifestyle/pp-lifestyle.css`, `management/commands/load_lifestyle_demo.py`,
+  `db.sqlite3` + `media/original_images/`
+
+**Verify (all pass)** — each variant renders its iNews layout: standard
+(thumb/content/share), video (iframe), gallery (owl carousel + 4 slides + nav),
+quote (`<q>` title, quote class), audio (iframe). Screenshot confirmed the
+gallery single-post matches iNews. `check` clean.
+
+**Still pending in Phase 3:** the full StreamField block set (pull quote, image
+gallery block, video/oEmbed block, product-card block, FAQ, key-takeaways, table,
+divider, inline ad). The `body` StreamField currently has paragraph + image only.
+
 ---
 
 ## Ad-hoc / early items

@@ -1,42 +1,63 @@
 {% extends "lifestyle/article_base.html" %}
-{% load wagtailcore_tags wagtailimages_tags thumbnail %}
+{% load wagtailcore_tags wagtailimages_tags thumbnail lifestyle_tags %}
 
 {% block title %}{{ page.seo_title|default:page.title }}{% endblock %}
 
 {% block article_main %}
-<article class="ppl-article ppl-post-{{ page.post_type }}">
-    <div class="ppl-cat mb-2">
-        {% if page.category %}<a href="{{ page.category.url }}">{{ page.category.title }}</a>{% endif %}
-        <span class="ppl-badge">{{ page.post_type_label }}</span>
-    </div>
-    <h1>{{ page.title }}</h1>
-    {% if page.subtitle %}<p class="lead ppl-dek">{{ page.subtitle }}</p>{% endif %}
-    <div class="inews-post-meta ppl-byline mb-3">
-        {% for a in page.authors.all %}<a href="{{ a.url }}">{{ a.title }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}
-        <span class="ms-2">· <i class="fas fa-calendar-alt"></i>
-            {{ page.publish_display_date|default:page.first_published_at|date:"F j, Y" }}</span>
-        <span class="ms-2">· {{ page.reading_time }} min read</span>
-    </div>
+<article class="single-post {% if page.post_type == 'quote' %}quote{% else %}standard{% endif %} ppl-post-{{ page.post_type }}">
 
-    {% if page.is_sponsored %}<div class="ppl-sponsor-band">Partner Content — produced in partnership with a Pier &amp; Paddock advertiser.</div>{% endif %}
-
-    {% if page.hero_image %}
-    <figure class="ppl-hero mb-4">
-        {% image page.hero_image width-1100 alt=page.hero_alt_text %}
-        {% if page.hero_caption %}<figcaption>{{ page.hero_caption }}{% if page.hero_credit %} <span class="ppl-credit">— {{ page.hero_credit }}</span>{% endif %}</figcaption>{% endif %}
-    </figure>
+    {% if page.post_type == 'quote' %}
+        {# Quote: the headline leads as a quote, then the image. #}
+        <div class="inews-post-title"><h1><q>{{ page.title }}</q></h1></div>
+        {% if page.hero_image %}<div class="inews-post-thumb">{% image page.hero_image width-820 alt=page.hero_alt_text %}</div>{% endif %}
+    {% else %}
+        {# Lead media by post type. #}
+        {% if page.post_type == 'video' and page.lead_video_url %}
+            <div class="inews-post-video"><iframe src="{{ page.lead_video_url }}" allowfullscreen title="{{ page.title }}"></iframe></div>
+        {% elif page.post_type == 'audio' and page.lead_audio_url %}
+            <div class="inews-post-audio"><iframe src="{{ page.lead_audio_url }}" title="{{ page.title }}"></iframe></div>
+        {% elif page.post_type == 'gallery' and page.gallery_images.all %}
+            <div class="inews-post-thumb owl-carousel gallery-slider">
+                {% for g in page.gallery_images.all %}<div class="slide-item">{% image g.image width-820 alt=g.caption|default:page.title %}</div>{% endfor %}
+            </div>
+        {% elif page.hero_image %}
+            <div class="inews-post-thumb">{% image page.hero_image width-820 alt=page.hero_alt_text %}</div>
+        {% endif %}
+        <div class="inews-post-title"><h1>{{ page.title }}</h1></div>
     {% endif %}
 
-    <div class="ppl-body">
+    {% if page.subtitle %}<p class="lead ppl-dek">{{ page.subtitle }}</p>{% endif %}
+
+    <div class="single-post-meta">
+        <div class="inews-post-meta ppl-byline">
+            <span class="inews-post-date"><i class="fas fa-calendar-alt"></i>
+                {{ page.publish_display_date|default:page.first_published_at|date:"F j, Y" }}</span>
+            {% for a in page.authors.all %}<span class="ms-2">· <a href="{{ a.url }}">{{ a.title }}</a></span>{% endfor %}
+            <span class="ms-2">· {{ page.reading_time }} min read</span>
+            {% if page.category %}<span class="ms-2">· <a href="{{ page.category.url }}">{{ page.category.title }}</a></span>{% endif %}
+        </div>
+    </div>
+
+    {% if page.is_sponsored %}<div class="ppl-sponsor-band mt-2">Partner Content — produced in partnership with a Pier &amp; Paddock advertiser.</div>{% endif %}
+
+    <div class="inews-post-content ppl-body mt-3">
         {% for block in page.body %}{% include_block block %}{% endfor %}
     </div>
 
-    {% if page.tags.all %}
-    <div class="ppl-tags mt-4">{% for t in page.tags.all %}<span class="tag">{{ t }}</span> {% endfor %}</div>
-    {% endif %}
+    {% if page.tags.all %}<div class="ppl-tags mt-3">{% for t in page.tags.all %}<span class="tag">{{ t }}</span> {% endfor %}</div>{% endif %}
+
+    <div class="share-box mt-4">
+        <h4>Share This Article:</h4>
+        <ul>
+            <li><a class="facebook" href="#"><i class="fab fa-facebook-f"></i></a></li>
+            <li><a class="twitter" href="#"><i class="fab fa-x-twitter"></i></a></li>
+            <li><a class="linkedin" href="#"><i class="fab fa-linkedin-in"></i></a></li>
+            <li><a class="pinterest" href="#"><i class="fab fa-pinterest-p"></i></a></li>
+        </ul>
+    </div>
 
     {% with rels=page.related_products.all %}{% if rels %}
-    <div class="ppl-shoppable mt-5">
+    <div class="ppl-shoppable mt-4">
         <div class="widget-title2"><h4><span>From the Shop</span></h4></div>
         <div class="row">
             {% for rp in rels %}{% with p=rp.product %}
@@ -56,6 +77,17 @@
     </div>
     {% endif %}{% endwith %}
 
+    {% for a in page.authors.all %}
+    <div class="ppl-author-box mt-4">
+        {% if a.portrait %}{% image a.portrait fill-80x80 class="rounded-circle" alt=a.title %}{% endif %}
+        <div class="ppl-author-box-body">
+            <h4><a href="{{ a.url }}">{{ a.title }}</a></h4>
+            {% if a.role %}<div class="ppl-cat">{{ a.role }}</div>{% endif %}
+            {% if a.bio %}<div class="ppl-author-box-bio">{{ a.bio|richtext }}</div>{% endif %}
+        </div>
+    </div>
+    {% endfor %}
+
     {% if related %}
     <div class="ppl-related mt-5">
         <div class="widget-title2"><h4><span>Related Reading</span></h4></div>
@@ -65,4 +97,17 @@
     </div>
     {% endif %}
 </article>
+{% endblock %}
+
+{% block extra_js %}
+{% if page.post_type == 'gallery' %}
+<script>
+jQuery(function($){
+    $('.gallery-slider').owlCarousel({
+        items:1, dots:false, loop:true, nav:true,
+        navText:['<i class="fas fa-chevron-left"></i>','<i class="fas fa-chevron-right"></i>']
+    });
+});
+</script>
+{% endif %}
 {% endblock %}
