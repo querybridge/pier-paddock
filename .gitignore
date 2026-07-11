@@ -26,14 +26,14 @@ db.sqlite3-wal
 db.sqlite3-shm
 
 # ─── Regenerated / derivative images ──────────────────────────
-# sorl-thumbnail cache — derivative images rebuilt on demand. (Source product
-# imagery under media/images/ IS committed so the demo renders without a reseed.)
+# sorl-thumbnail cache — derivative images rebuilt on demand.
 /media/cache/
-# Wagtail image renditions (regenerated on demand). Originals in
-# media/original_images/ ARE committed so the magazine renders without a reseed;
-# product imagery under media/images/products/ stays tracked.
-/media/images/*
-!/media/images/products/
+# Wagtail image renditions under media/images/ ARE committed (alongside the DB's
+# matching wagtailimages_rendition rows) so the magazine renders on deploy WITHOUT
+# regenerating — important on hosts where the media dir isn't writable (e.g.
+# PythonAnywhere). Sources live in media/original_images/; product imagery in
+# media/images/products/ stays tracked too. Keep files + DB rows in sync: after
+# content changes, re-render the pages and recommit media/images/ + db.sqlite3.
 
 # ─── Local-only docs ──────────────────────────────────────────
 # Context file uploaded to a Claude Project's knowledge base; kept local.
