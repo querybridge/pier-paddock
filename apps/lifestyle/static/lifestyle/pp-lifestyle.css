@@ -72,8 +72,8 @@ a:hover { color: var(--ppl-gold); }
 .ppl-header-icons svg { width: 16px; height: 16px; }
 /* Counter tag — matches the shop's .mini-cart-items (gold tag with a left pointer). */
 .ppl-icon-count { margin-left: 6px; color: #fff; font-size: 16px; background: var(--pp-gold-dark);
-    display: inline-block; padding: 1px 5px; position: relative; border-radius: 2px; line-height: 1.25; }
-.ppl-icon-count:before { content: ""; position: absolute; top: 4px; left: -11px; width: 0; height: 0;
+    display: inline-block; padding: 1px 5px; position: relative; border-radius: 0 2px 2px 0; line-height: 1.25; }
+.ppl-icon-count:before { content: ""; position: absolute; top: 4px; left: -10px; width: 0; height: 0;
     border-width: 6px; border-style: solid; border-color: transparent var(--pp-gold-dark) transparent transparent; }
 
 /* Ad placement band. */
