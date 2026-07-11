@@ -33,10 +33,13 @@ a:hover { color: var(--ppl-gold); }
    colours it identically; these rules only supply the zwat base layout (that theme's
    style.css isn't loaded on the magazine). */
 .header-top { padding: 10px 0; }
-.header-top .social-icon-style { display: flex; align-items: center; gap: 16px; }
-.header-top .social-icon-style a { display: inline-flex; line-height: 0; }
-.header-top .social-icon-style svg { width: 14px; height: 14px; }
-.header-top .free-delivery h4 { font-weight: 400; text-transform: uppercase; margin: 0; }
+.header-top .social-icon-style { display: flex; align-items: center; gap: 8px; }
+.header-top .social-icon-style a { display: inline-flex; align-items: center; justify-content: center;
+    width: 25px; height: 25px; border: 1px solid #A67314; }
+.header-top .social-icon-style a:hover { background: #A67314; color: var(--pp-gold); }
+.header-top .social-icon-style svg { width: 13px; height: 13px; }
+.header-top .free-delivery h4 { font-family: "Jost", "Segoe UI", Arial, sans-serif; font-size: 12px;
+    font-weight: 400; letter-spacing: 1px; text-transform: uppercase; margin: 0; }
 .header-top .setting-wrap { text-align: right; }
 .header-top .setting-wrap ul { list-style: none; margin: 0; padding: 0; }
 .header-top .setting-wrap ul li a:hover { color: var(--ppl-gold); }
@@ -63,11 +66,14 @@ a:hover { color: var(--ppl-gold); }
 .ppl-primary-nav { flex: 1 1 auto; display: flex; justify-content: center; }
 .ppl-primary-nav .menu-bar { justify-content: center; }
 .ppl-header-icons { flex: 0 0 auto; display: flex; align-items: center; gap: 22px; }
-.ppl-header-icons > a { position: relative; color: #1a1a1a; font-size: 17px; line-height: 1; display: inline-flex; align-items: center; }
+.ppl-header-icons > a { position: relative; color: #1a1a1a; font-size: 16px; line-height: 1; display: inline-flex; align-items: center; }
 .ppl-header-icons > a:hover { color: var(--pp-gold-dark); }
-.ppl-header-icons svg { width: 19px; height: 19px; }
-.ppl-icon-count { position: absolute; top: -9px; right: -11px; background: var(--pp-gold-dark); color: #fff;
-    font-size: 10px; min-width: 16px; height: 16px; line-height: 16px; text-align: center; border-radius: 50%; padding: 0 3px; }
+.ppl-header-icons svg { width: 16px; height: 16px; }
+/* Counter tag — matches the shop's .mini-cart-items (gold tag with a left pointer). */
+.ppl-icon-count { margin-left: 6px; color: #fff; font-size: 16px; background: var(--pp-gold-dark);
+    display: inline-block; padding: 1px 5px; position: relative; border-radius: 2px; line-height: 1.25; }
+.ppl-icon-count:before { content: ""; position: absolute; top: 4px; left: -11px; width: 0; height: 0;
+    border-width: 6px; border-style: solid; border-color: transparent var(--pp-gold-dark) transparent transparent; }
 
 /* Ad placement band. */
 .ppl-ad-band { background: #fff; }
