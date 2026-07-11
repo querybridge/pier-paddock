@@ -45,6 +45,17 @@ a:hover { color: var(--ppl-gold); }
 .main-menu .menu-container .menu li a { letter-spacing: 1px; font-weight: 500; color: #1a1a1a; }
 .main-menu .menu-container .menu li a:hover,
 .main-menu .menu-container .menu > li.active > a { background: transparent; color: var(--ppl-gold-dark); }
+/* Shop-style dropdowns on the magazine nav: gold caret + border (was iNews red). */
+.main-menu .menu-container .menu .has-submenu > a:after { color: var(--ppl-gold-dark); }
+.main-menu .menu-container .menu .has-submenu .submenu { border-top-color: var(--ppl-gold); }
+
+/* Header ad placement — centred (the logo has been dropped). */
+.ppl-header-ad { text-align: center; padding: 16px 0; line-height: 0; }
+.ppl-header-ad img { max-width: 100%; height: auto; }
+
+/* Centre the duplicated primary nav; keep the search pinned to the right. */
+.navigation .menu-bar { justify-content: center; }
+.navigation .header-search { position: absolute; right: 0; top: 50%; transform: translateY(-50%); }
 
 /* Section/widget title accent rules → gold */
 .widget-title2 h4 span, .section-title h2 span { border-color: var(--ppl-gold); }

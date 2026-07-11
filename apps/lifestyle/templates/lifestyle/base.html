@@ -49,15 +49,10 @@
         </div>
         <!--Top Banner End-->
 
-        <!--Main Header Start-->
+        <!--Main Header Start (logo dropped; ad placement centred) -->
         <div class="main-header">
             <div class="container">
-                <div class="logobar">
-                    <div class="top-logo">
-                        <a href="/lifestyle/"><img src="{% static 'lifestyle/img/pp-lifestyle-logo.svg' %}" width="270" height="74" alt="Pier &amp; Paddock Lifestyle"></a>
-                    </div>
-                    <div class="header-ads">{% ad_zone "leaderboard_top" %}</div>
-                </div>
+                <div class="ppl-header-ad">{% ad_zone "leaderboard_top" %}</div>
             </div>
         </div>
 
@@ -65,11 +60,32 @@
             <div class="container">
                 <nav class="main-menu menu-bar">
                     <div class="menu-container" id="desktop-menu">
+                        {# Primary nav duplicated from the storefront for consistent
+                           cross-site navigation (nav_collections / nav_brands come from
+                           the global apps.core.context_processors.navigation). #}
                         <ul class="menu">
-                            {% lifestyle_nav as nav_items %}
-                            {% for item in nav_items %}
-                            <li><a href="{{ item.url }}">{{ item.title }}</a></li>
-                            {% endfor %}
+                            <li><a href="{% url 'home' %}">Home</a></li>
+                            <li class="has-submenu"><a href="{% url 'shop:browse' %}">Shop</a>
+                                <ul class="submenu">
+                                    <li><a href="{% url 'shop:browse' %}">All Watches</a></li>
+                                    {% for c in nav_collections %}
+                                    <li><a href="{% url 'shop:browse' %}?collection={{ c.slug }}">{{ c.name }}</a></li>
+                                    {% endfor %}
+                                </ul>
+                            </li>
+                            <li class="has-submenu"><a href="{% url 'shop:browse' %}">Brands</a>
+                                <ul class="submenu">
+                                    {% for b in nav_brands %}
+                                    <li><a href="{% url 'shop:browse' %}?brand={{ b.slug }}">{{ b.name }}</a></li>
+                                    {% empty %}
+                                    <li><a href="{% url 'shop:browse' %}">All Brands</a></li>
+                                    {% endfor %}
+                                </ul>
+                            </li>
+                            <li><a href="/lifestyle/">Lifestyle</a></li>
+                            <li><a href="{% url 'pages:about' %}">About</a></li>
+                            <li><a href="{% url 'pages:faq' %}">FAQ</a></li>
+                            <li><a href="{% url 'pages:contact' %}">Contact</a></li>
                         </ul>
                     </div>
                     <div id="mobile-menu"></div>

@@ -310,6 +310,17 @@ reports pending while disabled. `check` clean.
   strip styling added to shared `pierpaddock.css` (magazine `pp-lifestyle.css` refines
   it). (4) Magazine primary nav now uses the storefront **rollover treatment** —
   gold-text hover, no red fill (overrode the iNews `.menu li a:hover` red background).
+- **2026-07-11 — Magazine header aligned to the storefront nav:** the magazine header
+  now **duplicates the Shop's primary nav** for consistent cross-site navigation —
+  Home, Shop ▾ (All Watches + collections), Brands ▾ (brands), Lifestyle, About, FAQ,
+  Contact. Built on the magazine's own working iNews nav machinery (`.has-submenu` /
+  `.submenu` hover dropdowns + mobile meanmenu + search), fed by the global
+  `nav_collections` / `nav_brands` context processors (available on Wagtail pages too).
+  The magazine **logo was dropped** from the header and the **leaderboard ad placement
+  centred** (`.ppl-header-ad`); nav is centred with the search pinned right. iNews red
+  submenu accents (caret + border) recoloured gold. The storefront `_header.html` was
+  **not** modified — the nav was duplicated into the magazine, not refactored into a
+  shared partial, to keep the storefront untouched.
 
 ---
 
