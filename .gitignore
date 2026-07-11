@@ -30,6 +30,10 @@ db.sqlite3-shm
 # imagery under media/images/ IS committed so the demo renders without a reseed.)
 /media/cache/
 
+# ─── Local-only docs ──────────────────────────────────────────
+# Context file uploaded to a Claude Project's knowledge base; kept local.
+/claude-project-context.md
+
 # ─── OS / editor cruft ────────────────────────────────────────
 .DS_Store
 Thumbs.db
