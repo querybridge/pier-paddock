@@ -39,7 +39,8 @@ a:hover { color: var(--ppl-gold); }
 .header-top .social-icon-style a:hover { background: #A67314; color: var(--pp-gold); }
 .header-top .social-icon-style svg { width: 13px; height: 13px; }
 .header-top .free-delivery h4 { font-family: "Jost", "Segoe UI", Arial, sans-serif; font-size: 12px;
-    font-weight: 400; letter-spacing: 1px; text-transform: uppercase; margin: 0; }
+    font-weight: 400; letter-spacing: 1px; text-transform: uppercase; margin: 0; white-space: nowrap; }
+.header-top .free-delivery h4 span { color: #fff; }
 .header-top .setting-wrap { text-align: right; }
 .header-top .setting-wrap ul { list-style: none; margin: 0; padding: 0; }
 .header-top .setting-wrap ul li a:hover { color: var(--ppl-gold); }
