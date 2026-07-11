@@ -6,3 +6,7 @@ Pillow==12.2.0
 pycountry==26.2.16
 # (django-oscar pulls in haystack, treebeard, widget-tweaks, django-tables2,
 #  factory-boy, phonenumbers, purl, babel, extra-views automatically.)
+
+# Pier & Paddock Lifestyle (Wagtail magazine). 7.x is the first series to
+# support Django 5.2. Pulls in Willow, modelcluster, taggit, DRF, etc.
+wagtail==7.4.2

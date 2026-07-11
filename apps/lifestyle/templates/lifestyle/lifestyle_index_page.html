@@ -1,0 +1,27 @@
+{% load wagtailcore_tags %}<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ page.title }} — Pier &amp; Paddock Lifestyle</title>
+    <style>
+        body { margin:0; font-family: Georgia, "Times New Roman", serif; background:#F6F3EE; color:#1B2A41; }
+        .wrap { max-width:760px; margin:0 auto; padding:120px 24px; text-align:center; }
+        .mark { letter-spacing:4px; text-transform:uppercase; font-size:12px; color:#9A7B43; font-family: Calibri, Carlito, sans-serif; }
+        h1 { font-size:44px; margin:14px 0 6px; }
+        .rule { width:60px; height:3px; background:#9A7B43; margin:18px auto; }
+        p { color:#4a4f5a; font-family: Calibri, Carlito, sans-serif; }
+    </style>
+</head>
+<body>
+    <div class="wrap">
+        <div class="mark">Pier &amp; Paddock</div>
+        <h1>{{ page.title }}</h1>
+        <div class="rule"></div>
+        {% if page.intro %}{{ page.intro|richtext }}{% else %}
+        <p>The harbor and the grid — coming soon. (Phase 0 stub; the iNews magazine
+           skin lands in Phase 1.)</p>
+        {% endif %}
+    </div>
+</body>
+</html>

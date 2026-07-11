@@ -72,6 +72,24 @@ INSTALLED_APPS = [
     "apps.merchant.apps.MerchantConfig",
     "apps.blog.apps.BlogConfig",
     "apps.pages.apps.PagesConfig",
+    # ── Pier & Paddock Lifestyle (Wagtail magazine) ──────────────────────
+    "wagtail.contrib.forms",
+    "wagtail.contrib.redirects",
+    "wagtail.contrib.settings",
+    "wagtail.contrib.routable_page",
+    "wagtail.contrib.sitemaps",
+    "wagtail.embeds",
+    "wagtail.sites",
+    "wagtail.users",
+    "wagtail.snippets",
+    "wagtail.documents",
+    "wagtail.images",
+    "wagtail.search",
+    "wagtail.admin",
+    "wagtail",
+    "modelcluster",
+    "taggit",
+    "apps.lifestyle.apps.LifestyleConfig",
 ]
 
 # Swap stock Oscar apps for our forked versions. Checkout is forked to disable
@@ -104,6 +122,8 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "django.contrib.flatpages.middleware.FlatpageFallbackMiddleware",
     "oscar.apps.basket.middleware.BasketMiddleware",
+    # Wagtail editor-managed redirects (magazine).
+    "wagtail.contrib.redirects.middleware.RedirectMiddleware",
 ]
 
 # ---------------------------------------------------------------------------
@@ -132,6 +152,7 @@ TEMPLATES = [
                 "apps.compare.context_processors.compare",
                 "apps.vault.context_processors.vault",
                 "apps.loyalty.context_processors.membership",
+                "wagtail.contrib.settings.context_processors.settings",
             ],
         },
     },
@@ -253,3 +274,31 @@ MAILCHIMP_AUDIENCE_ID = os.environ.get("MAILCHIMP_AUDIENCE_ID", "")
 
 # Shared demo password for the seeded per-tier member logins (load_loyalty_demo).
 LOYALTY_DEMO_PASSWORD = "Crest1234!"
+
+# ---------------------------------------------------------------------------
+# Pier & Paddock Lifestyle (Wagtail magazine)
+#
+# The magazine lives under /lifestyle/. Wagtail admin is at /cms-admin/ so it
+# never collides with the Django admin (/admin/) or the Oscar dashboard
+# (/dashboard/). See config/urls.py for URL precedence.
+# ---------------------------------------------------------------------------
+WAGTAIL_SITE_NAME = "Pier & Paddock Lifestyle"
+WAGTAILADMIN_BASE_URL = os.environ.get(
+    "WAGTAILADMIN_BASE_URL", "http://127.0.0.1:8000"
+)
+WAGTAIL_APPEND_SLASH = True
+
+# Serve image renditions as WebP for Core Web Vitals (Phase 6).
+WAGTAILIMAGES_FORMAT_CONVERSIONS = {"jpeg": "webp", "png": "webp"}
+
+# Wagtail's own search (separate from Oscar's Haystack). DB backend is plenty.
+WAGTAILSEARCH_BACKENDS = {
+    "default": {"BACKEND": "wagtail.search.backends.database"},
+}
+
+# Analytics / discovery IDs — empty by default; owner (Mike) supplies later.
+GA4_MEASUREMENT_ID = os.environ.get("GA4_MEASUREMENT_ID", "")
+
+# Ad server + marketing integrations — built with seams, inactive for now.
+REVIVE_ENABLED = _env_bool("REVIVE_ENABLED", False)
+MAILCHIMP_LIST_ID = os.environ.get("MAILCHIMP_LIST_ID", "")  # MAILCHIMP_API_KEY already defined above
