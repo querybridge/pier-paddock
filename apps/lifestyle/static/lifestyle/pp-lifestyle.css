@@ -28,7 +28,7 @@ a:hover { color: var(--ppl-gold); }
 .topbar .header-social a:hover, .topmenu a:hover { color: var(--ppl-gold); }
 
 /* Dark top banner — mirrors the storefront's header-top bg-main2 strip. */
-.ppl-topbar { background: var(--ppl-navy); padding: 8px 0; }
+.ppl-topbar { background: #14110E; padding: 8px 0; }
 .ppl-topbar .pp-social-svg { display: flex; gap: 14px; margin: 0; }
 .ppl-topbar .pp-social-svg a { color: #d8cfbd; }
 .ppl-topbar .pp-social-svg a:hover { color: var(--ppl-gold); }
