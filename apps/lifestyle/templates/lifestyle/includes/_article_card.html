@@ -1,0 +1,20 @@
+{% load wagtailimages_tags %}
+<div class="inews-post-item mb-4">
+    <div class="inews-post-thumb">
+        <a href="{{ article.url }}">
+            {% if article.hero_image %}{% image article.hero_image fill-420x260 alt=article.hero_alt_text %}
+            {% else %}<span class="ph-thumb" style="display:block;height:200px;background:#e9e4da;"></span>{% endif %}
+        </a>
+        <span class="ppl-badge">{{ article.post_type_label }}</span>
+        {% if article.is_sponsored %}<span class="ppl-badge ppl-badge--sponsored">Partner</span>{% endif %}
+    </div>
+    <div class="inews-post-info">
+        {% if article.category %}<div class="ppl-cat"><a href="{{ article.category.url }}">{{ article.category.title }}</a></div>{% endif %}
+        <div class="inews-post-title"><h3><a href="{{ article.url }}">{{ article.title }}</a></h3></div>
+        <div class="inews-post-meta">
+            <span class="inews-post-date"><i class="fas fa-calendar-alt"></i>
+                {{ article.publish_display_date|default:article.first_published_at|date:"M j, Y" }}</span>
+            <span class="ms-2">· {{ article.reading_time }} min read</span>
+        </div>
+    </div>
+</div>

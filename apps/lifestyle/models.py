@@ -5,13 +5,36 @@ Wagtail site at /lifestyle/ and serve a stub. The full information architecture
 (CategoryPage, ArticlePage, AuthorPage, StreamField body, etc.) arrives in later
 phases per LIFESTYLE_MAGAZINE.md — this model will be extended, not replaced.
 """
+import re
+
+from django import forms
+from django.core.paginator import Paginator
 from django.db import models
 from django.templatetags.static import static
 from django.utils.safestring import mark_safe
-from wagtail.admin.panels import FieldPanel
-from wagtail.fields import RichTextField
-from wagtail.models import Page
+from modelcluster.contrib.taggit import ClusterTaggableManager
+from modelcluster.fields import ParentalKey, ParentalManyToManyField
+from taggit.models import TaggedItemBase
+from wagtail import blocks
+from wagtail.admin.panels import FieldPanel, InlinePanel, MultiFieldPanel
+from wagtail.fields import RichTextField, StreamField
+from wagtail.images.blocks import ImageChooserBlock
+from wagtail.models import Orderable, Page
+from wagtail.search import index
 from wagtail.snippets.models import register_snippet
+
+# Post types the author picks at creation (Phase 3 drives templates/schema off it).
+POST_TYPE_CHOICES = [
+    ("standard", "Standard Article"),
+    ("feature", "Long-form Feature"),
+    ("gallery", "Photo Gallery"),
+    ("video", "Video Feature"),
+    ("interview", "Interview / Profile"),
+    ("review", "Review"),
+    ("guide", "Guide / How-To"),
+    ("event", "Event Coverage"),
+    ("list", "Curated List"),
+]
 
 
 @register_snippet
@@ -75,19 +98,260 @@ class AdZone(models.Model):
 
 class LifestyleIndexPage(Page):
     """The magazine landing page — mounted as the Wagtail site root so its URL is
-    /lifestyle/. Laid out to the iNews "Home Page 3" design in a later phase."""
+    /lifestyle/. Renders the iNews "Home Page 3" layout from live content."""
 
     intro = RichTextField(
         blank=True,
         help_text="Short editorial positioning shown on the landing page.",
     )
 
-    content_panels = Page.content_panels + [
-        FieldPanel("intro"),
-    ]
+    content_panels = Page.content_panels + [FieldPanel("intro")]
 
-    # Only one magazine landing page should exist, at the site root.
     max_count = 1
+    subpage_types = ["lifestyle.CategoryPage", "lifestyle.AuthorIndexPage"]
 
     class Meta:
         verbose_name = "Lifestyle landing page"
+
+    def get_context(self, request):
+        ctx = super().get_context(request)
+        articles = ArticlePage.objects.live().public().order_by("-first_published_at")
+        cats = list(CategoryPage.objects.live().child_of(self).order_by("path"))
+        ctx["categories"] = cats
+        ctx["featured"] = articles.first()
+        ctx["latest"] = articles[1:13]
+        # "Trending": most-viewed if we track it cheaply, else most recent fallback.
+        ctx["trending"] = articles[:6]
+        # Per-category rails (latest 3 in each) for the Home 3 layout.
+        ctx["category_rails"] = [
+            {"category": c,
+             "articles": list(ArticlePage.objects.live().public().child_of(c)
+                              .order_by("-first_published_at")[:3])}
+            for c in cats
+        ]
+        return ctx
+
+
+class CategoryPage(Page):
+    """A topical hub (Fashion, Motorsports, …) — the topical-authority page."""
+
+    intro = RichTextField(
+        help_text="150–300 words of editorial positioning for this section.")
+    hero_image = models.ForeignKey(
+        "wagtailimages.Image", null=True, blank=True, on_delete=models.SET_NULL, related_name="+")
+    accent_color = models.CharField(
+        max_length=7, blank=True, help_text="Optional hex accent, e.g. #9A7B43.")
+
+    content_panels = Page.content_panels + [
+        FieldPanel("intro"),
+        FieldPanel("hero_image"),
+        FieldPanel("accent_color"),
+        InlinePanel("featured", label="Featured articles", max_num=4),
+    ]
+
+    parent_page_types = ["lifestyle.LifestyleIndexPage"]
+    subpage_types = ["lifestyle.ArticlePage"]
+
+    class Meta:
+        verbose_name = "Category page"
+
+    def get_context(self, request):
+        ctx = super().get_context(request)
+        qs = (ArticlePage.objects.live().public().child_of(self)
+              .order_by("-first_published_at"))
+        paginator = Paginator(qs, 9)
+        ctx["articles"] = paginator.get_page(request.GET.get("page"))
+        ctx["featured_articles"] = [f.article for f in self.featured.all() if f.article]
+        return ctx
+
+
+class CategoryFeatured(Orderable):
+    """Manual curation slot: a featured article on a category hub."""
+    category = ParentalKey(CategoryPage, on_delete=models.CASCADE, related_name="featured")
+    article = models.ForeignKey(
+        "lifestyle.ArticlePage", on_delete=models.CASCADE, related_name="+")
+    panels = [FieldPanel("article")]
+
+
+class ArticleTag(TaggedItemBase):
+    content_object = ParentalKey("lifestyle.ArticlePage", on_delete=models.CASCADE,
+                                 related_name="tagged_items")
+
+
+class ArticleProduct(Orderable):
+    """A shoppable Oscar product related to an article (max 4)."""
+    page = ParentalKey("lifestyle.ArticlePage", on_delete=models.CASCADE,
+                       related_name="related_products")
+    product = models.ForeignKey("catalogue.Product", on_delete=models.CASCADE, related_name="+")
+    panels = [FieldPanel("product")]
+
+
+class ArticlePage(Page):
+    """A magazine article. ``post_type`` (required) drives the template variant,
+    schema.org type and card badge."""
+
+    post_type = models.CharField(
+        max_length=16, choices=POST_TYPE_CHOICES, default="standard",
+        help_text="Pick the kind of story — drives layout, schema and badge.")
+    subtitle = models.CharField(max_length=255, blank=True, help_text="Dek / standfirst.")
+
+    hero_image = models.ForeignKey(
+        "wagtailimages.Image", null=True, blank=True, on_delete=models.SET_NULL, related_name="+")
+    hero_alt_text = models.CharField(
+        max_length=255, blank=True, help_text="Required when a hero image is set.")
+    hero_caption = models.CharField(max_length=255, blank=True)
+    hero_credit = models.CharField(max_length=120, blank=True)
+
+    authors = ParentalManyToManyField("lifestyle.AuthorPage", blank=True, related_name="articles")
+    publish_display_date = models.DateField(null=True, blank=True)
+    updated_date = models.DateField(null=True, blank=True)
+    reading_time = models.PositiveIntegerField(default=0, help_text="Auto-computed (minutes).")
+    tags = ClusterTaggableManager(through=ArticleTag, blank=True)
+
+    is_sponsored = models.BooleanField(
+        default=False,
+        help_text="Shows a 'Partner Content' disclosure band and marks outbound "
+                  "links rel=sponsored.")
+    related_articles = ParentalManyToManyField(
+        "self", blank=True, symmetrical=False, related_name="+",
+        help_text="Manual override; otherwise auto by tag/category.")
+
+    body = StreamField([
+        ("paragraph", blocks.RichTextBlock()),
+        ("image", ImageChooserBlock()),
+    ], blank=True)
+
+    # SEO extras (Wagtail already provides seo_title + search_description).
+    canonical_url = models.URLField(blank=True)
+    og_image = models.ForeignKey(
+        "wagtailimages.Image", null=True, blank=True, on_delete=models.SET_NULL, related_name="+")
+    noindex = models.BooleanField(default=False)
+
+    content_panels = Page.content_panels + [
+        FieldPanel("post_type"),
+        FieldPanel("subtitle"),
+        MultiFieldPanel([
+            FieldPanel("hero_image"), FieldPanel("hero_alt_text"),
+            FieldPanel("hero_caption"), FieldPanel("hero_credit"),
+        ], heading="Hero"),
+        FieldPanel("authors", widget=forms.CheckboxSelectMultiple),
+        MultiFieldPanel([
+            FieldPanel("publish_display_date"), FieldPanel("updated_date"),
+            FieldPanel("is_sponsored"),
+        ], heading="Meta"),
+        FieldPanel("body"),
+        FieldPanel("tags"),
+        InlinePanel("related_products", label="Shoppable products", max_num=4),
+        FieldPanel("related_articles", widget=forms.SelectMultiple),
+    ]
+
+    promote_panels = Page.promote_panels + [
+        FieldPanel("canonical_url"),
+        FieldPanel("og_image"),
+        FieldPanel("noindex"),
+    ]
+
+    search_fields = Page.search_fields + [
+        index.SearchField("subtitle"),
+        index.SearchField("body"),
+        index.FilterField("post_type"),
+    ]
+
+    parent_page_types = ["lifestyle.CategoryPage"]
+    subpage_types = []
+
+    class Meta:
+        verbose_name = "Article"
+
+    # -- Derivations ------------------------------------------------------
+    def _plain_body(self):
+        return re.sub(r"<[^>]+>", " ", str(self.body))
+
+    def save(self, *args, **kwargs):
+        words = len(self._plain_body().split())
+        self.reading_time = max(1, round(words / 200)) if words else 1
+        super().save(*args, **kwargs)
+
+    def clean(self):
+        super().clean()
+        if self.hero_image and not self.hero_alt_text:
+            from django.core.exceptions import ValidationError
+            raise ValidationError({"hero_alt_text": "Alt text is required when a hero image is set."})
+
+    @property
+    def post_type_label(self):
+        return dict(POST_TYPE_CHOICES).get(self.post_type, "Article")
+
+    @property
+    def category(self):
+        parent = self.get_parent().specific
+        return parent if isinstance(parent, CategoryPage) else None
+
+    def get_related_articles(self, limit=3):
+        manual = list(self.related_articles.live())
+        if manual:
+            return manual[:limit]
+        qs = (ArticlePage.objects.live().public().exclude(id=self.id)
+              .filter(tags__in=self.tags.all()).distinct())
+        related = list(qs[:limit])
+        if len(related) < limit and self.category:
+            more = (ArticlePage.objects.live().public().child_of(self.category)
+                    .exclude(id=self.id).exclude(id__in=[a.id for a in related]))
+            related += list(more[: limit - len(related)])
+        return related[:limit]
+
+    def get_context(self, request):
+        ctx = super().get_context(request)
+        ctx["related"] = self.get_related_articles()
+        return ctx
+
+
+class AuthorIndexPage(Page):
+    """Listing of magazine authors (/lifestyle/authors/)."""
+    intro = RichTextField(blank=True)
+    content_panels = Page.content_panels + [FieldPanel("intro")]
+    max_count = 1
+    parent_page_types = ["lifestyle.LifestyleIndexPage"]
+    subpage_types = ["lifestyle.AuthorPage"]
+
+    class Meta:
+        verbose_name = "Authors index"
+
+    def get_context(self, request):
+        ctx = super().get_context(request)
+        ctx["authors"] = AuthorPage.objects.live().child_of(self).order_by("title")
+        return ctx
+
+
+class AuthorPage(Page):
+    """A bylined author — real bio + credentials for E-E-A-T."""
+    portrait = models.ForeignKey(
+        "wagtailimages.Image", null=True, blank=True, on_delete=models.SET_NULL, related_name="+")
+    role = models.CharField(max_length=120, blank=True, help_text="Title / credentials.")
+    bio = RichTextField(blank=True)
+    twitter = models.URLField(blank=True)
+    instagram = models.URLField(blank=True)
+    linkedin = models.URLField(blank=True)
+    website = models.URLField(blank=True)
+
+    content_panels = Page.content_panels + [
+        FieldPanel("portrait"),
+        FieldPanel("role"),
+        FieldPanel("bio"),
+        MultiFieldPanel([
+            FieldPanel("twitter"), FieldPanel("instagram"),
+            FieldPanel("linkedin"), FieldPanel("website"),
+        ], heading="Social / sameAs"),
+    ]
+
+    parent_page_types = ["lifestyle.AuthorIndexPage"]
+    subpage_types = []
+
+    class Meta:
+        verbose_name = "Author"
+
+    def get_context(self, request):
+        ctx = super().get_context(request)
+        qs = self.articles.live().public().order_by("-first_published_at")
+        ctx["articles"] = Paginator(qs, 9).get_page(request.GET.get("page"))
+        return ctx

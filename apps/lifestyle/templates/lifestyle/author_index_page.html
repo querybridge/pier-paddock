@@ -1,0 +1,18 @@
+{% extends "lifestyle/base.html" %}
+{% load wagtailcore_tags wagtailimages_tags %}
+{% block title %}{{ page.title }}{% endblock %}
+{% block content %}
+<div class="post-block"><div class="container">
+    <div class="section-title mb-4"><h2><span>{{ page.title }}</span></h2></div>
+    {% if page.intro %}<div class="lead mb-4">{{ page.intro|richtext }}</div>{% endif %}
+    <div class="row">
+        {% for a in authors %}
+        <div class="col-md-4 mb-4"><div class="ppl-author-card text-center">
+            {% if a.portrait %}<a href="{{ a.url }}">{% image a.portrait fill-140x140 class="rounded-circle" alt=a.title %}</a>{% endif %}
+            <h3 class="mt-2"><a href="{{ a.url }}">{{ a.title }}</a></h3>
+            {% if a.role %}<div class="ppl-cat">{{ a.role }}</div>{% endif %}
+        </div></div>
+        {% empty %}<p class="text-muted">Authors coming soon.</p>{% endfor %}
+    </div>
+</div></div>
+{% endblock %}

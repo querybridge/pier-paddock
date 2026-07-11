@@ -114,6 +114,53 @@ Wagtail CMS admin: **`/cms-admin/`** (log in as a superuser — `admin@example.c
 **Deploy note:** add `python manage.py lifestyle_ads` after `migrate` +
 `lifestyle_bootstrap` (idempotent; generates ad placeholders + seeds zones).
 
+## Phase 2 — Page models & information architecture — 2026-07-11 ✅
+
+**Built**
+- Page models (`apps/lifestyle/models.py`): **CategoryPage** (intro, hero, accent,
+  featured curation slots via `CategoryFeatured`, paginated reverse-chron listing),
+  **ArticlePage** (post_type, subtitle, hero+alt/caption/credit, authors M2M,
+  publish/updated dates, auto `reading_time`, taggit tags, `is_sponsored`,
+  `related_products` inline ×4, `related_articles` manual+auto, StreamField `body`
+  [minimal — expanded in Phase 3], SEO promote panels: canonical/og_image/noindex),
+  **AuthorIndexPage** + **AuthorPage** (portrait, role, bio, socials, article list).
+- IA enforced via `parent_page_types`/`subpage_types`; URLs are exactly
+  `/lifestyle/<category>/<slug>/`. Expanded `LifestyleIndexPage` to render the
+  Home 3 layout (featured hero, trending, latest grid, per-category rails, ads).
+- Templates: `article_page`, `category_page`, `author_index_page`, `author_page`,
+  a reusable `includes/_article_card.html`, and the wired `index.html`. Phase 2 CSS
+  appended to `pp-lifestyle.css`.
+- **Seed** `load_lifestyle_demo`: 3 authors, 6 categories, 12 articles across every
+  post_type, with generated category-coloured hero images, tags, shoppable Oscar
+  products on watch stories, and a sponsored (Partner Content) piece.
+
+**Files touched**
+- `apps/lifestyle/models.py`, `migrations/0003_*.py`,
+  `management/commands/load_lifestyle_demo.py`, `templates/lifestyle/*`,
+  `static/lifestyle/pp-lifestyle.css`
+- `.gitignore` (Wagtail renditions), `db.sqlite3` + `media/original_images/`
+  (magazine content ships so the demo renders without a reseed)
+
+**Deviations**
+- Magazine demo *content* ships in `db.sqlite3` + `media/original_images/` (21
+  small placeholders, ~208 KB) so `/lifestyle/` is populated out of the box —
+  consistent with how the store ships a runnable db. `load_lifestyle_demo` rebuilds
+  it; Wagtail renditions regenerate on demand (gitignored).
+- `related_products` uses an Orderable inline (Oscar Product FK); `authors` and
+  `related_articles` are ParentalManyToMany.
+
+**Verify (all pass)**
+- Full tree navigable: `/lifestyle/` (Home 3 with featured/trending/rails/latest),
+  `/lifestyle/<category>/` (hub + pagination), `/lifestyle/<category>/<slug>/`
+  (article, exact URL), `/lifestyle/authors/`, `/lifestyle/authors/<slug>/`.
+- Article renders h1/byline/body/badge; sponsored → "Partner Content" band;
+  watch stories show shoppable "From the Shop" cards + related reading.
+- Screenshot confirmed the Home 3 layout (featured hero, numbered trending,
+  post-type badges over category-coloured heroes). `check` clean.
+
+**Deploy note:** after `migrate` + `lifestyle_bootstrap` + `lifestyle_ads`, run
+`python manage.py load_lifestyle_demo` (or pull the committed db + originals).
+
 ---
 
 ## Ad-hoc / early items

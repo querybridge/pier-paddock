@@ -1,0 +1,29 @@
+{% extends "lifestyle/category_base.html" %}
+{% load wagtailcore_tags %}
+
+{% block title %}{{ page.title }}{% endblock %}
+
+{% block category_body %}
+{% if page.intro %}<div class="ppl-cat-intro lead mb-4">{{ page.intro|richtext }}</div>{% endif %}
+
+{% if featured_articles %}
+<div class="widget-title2"><h4><span>Featured</span></h4></div>
+<div class="row mb-4">
+    {% for a in featured_articles %}<div class="col-md-4">{% include "lifestyle/includes/_article_card.html" with article=a %}</div>{% endfor %}
+</div>
+{% endif %}
+
+<div class="widget-title2"><h4><span>Latest in {{ page.title }}</span></h4></div>
+<div class="row">
+    {% for a in articles %}<div class="col-md-4">{% include "lifestyle/includes/_article_card.html" with article=a %}</div>
+    {% empty %}<p class="text-muted">No stories here yet.</p>{% endfor %}
+</div>
+
+{% if articles.has_other_pages %}
+<nav class="ppl-pagination text-center my-4">
+    {% if articles.has_previous %}<a class="btn btn-outline-secondary btn-sm" href="?page={{ articles.previous_page_number }}">← Newer</a>{% endif %}
+    <span class="mx-2">Page {{ articles.number }} of {{ articles.paginator.num_pages }}</span>
+    {% if articles.has_next %}<a class="btn btn-outline-secondary btn-sm" href="?page={{ articles.next_page_number }}">Older →</a>{% endif %}
+</nav>
+{% endif %}
+{% endblock %}

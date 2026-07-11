@@ -1,0 +1,68 @@
+{% extends "lifestyle/article_base.html" %}
+{% load wagtailcore_tags wagtailimages_tags thumbnail %}
+
+{% block title %}{{ page.seo_title|default:page.title }}{% endblock %}
+
+{% block article_main %}
+<article class="ppl-article ppl-post-{{ page.post_type }}">
+    <div class="ppl-cat mb-2">
+        {% if page.category %}<a href="{{ page.category.url }}">{{ page.category.title }}</a>{% endif %}
+        <span class="ppl-badge">{{ page.post_type_label }}</span>
+    </div>
+    <h1>{{ page.title }}</h1>
+    {% if page.subtitle %}<p class="lead ppl-dek">{{ page.subtitle }}</p>{% endif %}
+    <div class="inews-post-meta ppl-byline mb-3">
+        {% for a in page.authors.all %}<a href="{{ a.url }}">{{ a.title }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}
+        <span class="ms-2">· <i class="fas fa-calendar-alt"></i>
+            {{ page.publish_display_date|default:page.first_published_at|date:"F j, Y" }}</span>
+        <span class="ms-2">· {{ page.reading_time }} min read</span>
+    </div>
+
+    {% if page.is_sponsored %}<div class="ppl-sponsor-band">Partner Content — produced in partnership with a Pier &amp; Paddock advertiser.</div>{% endif %}
+
+    {% if page.hero_image %}
+    <figure class="ppl-hero mb-4">
+        {% image page.hero_image width-1100 alt=page.hero_alt_text %}
+        {% if page.hero_caption %}<figcaption>{{ page.hero_caption }}{% if page.hero_credit %} <span class="ppl-credit">— {{ page.hero_credit }}</span>{% endif %}</figcaption>{% endif %}
+    </figure>
+    {% endif %}
+
+    <div class="ppl-body">
+        {% for block in page.body %}{% include_block block %}{% endfor %}
+    </div>
+
+    {% if page.tags.all %}
+    <div class="ppl-tags mt-4">{% for t in page.tags.all %}<span class="tag">{{ t }}</span> {% endfor %}</div>
+    {% endif %}
+
+    {% with rels=page.related_products.all %}{% if rels %}
+    <div class="ppl-shoppable mt-5">
+        <div class="widget-title2"><h4><span>From the Shop</span></h4></div>
+        <div class="row">
+            {% for rp in rels %}{% with p=rp.product %}
+            <div class="col-md-3 col-6 mb-3">
+                <div class="inews-post-item">
+                    <div class="inews-post-thumb"><a href="{{ p.get_absolute_url }}"{% if page.is_sponsored %} rel="sponsored"{% endif %}>
+                        {% with img=p.primary_image %}{% if img %}{% thumbnail img.original "300x200" padding=True as t %}<img src="{{ t.url }}" alt="{{ p.title }}">{% endthumbnail %}{% endif %}{% endwith %}
+                    </a></div>
+                    <div class="inews-post-info">
+                        <div class="inews-post-title"><h3 style="font-size:15px;"><a href="{{ p.get_absolute_url }}">{{ p.title }}</a></h3></div>
+                        <a class="ppl-shop-cta" href="{{ p.get_absolute_url }}"{% if page.is_sponsored %} rel="sponsored"{% endif %}>View at Pier &amp; Paddock →</a>
+                    </div>
+                </div>
+            </div>
+            {% endwith %}{% endfor %}
+        </div>
+    </div>
+    {% endif %}{% endwith %}
+
+    {% if related %}
+    <div class="ppl-related mt-5">
+        <div class="widget-title2"><h4><span>Related Reading</span></h4></div>
+        <div class="row">
+            {% for a in related %}<div class="col-md-4">{% include "lifestyle/includes/_article_card.html" with article=a %}</div>{% endfor %}
+        </div>
+    </div>
+    {% endif %}
+</article>
+{% endblock %}

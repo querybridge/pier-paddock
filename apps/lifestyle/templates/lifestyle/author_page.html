@@ -1,0 +1,24 @@
+{% extends "lifestyle/base.html" %}
+{% load wagtailcore_tags wagtailimages_tags %}
+{% block title %}{{ page.title }}{% endblock %}
+{% block content %}
+<div class="post-block"><div class="container">
+    <div class="ppl-author-head text-center mb-4">
+        {% if page.portrait %}{% image page.portrait fill-160x160 class="rounded-circle" alt=page.title %}{% endif %}
+        <h1 class="mt-2">{{ page.title }}</h1>
+        {% if page.role %}<div class="ppl-cat">{{ page.role }}</div>{% endif %}
+        {% if page.bio %}<div class="ppl-bio mt-2 mx-auto" style="max-width:640px;">{{ page.bio|richtext }}</div>{% endif %}
+        <div class="ppl-author-social mt-2">
+            {% if page.twitter %}<a href="{{ page.twitter }}" rel="me"><i class="fa-brands fa-x-twitter"></i></a>{% endif %}
+            {% if page.instagram %}<a href="{{ page.instagram }}" rel="me"><i class="fa-brands fa-instagram"></i></a>{% endif %}
+            {% if page.linkedin %}<a href="{{ page.linkedin }}" rel="me"><i class="fa-brands fa-linkedin-in"></i></a>{% endif %}
+            {% if page.website %}<a href="{{ page.website }}" rel="me"><i class="fas fa-globe"></i></a>{% endif %}
+        </div>
+    </div>
+    <div class="widget-title2"><h4><span>Stories by {{ page.title }}</span></h4></div>
+    <div class="row">
+        {% for a in articles %}<div class="col-md-4">{% include "lifestyle/includes/_article_card.html" with article=a %}</div>
+        {% empty %}<p class="text-muted">No stories yet.</p>{% endfor %}
+    </div>
+</div></div>
+{% endblock %}

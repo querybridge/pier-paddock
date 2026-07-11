@@ -29,6 +29,11 @@ db.sqlite3-shm
 # sorl-thumbnail cache — derivative images rebuilt on demand. (Source product
 # imagery under media/images/ IS committed so the demo renders without a reseed.)
 /media/cache/
+# Wagtail image renditions (regenerated on demand). Originals in
+# media/original_images/ ARE committed so the magazine renders without a reseed;
+# product imagery under media/images/products/ stays tracked.
+/media/images/*
+!/media/images/products/
 
 # ─── Local-only docs ──────────────────────────────────────────
 # Context file uploaded to a Claude Project's knowledge base; kept local.

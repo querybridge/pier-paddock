@@ -1,25 +1,69 @@
 {% extends "lifestyle/base.html" %}
-{% load lifestyle_tags wagtailcore_tags %}
+{% load lifestyle_tags wagtailcore_tags wagtailimages_tags %}
 
-{% comment %}Magazine landing base (iNews "Home Page 3"). Phase 1 = chrome +
-scaffold; Phase 2 wires the hero / per-category rails / latest grid to Wagtail
-content via overridable blocks.{% endcomment %}
+{% comment %}Magazine landing — iNews "Home Page 3", wired to live Wagtail content
+(featured hero, trending, latest grid, per-category rails, ad zones).{% endcomment %}
 
 {% block content %}
 <div class="post-block">
     <div class="container">
+
         {% block hero %}
-        <div class="section-title mb-4"><h2><span>{{ page.title|default:"Pier & Paddock Lifestyle" }}</span></h2></div>
+        {% if featured %}
+        <div class="ppl-hero row mb-5">
+            <div class="col-lg-8 mb-3">
+                <div class="inews-post-item ppl-hero-lead">
+                    <div class="inews-post-thumb"><a href="{{ featured.url }}">
+                        {% if featured.hero_image %}{% image featured.hero_image fill-820x460 alt=featured.hero_alt_text %}{% endif %}</a>
+                        <span class="ppl-badge">{{ featured.post_type_label }}</span>
+                    </div>
+                    <div class="inews-post-info">
+                        {% if featured.category %}<div class="ppl-cat"><a href="{{ featured.category.url }}">{{ featured.category.title }}</a></div>{% endif %}
+                        <div class="inews-post-title"><h2><a href="{{ featured.url }}">{{ featured.title }}</a></h2></div>
+                        {% if featured.subtitle %}<p class="ppl-dek">{{ featured.subtitle }}</p>{% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="widget-title2"><h4><span>Trending</span></h4></div>
+                <ol class="ppl-trending">
+                    {% for a in trending %}<li><a href="{{ a.url }}">{{ a.title }}</a>
+                        <span class="ppl-cat">{% if a.category %}{{ a.category.title }}{% endif %}</span></li>{% endfor %}
+                </ol>
+            </div>
+        </div>
+        {% else %}
+        <div class="section-title mb-4"><h2><span>{{ page.title }}</span></h2></div>
         {% if page.intro %}<div class="lead mb-3">{{ page.intro|richtext }}</div>{% endif %}
-        <p class="text-muted">The harbor and the grid — F1, sailing, luxury autos and watch collecting.
-            The full Home&nbsp;3 layout is wired to Wagtail content in Phase&nbsp;2.</p>
+        <p class="text-muted">The harbor and the grid — stories are on the way. Seed the demo
+            with <code>manage.py load_lifestyle_demo</code>.</p>
+        {% endif %}
         {% endblock %}
 
-        {% block rails %}{% endblock %}
+        <div class="my-4 text-center">{% ad_zone "leaderboard_top" %}</div>
 
-        <div class="my-5 text-center">{% ad_zone "in_content" %}</div>
+        {% block latest_grid %}
+        {% if latest %}
+        <div class="widget-title2"><h4><span>Latest Stories</span></h4></div>
+        <div class="row">
+            {% for a in latest %}<div class="col-md-4">{% include "lifestyle/includes/_article_card.html" with article=a %}</div>{% endfor %}
+        </div>
+        {% endif %}
+        {% endblock %}
 
-        {% block latest_grid %}{% endblock %}
+        <div class="my-4 text-center">{% ad_zone "in_content" %}</div>
+
+        {% block rails %}
+        {% for rail in category_rails %}{% if rail.articles %}
+        <div class="ppl-rail">
+            <div class="widget-title2"><h4><span>{{ rail.category.title }}</span></h4>
+                <a class="ppl-rail-more" href="{{ rail.category.url }}">All {{ rail.category.title }} →</a></div>
+            <div class="row">
+                {% for a in rail.articles %}<div class="col-md-4">{% include "lifestyle/includes/_article_card.html" with article=a %}</div>{% endfor %}
+            </div>
+        </div>
+        {% endif %}{% endfor %}
+        {% endblock %}
     </div>
 </div>
 {% endblock %}
