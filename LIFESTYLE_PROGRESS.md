@@ -61,6 +61,15 @@ Wagtail CMS admin: **`/cms-admin/`** (log in as a superuser — `admin@example.c
 
 ---
 
+## Ad-hoc / early items
+
+- **2026-07-11 — Storefront primary nav "Blog" → "Lifestyle"** (a Phase 7 item,
+  done early at the owner's request). Both the desktop and mobile menus in
+  `templates/oscar/partials/_header.html` now link to `/lifestyle/`. The footer
+  "Journal" link is untouched for now.
+
+---
+
 ## Owner (Mike) — outstanding placeholders
 
 | Placeholder | Status | Notes |
