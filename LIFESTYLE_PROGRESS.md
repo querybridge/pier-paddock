@@ -218,6 +218,33 @@ avoid another app; the in-body `product` block uses an IntegerBlock product-id (
 generic Oscar model chooser out of the box). FAQPage/schema emission for the FAQ
 block lands in Phase 6.
 
+## Phase 4 — article rail: Latest News + Sponsored Products — 2026-07-11 ✅
+
+**Built**
+- **`SponsoredProductSlot`** snippet (product, hook, advertiser, order, active) —
+  the Revive product-listing seam.
+- `{% latest_news %}` tag → the iNews sidebar widget markup fed the 5 most recent
+  articles (current excluded).
+- `{% sponsored_products %}` tag → **duplicates the Latest News widget**, retitled
+  "Sponsored Products" with a small-caps gold-ruled "Sponsored" label. Resolution:
+  curated slots → the article's `related_products` → same-category/recent fallback.
+  Every link carries `rel="sponsored"` + `?ppl_src=sponsored&ppl_article=<slug>`
+  tracking. The tag docstring documents the future Revive contract (zone ID in,
+  `[{image,title,url,advertiser}]` out).
+- Wired both into `article_base.html`'s sidebar (below the sidebar ad). Sidebar CSS
+  added. Seed creates 4 curated slots.
+
+**Files touched**
+- `apps/lifestyle/models.py`, `migrations/0006_*.py`,
+  `templatetags/lifestyle_tags.py`,
+  `templates/lifestyle/includes/{_latest_news,_sponsored_products}.html`,
+  `templates/lifestyle/article_base.html`, `static/lifestyle/pp-lifestyle.css`,
+  `management/commands/load_lifestyle_demo.py`, `db.sqlite3` (slots)
+
+**Verify (all pass):** article rail shows Latest News then Sponsored Products;
+sponsored links carry `rel="sponsored"` + tracking; Latest News excludes the
+current article. `check` clean.
+
 ---
 
 ## Ad-hoc / early items

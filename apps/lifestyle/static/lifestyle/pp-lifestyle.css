@@ -143,3 +143,13 @@ a:hover { color: var(--ppl-gold); }
 .ppl-table { margin:28px 0; }
 .ppl-table table { width:100%; border-collapse:collapse; }
 .ppl-table th, .ppl-table td { border:1px solid #e6ded0; padding:8px 12px; text-align:left; }
+
+/* ---------- Phase 4: article rail (Latest News + Sponsored Products) ---------- */
+.recent-post-block2 .inews-post-item { display:flex; gap:12px; margin-bottom:14px; }
+.recent-post-block2 .inews-post-thumb { flex:0 0 84px; }
+.recent-post-block2 .inews-post-thumb img { width:84px; height:64px; object-fit:cover; border-radius:2px; }
+.recent-post-block2 .inews-post-title h3 { font-size:14px; line-height:1.35; margin:0 0 4px; }
+.ppl-sponsored-label { font-size:10px; letter-spacing:2px; text-transform:uppercase; color:var(--ppl-gold);
+    border-bottom:2px solid var(--ppl-gold); display:inline-block; padding-bottom:3px; margin:-6px 0 12px; }
+.ppl-sponsored-hook { color:#8a847a; font-size:12px; }
+.sidebar-widget .widget-title h4 span { border-bottom:2px solid var(--ppl-gold); padding-bottom:4px; }

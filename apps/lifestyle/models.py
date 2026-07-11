@@ -100,6 +100,32 @@ class AdZone(models.Model):
         )
 
 
+@register_snippet
+class SponsoredProductSlot(models.Model):
+    """A curated sponsored product unit for the article rail's "Sponsored Products"
+    section. Mirrors the AdZone pattern: this is the seam for a **Revive**
+    product-listing zone (see the ``sponsored_products`` template tag). Falls back
+    to the article's related_products / same-category products when no slots exist."""
+
+    product = models.ForeignKey("catalogue.Product", on_delete=models.CASCADE, related_name="+")
+    hook = models.CharField(max_length=140, blank=True, help_text="One-line hook.")
+    advertiser = models.CharField(max_length=120, blank=True)
+    sort_order = models.IntegerField(default=0)
+    active = models.BooleanField(default=True)
+
+    panels = [
+        FieldPanel("product"), FieldPanel("hook"),
+        FieldPanel("advertiser"), FieldPanel("sort_order"), FieldPanel("active"),
+    ]
+
+    class Meta:
+        ordering = ["sort_order"]
+        verbose_name = "Sponsored product slot"
+
+    def __str__(self):
+        return "%s%s" % (self.product, " (sponsored)" if self.active else "")
+
+
 class LifestyleIndexPage(Page):
     """The magazine landing page — mounted as the Wagtail site root so its URL is
     /lifestyle/. Renders the iNews "Home Page 3" layout from live content."""

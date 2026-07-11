@@ -1,0 +1,21 @@
+{% load thumbnail %}
+{% if units %}
+{# Duplicates the Latest News widget markup, retitled + labelled "Sponsored". #}
+<div class="sidebar-widget ppl-sponsored-widget">
+    <div class="widget-title"><h4><span>Sponsored Products</span></h4></div>
+    <div class="ppl-sponsored-label">Sponsored</div>
+    <div class="recent-post-block2">
+        {% for u in units %}
+        <div class="inews-post-item">
+            <div class="inews-post-thumb"><a href="{{ u.url }}" rel="sponsored">
+                {% with img=u.product.primary_image %}{% if img %}{% thumbnail img.original "110x84" padding=True as t %}<img src="{{ t.url }}" alt="{{ u.product.title }}">{% endthumbnail %}{% endif %}{% endwith %}</a></div>
+            <div class="inews-post-info">
+                <div class="inews-post-title"><h3><a href="{{ u.url }}" rel="sponsored">{{ u.product.title }}</a></h3></div>
+                <div class="inews-post-meta ppl-sponsored-hook">
+                    {% if u.hook %}{{ u.hook }}{% elif u.advertiser %}{{ u.advertiser }}{% else %}At Pier &amp; Paddock{% endif %}</div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}

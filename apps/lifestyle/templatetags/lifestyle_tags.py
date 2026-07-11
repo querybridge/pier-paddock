@@ -65,3 +65,54 @@ def lifestyle_latest(limit=5, exclude_id=None):
         return list(qs[:limit])
     except Exception:
         return []
+
+
+@register.inclusion_tag("lifestyle/includes/_latest_news.html", takes_context=True)
+def latest_news(context, limit=5):
+    """The article rail's 'Latest News' — most recent articles, current excluded."""
+    page = context.get("page")
+    exclude = getattr(page, "id", None)
+    return {"articles": lifestyle_latest(limit, exclude)}
+
+
+@register.inclusion_tag("lifestyle/includes/_sponsored_products.html", takes_context=True)
+def sponsored_products(context, limit=4):
+    """Sponsored product units for the article rail.
+
+    Resolution order: curated ``SponsoredProductSlot``s → the article's
+    ``related_products`` → same-category / recent products. Each link carries
+    ``rel="sponsored"`` and click-through tracking params.
+
+    REVIVE CONTRACT (future): this tag is the seam for a customised Revive
+    product-listing zone. When Revive lands, replace the resolution below with a
+    call keyed by a zone ID that returns JSON ``[{image, title, url, advertiser}]``;
+    the output markup stays identical.
+    """
+    from ..models import SponsoredProductSlot
+
+    page = context.get("page")
+    units = []
+
+    slots = list(SponsoredProductSlot.objects.filter(active=True).select_related("product")[:limit])
+    if slots:
+        units = [{"product": s.product, "hook": s.hook, "advertiser": s.advertiser} for s in slots]
+    elif page is not None and hasattr(page, "related_products"):
+        units = [{"product": rp.product, "hook": "", "advertiser": ""}
+                 for rp in page.related_products.all()[:limit]]
+
+    if not units and page is not None:
+        try:
+            from oscar.core.loading import get_model
+            Product = get_model("catalogue", "Product")
+            units = [{"product": p, "hook": "", "advertiser": ""}
+                     for p in Product.objects.browsable()[:limit]]
+        except Exception:
+            units = []
+
+    slug = getattr(page, "slug", "") or ""
+    for u in units:
+        try:
+            u["url"] = "%s?ppl_src=sponsored&ppl_article=%s" % (u["product"].get_absolute_url(), slug)
+        except Exception:
+            u["url"] = "#"
+    return {"units": units}

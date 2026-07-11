@@ -173,6 +173,17 @@ class Command(BaseCommand):
             art.save_revision().publish()
             made += 1
         self.stdout.write(self.style.SUCCESS("  articles: %d" % made))
+
+        # Curated sponsored product slots (article rail "Sponsored Products").
+        from apps.lifestyle.models import SponsoredProductSlot
+        SponsoredProductSlot.objects.all().delete()
+        hooks = ["A bridge-deck classic.", "The paddock's quiet favourite.",
+                 "Built for bluewater.", "An auction-room darling."]
+        for i, p in enumerate(random.sample(products, min(4, len(products)))):
+            SponsoredProductSlot.objects.create(
+                product=p, hook=hooks[i % len(hooks)], advertiser="Pier & Paddock",
+                sort_order=i)
+        self.stdout.write("  sponsored slots: %d" % SponsoredProductSlot.objects.count())
         self.stdout.write(self.style.SUCCESS("Lifestyle demo seeded."))
 
     # -- helpers ----------------------------------------------------------
