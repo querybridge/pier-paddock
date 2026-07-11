@@ -1,8 +1,8 @@
-{% load i18n %}
+{% load i18n lifestyle_tags %}
 <footer class="footer-home-03 bg-main3 pp-footer">
     <div class="container">
         <div class="row pp-footer-top">
-            <div class="col-lg-4 col-md-6 col-12">
+            <div class="col-lg-3 col-md-6 col-12">
                 <div class="pp-footer-block">
                     <h2 class="brand-name">{{ BRAND_NAME }}</h2>
                     <p class="brand-tagline">{{ BRAND_TAGLINE }}</p>
@@ -26,6 +26,18 @@
                     </ul>
                 </div>
             </div>
+            <div class="col-lg-2 col-md-6 col-6">
+                <div class="pp-footer-block">
+                    <h4>Lifestyle</h4>
+                    <ul>
+                        <li><a href="/lifestyle/">Latest Stories</a></li>
+                        {% lifestyle_nav as ls_items %}
+                        {% for item in ls_items %}{% if item.title != "Shop" %}
+                        <li><a href="{{ item.url }}">{{ item.title }}</a></li>
+                        {% endif %}{% endfor %}
+                    </ul>
+                </div>
+            </div>
             <div class="col-lg-3 col-md-6 col-6">
                 <div class="pp-footer-block">
                     <h4>Customer Care</h4>
@@ -34,11 +46,13 @@
                         <li><a href="{% url 'pages:about' %}">About Us</a></li>
                         <li><a href="{% url 'pages:faq' %}">FAQ</a></li>
                         <li><a href="{% url 'pages:contact' %}">Contact</a></li>
-                        <li><a href="{% url 'blog:list' %}">Journal</a></li>
+                        <li><a href="{% url 'pages:terms' %}">Terms &amp; Conditions</a></li>
+                        <li><a href="{% url 'pages:privacy' %}">Privacy</a></li>
+                        <li><a href="{% url 'advertise' %}">Advertise</a></li>
                     </ul>
                 </div>
             </div>
-            <div class="col-lg-3 col-md-6 col-12">
+            <div class="col-lg-2 col-md-6 col-12">
                 <div class="pp-footer-block">
                     <h4>Authenticity Guaranteed</h4>
                     <ul>
@@ -50,17 +64,10 @@
             </div>
         </div>
         <div class="row pp-footer-bottom align-items-center">
-            <div class="col-md-4 col-12">
+            <div class="col-md-6 col-12">
                 <p class="text-copyright">&copy; {% now "Y" %} {{ BRAND_NAME }}. {{ BRAND_FOOTER_ATTRIBUTION }}.</p>
             </div>
-            <div class="col-md-4 col-12 text-center">
-                <p class="pp-footer-legal">
-                    <a href="{% url 'pages:privacy' %}">Privacy Policy</a>
-                    <a href="{% url 'pages:terms' %}">Terms &amp; Conditions</a>
-                    <a href="{% url 'pages:contact' %}">Contact</a>
-                </p>
-            </div>
-            <div class="col-md-4 col-12 text-md-right">
+            <div class="col-md-6 col-12 text-md-right">
                 <p class="pp-demo-disclaimer">{{ BRAND_DEMO_DISCLAIMER }}</p>
             </div>
         </div>

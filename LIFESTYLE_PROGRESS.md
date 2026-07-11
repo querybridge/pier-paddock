@@ -167,8 +167,12 @@ Wagtail CMS admin: **`/cms-admin/`** (log in as a superuser — `admin@example.c
 
 - **2026-07-11 — Storefront primary nav "Blog" → "Lifestyle"** (a Phase 7 item,
   done early at the owner's request). Both the desktop and mobile menus in
-  `templates/oscar/partials/_header.html` now link to `/lifestyle/`. The footer
-  "Journal" link is untouched for now.
+  `templates/oscar/partials/_header.html` now link to `/lifestyle/`.
+- **2026-07-11 — Shared footer restructure** (`_footer.html`, affects both
+  properties): new **Lifestyle** column (Latest Stories + the six magazine
+  categories, data-driven via `{% lifestyle_nav %}`); moved **Terms & Conditions,
+  Privacy, Advertise** into **Customer Care**; removed the **Journal** link and the
+  redundant bottom legal row. Now a 5-column footer.
 
 ---
 
