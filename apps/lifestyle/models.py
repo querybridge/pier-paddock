@@ -101,6 +101,61 @@ class AdZone(models.Model):
 
 
 @register_snippet
+class AdvertiseInquiry(models.Model):
+    """A submission from the /advertise/ form (also emailed to the ad desk)."""
+    BUDGET_CHOICES = [
+        ("", "—"),
+        ("under_5k", "Under $5,000"),
+        ("5_25k", "$5,000 – $25,000"),
+        ("25_100k", "$25,000 – $100,000"),
+        ("100k_plus", "$100,000+"),
+    ]
+    name = models.CharField(max_length=120)
+    company = models.CharField(max_length=160, blank=True)
+    email = models.EmailField()
+    phone = models.CharField(max_length=40, blank=True)
+    budget = models.CharField(max_length=20, choices=BUDGET_CHOICES, blank=True)
+    message = models.TextField(blank=True)
+    created = models.DateTimeField(auto_now_add=True)
+
+    panels = [
+        FieldPanel("name"), FieldPanel("company"), FieldPanel("email"),
+        FieldPanel("phone"), FieldPanel("budget"), FieldPanel("message"),
+    ]
+
+    class Meta:
+        ordering = ["-created"]
+        verbose_name = "Advertise inquiry"
+        verbose_name_plural = "Advertise inquiries"
+
+    def __str__(self):
+        return "%s <%s>" % (self.name, self.email)
+
+
+@register_snippet
+class PendingSubscriber(models.Model):
+    """A newsletter/Members sign-up stored locally until Mailchimp keys exist.
+    Push with `manage.py sync_pending_subscribers`."""
+    email = models.EmailField(unique=True)
+    source = models.CharField(max_length=120, blank=True, help_text="Page/section it came from.")
+    consent = models.BooleanField(default=False)
+    synced = models.BooleanField(default=False, help_text="Pushed to Mailchimp.")
+    created = models.DateTimeField(auto_now_add=True)
+
+    panels = [
+        FieldPanel("email"), FieldPanel("source"),
+        FieldPanel("consent"), FieldPanel("synced"),
+    ]
+
+    class Meta:
+        ordering = ["-created"]
+        verbose_name = "Pending subscriber"
+
+    def __str__(self):
+        return self.email
+
+
+@register_snippet
 class SponsoredProductSlot(models.Model):
     """A curated sponsored product unit for the article rail's "Sponsored Products"
     section. Mirrors the AdZone pattern: this is the seam for a **Revive**

@@ -1,0 +1,18 @@
+{# Reusable P&P Members subscribe form. Params: source, heading, blurb, hide_heading. #}
+<div class="ppl-subscribe">
+    {% if not hide_heading %}<h4 class="ppl-subscribe-title">{{ heading|default:"Join P&P Members" }}</h4>{% endif %}
+    <p class="ppl-subscribe-blurb">{{ blurb|default:"Early access, the market brief, and the Vault — never a newsletter." }}</p>
+    <form class="ppl-subscribe-form" action="{% url 'lifestyle_subscribe' %}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="source" value="{{ source|default:'magazine' }}">
+        <input type="hidden" name="next" value="{{ request.path }}">
+        <div class="ppl-hp" aria-hidden="true"><input type="text" name="website" tabindex="-1" autocomplete="off"></div>
+        <div class="input-group mb-2">
+            <input type="email" name="email" class="form-control" placeholder="Your email" required>
+            <button class="btn btn-danger" type="submit">Join</button>
+        </div>
+        <label class="ppl-consent"><input type="checkbox" name="consent" required>
+            I agree to receive P&amp;P Members communications and accept the
+            <a href="{% url 'pages:privacy' %}">Privacy Policy</a>. Double opt-in — unsubscribe any time.</label>
+    </form>
+</div>

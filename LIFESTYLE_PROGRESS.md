@@ -245,6 +245,41 @@ block lands in Phase 6.
 sponsored links carry `rel="sponsored"` + tracking; Latest News excludes the
 current article. `check` clean.
 
+## Phase 5 — /advertise/ + subscriptions + Members hook — 2026-07-11 ✅
+
+**Built**
+- **`/advertise/`** (real form, replacing the Phase-1 stub): positioning + audience
+  bullets + form (name, company, email, phone, budget, message). On submit: emails
+  `advertise@pierandpaddock.com` (console backend in dev), stores an
+  **`AdvertiseInquiry`**, shows confirmation. **Honeypot** (`website` field) +
+  per-IP rate limit (5/hour via cache).
+- **Subscriptions** — one endpoint `/lifestyle/subscribe/` for every form. New
+  **`MailchimpClient`** wrapper (INACTIVE): reads keys from settings; while disabled
+  the endpoint saves a **`PendingSubscriber`** (email, source, consent) and returns
+  success. **`manage.py sync_pending_subscribers`** pushes them once keys exist.
+- **Crest tie-in:** subscribing = eligibility for Member. If the email matches a
+  store account, `services.set_marketing_opt_in` → 1 crest; otherwise the
+  PendingSubscriber records the intent. Members copy throughout ("Join P&P
+  Members…", never "newsletter"), double-opt-in language + Privacy Policy link.
+- Subscribe surfaces: **article sidebar** widget, an **inline** end-of-article unit,
+  and a **footer strip** on the magazine (`base.html`) — plus a `?subscribed=`
+  confirmation banner. `AdvertiseInquiry` + `PendingSubscriber` are Wagtail snippets
+  (reviewable in `/cms-admin/`).
+
+**Files touched**
+- `apps/lifestyle/{models,forms,integrations,views}.py`,
+  `migrations/0007_*.py`, `management/commands/sync_pending_subscribers.py`,
+  `templates/lifestyle/{advertise,base,article_base,article_page}.html` +
+  `includes/_subscribe.html`, `static/lifestyle/pp-lifestyle.css`, `config/urls.py`
+
+**Verify (all pass):** advertise POST persists + emails + confirms; honeypot blocks
+spam; subscribe stores PendingSubscriber (source/consent) with Mailchimp disabled;
+existing-account subscribe → 1 crest; 3 subscribe surfaces render; sync command
+reports pending while disabled. `check` clean.
+
+**Owner placeholder:** set `MAILCHIMP_API_KEY` / `MAILCHIMP_LIST_ID` +
+`LOYALTY_MARKETING_ENABLED=True`, then run `sync_pending_subscribers`.
+
 ---
 
 ## Ad-hoc / early items

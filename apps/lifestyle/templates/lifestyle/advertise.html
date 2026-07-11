@@ -1,10 +1,40 @@
 {% extends "lifestyle/base.html" %}
+{% load lifestyle_tags %}
 {% block title %}Advertise{% endblock %}
 {% block content %}
-<div class="post-block"><div class="container py-5">
-    <div class="section-title mb-4"><h2><span>Advertise with Pier &amp; Paddock Lifestyle</span></h2></div>
-    <p class="lead">Reach the collector at the harbor and the grid.</p>
-    <p class="text-muted">Our advertising enquiry form is coming soon. In the meantime, write to
-        <a href="mailto:advertise@pierandpaddock.com">advertise@pierandpaddock.com</a>.</p>
-</div></div>
+<div class="main-content"><div class="container"><div class="row">
+    <div class="col-lg-8">
+        <div class="section-title mb-3"><h2><span>Advertise with Pier &amp; Paddock Lifestyle</span></h2></div>
+        <p class="lead">Reach the collector at the harbor and the grid.</p>
+        <ul class="ppl-audience">
+            <li>An affluent, high-intent audience across F1, sailing, luxury autos and watch collecting.</li>
+            <li>Editorial adjacency, never interruption — leaderboard, in-content and product-listing units.</li>
+            <li>Sponsored content and product-listing partnerships available.</li>
+        </ul>
+
+        {% if sent %}
+        <div class="ppl-alert ppl-alert--ok">Thank you — your enquiry has been received. Our team will be in touch shortly.</div>
+        {% else %}
+        <form method="post" action="{% url 'advertise' %}" class="ppl-advertise-form mt-3">
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+            <div class="row">
+                <div class="col-md-6 mb-3">{{ form.name.label_tag }} {{ form.name }} {{ form.name.errors }}</div>
+                <div class="col-md-6 mb-3">{{ form.company.label_tag }} {{ form.company }}</div>
+                <div class="col-md-6 mb-3">{{ form.email.label_tag }} {{ form.email }} {{ form.email.errors }}</div>
+                <div class="col-md-6 mb-3">{{ form.phone.label_tag }} {{ form.phone }}</div>
+                <div class="col-md-6 mb-3">{{ form.budget.label_tag }} {{ form.budget }}</div>
+            </div>
+            <div class="mb-3">{{ form.message.label_tag }} {{ form.message }}</div>
+            {{ form.website }}
+            <button class="btn btn-danger" type="submit">Send enquiry</button>
+            <p class="ppl-fineprint mt-2">We'll only use your details to respond. See our <a href="{% url 'pages:privacy' %}">Privacy Policy</a>.</p>
+        </form>
+        {% endif %}
+    </div>
+    <div class="col-lg-4"><div class="sidebar">
+        <div class="sidebar-widget text-center"><span class="ppl-ad-label">- Advertisement -</span>{% ad_zone "sidebar" %}</div>
+        <div class="sidebar-widget">{% include "lifestyle/includes/_subscribe.html" with source="advertise" %}</div>
+    </div></div>
+</div></div></div>
 {% endblock %}

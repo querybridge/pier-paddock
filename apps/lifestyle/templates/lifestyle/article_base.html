@@ -15,6 +15,9 @@ is built in Phase 4.{% endcomment %}
             <div class="col-lg-4">
                 <div class="sidebar">
                     {% block article_sidebar %}
+                    <div class="sidebar-widget">
+                        {% include "lifestyle/includes/_subscribe.html" with source="article-sidebar" %}
+                    </div>
                     <div class="sidebar-widget text-center">
                         <span class="ppl-ad-label">- Advertisement -</span>
                         {% ad_zone "sidebar" %}

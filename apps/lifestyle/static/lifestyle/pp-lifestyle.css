@@ -153,3 +153,30 @@ a:hover { color: var(--ppl-gold); }
     border-bottom:2px solid var(--ppl-gold); display:inline-block; padding-bottom:3px; margin:-6px 0 12px; }
 .ppl-sponsored-hook { color:#8a847a; font-size:12px; }
 .sidebar-widget .widget-title h4 span { border-bottom:2px solid var(--ppl-gold); padding-bottom:4px; }
+
+/* ---------- Phase 5: advertise + subscribe ---------- */
+.ppl-hp { position:absolute; left:-9999px; height:0; overflow:hidden; }
+.ppl-subscribe-title { margin:0 0 6px; }
+.ppl-subscribe-blurb { font-size:13px; color:#6b6459; margin-bottom:10px; }
+.ppl-subscribe .input-group { display:flex; }
+.ppl-subscribe .form-control { flex:1; border:1px solid #d9d5cc; padding:9px 12px; border-radius:3px 0 0 3px; }
+.ppl-subscribe .btn { border-radius:0 3px 3px 0; }
+.ppl-consent { display:block; font-size:11.5px; color:#8a847a; line-height:1.5; }
+.ppl-consent input { margin-right:6px; }
+.ppl-inline-subscribe, .ppl-subscribe-strip { background:#efe9dd; border-radius:6px; padding:26px; }
+.ppl-inline-subscribe .ppl-subscribe-blurb { color:#4a4f5a; }
+.ppl-subscribe-strip { background:var(--ppl-navy); color:#fff; border-radius:0; padding:40px 0; margin-top:40px; }
+.ppl-subscribe-strip h3 { color:#fff; font-family:"GFS Baskerville",Georgia,serif; }
+.ppl-subscribe-strip p { color:#c7cdd9; margin:0; }
+.ppl-subscribe-strip .ppl-consent { color:#aeb6c4; }
+.ppl-subscribe-strip .ppl-subscribe-blurb { display:none; }
+.ppl-banner { text-align:center; padding:12px; font-size:14px; }
+.ppl-banner--ok { background:rgba(46,125,82,.12); color:#1f5e3c; }
+.ppl-banner--err { background:rgba(180,69,60,.12); color:#8e3029; }
+.ppl-audience { color:#4a4f5a; line-height:1.9; }
+.ppl-advertise-form label { font-weight:600; font-size:13px; color:var(--ppl-navy); display:block; margin-bottom:4px; }
+.ppl-advertise-form .form-control, .ppl-advertise-form textarea, .ppl-advertise-form select {
+    width:100%; border:1px solid #d9d5cc; border-radius:3px; padding:9px 12px; }
+.ppl-alert--ok { background:rgba(46,125,82,.12); color:#1f5e3c; border:1px solid rgba(46,125,82,.3);
+    border-radius:4px; padding:16px; }
+.ppl-fineprint { font-size:12px; color:#8a847a; }
