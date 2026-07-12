@@ -1,7 +1,8 @@
 # Pier & Paddock — Luxury Watch Demo Store
 
-A polished **demo ecommerce store** for high-end watches, built with
-**Django + django-oscar** and skinned with the "zwat" theme.
+A polished **demo ecommerce store** for high-end watches — built with
+**Django + django-oscar** (zwat theme) and paired with an editorially independent
+**Wagtail lifestyle magazine** at `/lifestyle/` (iNews theme).
 
 > **This is a sales/UX demo, not a production site.** Shoppers can browse, filter,
 > search, view rich product detail, manage a cart and wishlist/vault, register and
@@ -26,7 +27,7 @@ A complete, believable luxury-watch storefront:
   no scraped brand photos.)
 - **Home page** — animated hero carousel (auto-rotating, 5s per slide), featured
   collections, a new-arrivals slider with hover "rollover" cards, a trust strip
-  and the latest journal posts.
+  and a **"From the Lifestyle Journal"** strip of the latest magazine stories.
 - **Shop / product listing** — faceted sidebar (brand, collection, price, case
   material, condition), sorting and pagination; cards with image rollover,
   quick add-to-cart and save-to-vault.
@@ -63,8 +64,21 @@ A complete, believable luxury-watch storefront:
   clear "payments are disabled in this demo" notice. Two named shipping methods
   (complimentary insured overnight, or paid Saturday delivery).
 - **Accounts** — registration, login, profile, order history and address book.
+- **Lifestyle magazine** — an editorially independent **Wagtail 7 content hub** at
+  `/lifestyle/` ("Pier & Paddock Lifestyle"), skinned with the "iNews" theme. Category
+  hubs, multi-format articles (standard, feature, gallery, video, audio, review, guide,
+  interview, list, quote), author pages, and a **StreamField** body (rich text,
+  pull-quotes, full-bleed images, galleries, shoppable product cards, FAQs,
+  key-takeaways, embeds, inline ads). Each article has a Latest-News + **Sponsored
+  Products** rail, an `/advertise/` enquiry funnel and a **Members** newsletter sign-up
+  (Mailchimp-pending; ties into the Crest program). Full **SEO / AI-discovery** layer —
+  JSON-LD by post type, OpenGraph/Twitter, `/sitemap.xml`, RSS/Atom feeds, `robots.txt`,
+  `llms.txt` — plus a magazine-skinned search and 404. Edited in the **Wagtail CMS admin**
+  (`/cms-admin/`). Ad slots (`AdZone`) and sponsored products are wired as **Revive
+  Adserver** seams (inactive placeholders for now).
 - **Content** — About, FAQ and Contact pages (contact posts to the console email
-  backend), a simple blog/journal, and a custom 404.
+  backend) and a custom 404. (The old blog/journal is superseded by the Lifestyle
+  magazine above — `/blog/*` now 301-redirects to `/lifestyle/*`.)
 
 ---
 
@@ -73,10 +87,11 @@ A complete, believable luxury-watch storefront:
 | Concern   | Choice |
 |-----------|--------|
 | Framework | Django 5.2 + django-oscar 4.1 |
+| CMS / magazine | **Wagtail 7.4** — the Lifestyle content hub at `/lifestyle/`, edited in the Wagtail CMS admin at `/cms-admin/` |
 | Database  | SQLite (`db.sqlite3`) |
-| Images    | Pillow — generated placeholder imagery; sorl-thumbnail for thumbnails |
-| Search    | Haystack simple backend; faceted shop filtering via a custom ORM view |
-| Custom apps | `loyalty` (Crest membership + Operator Console), `merchant` (Merchant Portal), `vault` (investment tracking), `compare`, `shop` (faceted browse), `blog`, `pages`, plus forked `checkout` (payments disabled) and `shipping` (named methods) |
+| Images    | Pillow — generated placeholder imagery; sorl-thumbnail (store) + Wagtail renditions → WebP (magazine) |
+| Search    | Haystack simple backend (store); substring search over live articles (magazine); faceted shop filtering via a custom ORM view |
+| Custom apps | `loyalty` (Crest membership + Operator Console), `merchant` (Merchant Portal), `vault` (investment tracking), `compare`, `shop` (faceted browse), **`lifestyle`** (Wagtail magazine), `blog`, `pages`, plus forked `checkout` (payments disabled) and `shipping` (named methods) |
 | Email (built, inactive) | **SendGrid** for transactional mail, **Mailchimp** for marketing — wired in `apps/loyalty/emails.py` but disabled in the demo (no keys, no network calls) |
 
 ---
@@ -123,6 +138,23 @@ and seeded credit/grail/notifications:
 
 This is idempotent (re-running resets the per-tier members). Run it after
 `load_demo_catalogue` if you rebuild from scratch.
+
+### Seed the Lifestyle magazine (optional)
+
+The magazine ships in `db.sqlite3` too. To rebuild it from scratch, run in order:
+
+```bash
+./bin/python manage.py lifestyle_bootstrap   # Wagtail site + landing/category/author pages
+./bin/python manage.py lifestyle_ads         # ad zones (Revive-ready placeholders)
+./bin/python manage.py load_lifestyle_demo   # authors, articles, StreamField bodies, imagery
+```
+
+Content is authored in the **Wagtail CMS admin** at `/cms-admin/` (sign in as the
+superuser — see below). Magazine images are committed as Wagtail renditions alongside
+their DB rows, so the demo renders on deploy without regenerating; after editing content,
+re-render the `/lifestyle/*` pages and recommit `media/images/` + `db.sqlite3` together.
+Newsletter sign-ups queue locally (`PendingSubscriber`) until Mailchimp keys exist —
+`./bin/python manage.py sync_pending_subscribers` flushes them when configured.
 
 ---
 
@@ -203,7 +235,7 @@ the portal and the merchant can't open the loyalty console (a superuser sees bot
 | Customer               | `demo@example.com`          | `Demo1234!`   | the shopper experience (vault, orders, addresses) |
 | Operator (loyalty ops) | `retailer@pierpaddock.demo` | `Retail1234!` | **Operator Console** (`/console/`) — runs the Crest program. Staff, *not* superuser |
 | Merchant               | `merchant@meridianwatch.demo`| `Merchant1234!`| **Merchant Portal** (`/merchant/`) — a supplier listing inventory & watching their sales (a generic stand-in for the IDC-style dropship supplier). Staff, *not* superuser |
-| Admin (superuser)      | `admin@example.com`         | `Admin1234!`  | full Django admin (`/admin/`), Oscar dashboard (`/dashboard/`), console **and** portal |
+| Admin (superuser)      | `admin@example.com`         | `Admin1234!`  | everything: Django admin (`/admin/`), Oscar dashboard (`/dashboard/`), **Wagtail CMS admin (`/cms-admin/`)**, console **and** portal |
 
 **Crest membership — one member per tier** (shared password `Crest1234!`), each
 seeded so the screen is fully populated for a walkthrough:
@@ -216,13 +248,19 @@ seeded so the screen is fully populated for a walkthrough:
 | Curator   | `curator@pierpaddock.demo`   | $110,000 | Crest 4; a members-only first-look piece in the Vault |
 | Steward   | `steward@pierpaddock.demo`   | $260,000 | Crest 5; named concierge, by-invitation badge, a matched grail |
 
-- Two staff back-office surfaces, cleanly separated by role (a superuser sees both):
+- Staff / admin surfaces:
   - **Operator Console** (`/console/`) — the **operator** account runs the Crest
     loyalty program (members, simulate-purchase, analytics, config).
   - **Merchant Portal** (`/merchant/`) — the **merchant** account manages their
     own listings, XML feed and sales. See the section below.
-- The **admin** superuser reaches everything (`/admin/`, `/dashboard/`, console,
-  portal); create your own with `./bin/python manage.py createsuperuser`.
+  - **Wagtail CMS admin** (`/cms-admin/`) — authors and publishes the **Lifestyle
+    magazine** (articles, categories, authors, images, ad zones, snippets). No
+    dedicated editor account ships; sign in as the **admin** superuser, or grant a
+    user Wagtail access and add them to an Editors/Moderators group.
+  - **Django admin** (`/admin/`) and the **Oscar dashboard** (`/dashboard/`) — the
+    store's low-level + catalogue/order back offices.
+- The **admin** superuser reaches everything (`/admin/`, `/dashboard/`, `/cms-admin/`,
+  console, portal); create your own with `./bin/python manage.py createsuperuser`.
 - All accounts above ship in the committed `db.sqlite3`; `load_loyalty_demo`
   recreates the five tier members, the operator **and the merchant** if you
   rebuild from scratch.
@@ -244,15 +282,22 @@ apps/
                         supplier-scoped listings / feed / sales views
   vault/                Investment-tracking vault (MarketValue/Valuation, VaultItem)
   compare/              Session-based watch comparison
+  lifestyle/            Wagtail magazine: page models (index/category/article/author),
+                        StreamField blocks, ad zones + sponsored-product snippets,
+                        RSS/Atom feeds, JSON-LD/SEO (seo.py), robots/llms (discovery.py),
+                        /advertise/ + subscribe + search views, seed commands
   checkout/             Forked Oscar checkout — payments disabled at place-order
   shipping/             Forked Oscar shipping — two named insured methods
-  blog/                 Simple blog / journal
-  pages/                About / FAQ / Contact / custom 404
+  blog/                 Legacy blog / journal — superseded by lifestyle (/blog/* → /lifestyle/*)
+  pages/                About / FAQ / Contact / custom 404 (magazine-skinned under /lifestyle/)
 templates/              Theme-skinned overrides of Oscar templates + custom pages
-                        (incl. templates/loyalty/, templates/console/, templates/merchant/)
+                        (incl. templates/loyalty/, templates/console/, templates/merchant/;
+                        magazine templates live in apps/lifestyle/templates/lifestyle/)
 static/                 Theme assets + brand CSS (css/pierpaddock.css, css/loyalty.css,
-                        css/console.css, css/partner.css) + crest favicon (img/crest.ico)
-media/                  Product & blog imagery (thumbnail cache is gitignored)
+                        css/console.css, css/partner.css) + crest favicon (img/crest.ico);
+                        the magazine skin is under apps/lifestyle/static/lifestyle/
+media/                  Product imagery + Wagtail magazine originals (original_images/) and
+                        committed renditions (images/); sorl thumbnail cache is gitignored
 ```
 
 ### Brand configuration (single source of truth)
@@ -272,4 +317,8 @@ Real payment processing, real inventory sync, and live market pricing. Email is
 and Mailchimp (marketing), but makes no network calls in the demo — transactional
 "sends" fall back to the console backend and marketing "syncs" are logged no-ops.
 Add real keys and flip `LOYALTY_TRANSACTIONAL_ENABLED` / `LOYALTY_MARKETING_ENABLED`
-to activate. This is a local/demo-host build for showing off the storefront and UX.
+to activate. The magazine's **Revive Adserver** ad slots and **Mailchimp** newsletter
+are likewise inactive seams (placeholder creatives; sign-ups stored locally as
+`PendingSubscriber`), and `GA4_MEASUREMENT_ID`, `INDEXNOW_KEY` and
+`LIFESTYLE_OG_DEFAULT_IMAGE` are empty config placeholders. This is a local/demo-host
+build for showing off the storefront, the magazine and the UX.
