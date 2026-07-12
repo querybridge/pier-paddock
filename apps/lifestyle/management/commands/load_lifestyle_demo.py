@@ -24,6 +24,13 @@ from apps.lifestyle.models import (
 
 WagtailImage = get_image_model()
 
+# A dedicated magazine-editor login for the Wagtail CMS (/cms-admin/). Scoped to the
+# CMS via the default Wagtail Editors + Moderators groups — NOT a superuser, and
+# is_staff=False so it can't reach the Django admin, Operator Console or Merchant Portal.
+EDITOR_EMAIL = "editor@pierpaddock.demo"
+EDITOR_PASSWORD = "Editor1234!"
+EDITOR_NAME = ("Nadia", "Okonkwo")  # Managing Editor persona
+
 AUTHORS = [
     ("Eleanor Voss", "Editor-at-Large · Horology",
      "Two decades covering watch auctions, independent makers and the trade."),
@@ -93,11 +100,34 @@ def _font(size):
 class Command(BaseCommand):
     help = "Seed the Lifestyle magazine (categories, authors, articles)."
 
+    def _seed_editor(self):
+        """Create/refresh the dedicated magazine-editor CMS login (idempotent)."""
+        from django.contrib.auth import get_user_model
+        from django.contrib.auth.models import Group
+
+        User = get_user_model()
+        user, _ = User.objects.get_or_create(
+            username=EDITOR_EMAIL,
+            defaults={"email": EDITOR_EMAIL,
+                      "first_name": EDITOR_NAME[0], "last_name": EDITOR_NAME[1]},
+        )
+        user.email = EDITOR_EMAIL
+        user.is_staff = False       # no Django admin / console / portal
+        user.is_superuser = False
+        user.set_password(EDITOR_PASSWORD)
+        user.save()
+        # Wagtail admin access comes from these default groups (both carry access_admin).
+        groups = Group.objects.filter(name__in=["Editors", "Moderators"])
+        user.groups.add(*groups)
+        self.stdout.write("  CMS editor: %s (%s)" % (
+            EDITOR_EMAIL, ", ".join(g.name for g in groups) or "no Wagtail groups found"))
+
     def handle(self, *args, **options):
         random.seed(77)
         index = LifestyleIndexPage.objects.first()
         if index is None:
             self.stderr.write("Run `lifestyle_bootstrap` first."); return
+        self._seed_editor()  # ensure the CMS editor exists even on reseed
         if ArticlePage.objects.exists():
             self.stdout.write("Articles already exist — delete them to reseed."); return
 

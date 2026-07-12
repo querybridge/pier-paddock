@@ -235,6 +235,7 @@ the portal and the merchant can't open the loyalty console (a superuser sees bot
 | Customer               | `demo@example.com`          | `Demo1234!`   | the shopper experience (vault, orders, addresses) |
 | Operator (loyalty ops) | `retailer@pierpaddock.demo` | `Retail1234!` | **Operator Console** (`/console/`) — runs the Crest program. Staff, *not* superuser |
 | Merchant               | `merchant@meridianwatch.demo`| `Merchant1234!`| **Merchant Portal** (`/merchant/`) — a supplier listing inventory & watching their sales (a generic stand-in for the IDC-style dropship supplier). Staff, *not* superuser |
+| Magazine editor        | `editor@pierpaddock.demo`   | `Editor1234!` | **Wagtail CMS admin** (`/cms-admin/`) — authors & publishes the Lifestyle magazine. In the Wagtail **Editors + Moderators** groups; *not* staff/superuser, so it can't reach `/admin/`, the Operator Console or the Merchant Portal |
 | Admin (superuser)      | `admin@example.com`         | `Admin1234!`  | everything: Django admin (`/admin/`), Oscar dashboard (`/dashboard/`), **Wagtail CMS admin (`/cms-admin/`)**, console **and** portal |
 
 **Crest membership — one member per tier** (shared password `Crest1234!`), each
@@ -254,16 +255,16 @@ seeded so the screen is fully populated for a walkthrough:
   - **Merchant Portal** (`/merchant/`) — the **merchant** account manages their
     own listings, XML feed and sales. See the section below.
   - **Wagtail CMS admin** (`/cms-admin/`) — authors and publishes the **Lifestyle
-    magazine** (articles, categories, authors, images, ad zones, snippets). No
-    dedicated editor account ships; sign in as the **admin** superuser, or grant a
-    user Wagtail access and add them to an Editors/Moderators group.
+    magazine** (articles, categories, authors, images, ad zones, snippets). Sign in as
+    the dedicated **magazine editor** (`editor@pierpaddock.demo` — in the Editors +
+    Moderators groups, CMS-only) or the **admin** superuser.
   - **Django admin** (`/admin/`) and the **Oscar dashboard** (`/dashboard/`) — the
     store's low-level + catalogue/order back offices.
 - The **admin** superuser reaches everything (`/admin/`, `/dashboard/`, `/cms-admin/`,
   console, portal); create your own with `./bin/python manage.py createsuperuser`.
-- All accounts above ship in the committed `db.sqlite3`; `load_loyalty_demo`
-  recreates the five tier members, the operator **and the merchant** if you
-  rebuild from scratch.
+- All accounts above ship in the committed `db.sqlite3`. If you rebuild from scratch,
+  `load_loyalty_demo` recreates the five tier members, the operator **and the merchant**,
+  and `load_lifestyle_demo` recreates the **magazine editor**.
 
 ---
 
