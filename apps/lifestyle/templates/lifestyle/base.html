@@ -82,7 +82,6 @@
                                 consistent cross-site navigation (nav_collections / nav_brands
                                 come from the global apps.core.context_processors.navigation).{% endcomment %}
                                 <ul class="menu">
-                                    <li><a href="{% url 'home' %}">Home</a></li>
                                     <li class="has-submenu"><a href="{% url 'shop:browse' %}">Shop</a>
                                         <ul class="submenu">
                                             <li><a href="{% url 'shop:browse' %}">All Watches</a></li>
@@ -100,10 +99,8 @@
                                             {% endfor %}
                                         </ul>
                                     </li>
+                                    <li><a href="{% url 'vault:index' %}">Vault</a></li>
                                     <li><a href="/lifestyle/">Lifestyle</a></li>
-                                    <li><a href="{% url 'pages:about' %}">About</a></li>
-                                    <li><a href="{% url 'pages:faq' %}">FAQ</a></li>
-                                    <li><a href="{% url 'pages:contact' %}">Contact</a></li>
                                 </ul>
                             </div>
                             <div id="mobile-menu"></div>
