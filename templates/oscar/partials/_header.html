@@ -58,7 +58,6 @@
                             <div class="main-menu menu-lh-1 menu-text-white">
                                 <nav>
                                     <ul>
-                                        <li><a href="{% url 'home' %}">Home</a></li>
                                         <li><a href="{% url 'shop:browse' %}">Shop<i class="fa fa-caret-down" aria-hidden="true"></i></a>
                                             <ul class="sub-menu-width">
                                                 <li><a href="{% url 'shop:browse' %}">All Watches</a></li>
@@ -76,10 +75,8 @@
                                                 {% endfor %}
                                             </ul>
                                         </li>
+                                        <li><a href="{% url 'vault:index' %}">Vault</a></li>
                                         <li><a href="/lifestyle/">Lifestyle</a></li>
-                                        <li><a href="{% url 'pages:about' %}">About</a></li>
-                                        <li><a href="{% url 'pages:faq' %}">FAQ</a></li>
-                                        <li><a href="{% url 'pages:contact' %}">Contact</a></li>
                                     </ul>
                                 </nav>
                             </div>
@@ -167,7 +164,6 @@
             <div class="clickable-mainmenu-wrap clickable-mainmenu-style1">
                 <nav>
                     <ul>
-                        <li><a href="{% url 'home' %}">Home</a></li>
                         <li class="has-sub-menu"><a href="{% url 'shop:browse' %}">Shop</a>
                             <ul class="sub-menu-2">
                                 <li><a href="{% url 'shop:browse' %}">All Watches</a></li>
@@ -183,10 +179,8 @@
                                 {% endfor %}
                             </ul>
                         </li>
+                        <li><a href="{% url 'vault:index' %}">Vault</a></li>
                         <li><a href="/lifestyle/">Lifestyle</a></li>
-                        <li><a href="{% url 'pages:about' %}">About</a></li>
-                        <li><a href="{% url 'pages:faq' %}">FAQ</a></li>
-                        <li><a href="{% url 'pages:contact' %}">Contact</a></li>
                     </ul>
                 </nav>
             </div>
