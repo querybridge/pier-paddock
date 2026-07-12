@@ -15,7 +15,9 @@ from apps.lifestyle.discovery import indexnow_key, llms_txt, robots_txt
 from apps.lifestyle.feeds import (
     CategoryFeed, LatestArticlesAtomFeed, LatestArticlesFeed,
 )
-from apps.lifestyle.views import AdvertiseView, subscribe as lifestyle_subscribe
+from apps.lifestyle.views import (
+    AdvertiseView, magazine_search, subscribe as lifestyle_subscribe,
+)
 from apps.loyalty.views import PublicMembershipView
 
 urlpatterns = [
@@ -60,6 +62,8 @@ urlpatterns = [
     # subscribe path is registered before the Wagtail catch-all include.
     path("advertise/", AdvertiseView.as_view(), name="advertise"),
     path("lifestyle/subscribe/", lifestyle_subscribe, name="lifestyle_subscribe"),
+    # Phase 7 — magazine search (before the Wagtail catch-all).
+    path("lifestyle/search/", magazine_search, name="lifestyle_search"),
     # Phase 6 — syndication feeds. Registered BEFORE the Wagtail catch-all so
     # /lifestyle/feed/ and /lifestyle/<category>/feed/ aren't swallowed by page routing.
     path("lifestyle/feed/", LatestArticlesFeed(), name="lifestyle_feed"),

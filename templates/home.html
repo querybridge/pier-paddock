@@ -146,32 +146,6 @@
         </div>
     </div>
 
-    {# ---------------- Latest journal ---------------- #}
-    {% if latest_posts %}
-    <div class="blog-area" style="padding:70px 0;">
-        <div class="container">
-            <div class="pp-section-title">
-                <span>The Journal</span>
-                <h2>From Our Editors</h2>
-            </div>
-            <div class="row">
-                {% for post in latest_posts %}
-                <div class="col-md-4 col-12 mb-40">
-                    <div class="pp-product-card" style="text-align:left;">
-                        <a class="pp-product-img" href="{{ post.get_absolute_url }}" style="padding:0;">
-                            {% if post.image %}<img src="{{ post.image.url }}" alt="{{ post.title }}">{% endif %}
-                        </a>
-                        <div class="pp-product-body">
-                            <div class="pp-brand">{{ post.date|date:"M j, Y" }}</div>
-                            <h3 class="pp-title"><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></h3>
-                            <p class="pp-muted">{{ post.excerpt|truncatewords:18 }}</p>
-                            <a href="{{ post.get_absolute_url }}" class="text-gold">Read more &rarr;</a>
-                        </div>
-                    </div>
-                </div>
-                {% endfor %}
-            </div>
-        </div>
-    </div>
-    {% endif %}
+    {# ---------------- From the Lifestyle Journal (Phase 7) ---------------- #}
+    {% include "partials/_lifestyle_journal.html" %}
 {% endblock %}

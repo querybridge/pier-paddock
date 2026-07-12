@@ -52,4 +52,7 @@ class ContactView(FormView):
 
 
 def custom_404(request, exception=None):
+    # Magazine paths get the Lifestyle-skinned 404 (Phase 7); everything else the store's.
+    if request.path.startswith("/lifestyle"):
+        return render(request, "lifestyle/404.html", status=404)
     return render(request, "404.html", status=404)

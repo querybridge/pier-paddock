@@ -31,14 +31,16 @@ class HomeView(TemplateView):
         # Top-level brand/style categories for the collection blocks.
         ctx["collections"] = list(Category.get_root_nodes()[:6])
 
+        # "From the Lifestyle Journal" strip — the Wagtail magazine supersedes the
+        # old apps.blog journal (Phase 7).
         try:
-            from apps.blog.models import Post
+            from apps.lifestyle.models import ArticlePage
 
-            ctx["latest_posts"] = list(
-                Post.objects.filter(published=True).order_by("-date")[:3]
+            ctx["lifestyle_articles"] = list(
+                ArticlePage.objects.live().public().order_by("-first_published_at")[:3]
             )
         except Exception:
-            ctx["latest_posts"] = []
+            ctx["lifestyle_articles"] = []
 
         return ctx
 

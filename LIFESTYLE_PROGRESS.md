@@ -336,6 +336,40 @@ with correct `@type`s, and feeds/sitemap validated as well-formed XML.
 
 ---
 
+## Phase 7 — Storefront integration & polish — 2026-07-12 ✅
+
+- **Storefront homepage → magazine** — the old `apps.blog` "From Our Editors" strip is
+  replaced by **"From the Lifestyle Journal"** (`templates/partials/_lifestyle_journal.html`,
+  included from `home.html`): the 3 latest live `ArticlePage`s (hero + category badge + title +
+  dek), plus an "Explore the Magazine →" link to `/lifestyle/`. `HomeView` now reads Wagtail
+  `ArticlePage`s (`lifestyle_articles`) instead of `apps.blog.Post`. Reuses the existing
+  `fill-420x260` rendition — no new image files.
+- **Magazine search** — real search at `/lifestyle/search/` (`magazine_search` view, routed
+  before the Wagtail catch-all). Uses a substring query across title/subtitle/body/tags rather
+  than the Wagtail DB backend, which **under-matches on SQLite** (e.g. a term users expect to
+  hit returned nothing); predictable substring search is better demo UX. Results reuse the
+  article-card partial with pagination; the header + 404 search boxes point here.
+- **Magazine 404** — `custom_404` now branches: `/lifestyle/*` gets the Lifestyle-skinned
+  `lifestyle/404.html` (headline + search box + 3 latest stories); everything else keeps the
+  store's 404.
+- **Cross-property nav/footer** — already in place: both primary navs carry Shop + Lifestyle
+  (later trimmed to Shop/Brands/Vault/Lifestyle at the owner's request); the footer is a single
+  shared `oscar/partials/_footer.html` on both properties; the "Join P&P Members" strip is
+  shared above both footers.
+- **QA** — `/blog/*` → `/lifestyle/*` 301 verified; no seed article has a hero without alt text
+  (enforced by `ArticlePage.clean()`); all ad zones carry width/height + a target link (no CLS);
+  storefront + magazine render 200 across index/category/article/author/search/advertise.
+
+**Deviations / notes:** magazine search deliberately uses substring matching (not the Wagtail
+search backend) for reliable results on SQLite — swap to a real backend (Postgres FTS /
+Elasticsearch) for production relevance + stemming. Mobile layout was not visually QA'd here
+(no browser in the build env) — worth a manual pass on index/category/article/advertise.
+
+**Phases 0–7 complete.** Remaining work is owner-supplied config (Mailchimp, Revive, GA4,
+IndexNow, OG default image) and the production search backend — see the table below.
+
+---
+
 ## Ad-hoc / early items
 
 - **2026-07-11 — Storefront primary nav "Blog" → "Lifestyle"** (a Phase 7 item,

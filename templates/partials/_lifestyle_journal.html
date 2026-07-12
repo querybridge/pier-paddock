@@ -1,0 +1,33 @@
+{% load wagtailimages_tags %}{% comment %}
+Phase 7 — "From the Lifestyle Journal" strip on the storefront homepage. Reads the
+3 latest live Wagtail ArticlePages (context: lifestyle_articles). Reuses the fill-420x260
+rendition (already committed) so it adds no new renditions.
+{% endcomment %}
+{% if lifestyle_articles %}
+<div class="blog-area" style="padding:70px 0;">
+    <div class="container">
+        <div class="pp-section-title">
+            <span>The Journal</span>
+            <h2>From the Lifestyle Journal</h2>
+        </div>
+        <div class="row">
+            {% for a in lifestyle_articles %}
+            <div class="col-md-4 col-12 mb-40">
+                <div class="pp-product-card" style="text-align:left;">
+                    <a class="pp-product-img" href="{{ a.url }}" style="padding:0;">
+                        {% if a.hero_image %}{% image a.hero_image fill-420x260 alt=a.hero_alt_text loading="lazy" %}{% endif %}
+                    </a>
+                    <div class="pp-product-body">
+                        {% if a.category %}<div class="pp-brand">{{ a.category.title }}</div>{% endif %}
+                        <h3 class="pp-title"><a href="{{ a.url }}">{{ a.title }}</a></h3>
+                        {% if a.subtitle %}<p class="pp-muted">{{ a.subtitle|truncatewords:18 }}</p>{% endif %}
+                        <a href="{{ a.url }}" class="text-gold">Read more &rarr;</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="text-center"><a href="/lifestyle/" class="btn btn-secondary">Explore the Magazine &rarr;</a></div>
+    </div>
+</div>
+{% endif %}

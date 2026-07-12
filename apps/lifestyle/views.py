@@ -7,13 +7,14 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.cache import cache
 from django.core.mail import send_mail
-from django.shortcuts import redirect
+from django.core.paginator import Paginator
+from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.views.generic import FormView
 
 from .forms import AdvertiseForm, SubscribeForm
 from .integrations import MailchimpClient
-from .models import PendingSubscriber
+from .models import ArticlePage, PendingSubscriber
 
 
 def _client_ip(request):
@@ -102,3 +103,23 @@ def subscribe(request):
             pass
 
     return _redir("1")
+
+
+def magazine_search(request):
+    """Phase 7 — magazine search over live ArticlePages.
+
+    Uses a plain substring query across title/subtitle/body/tags rather than the
+    Wagtail DB backend, which under-matches on SQLite (a term users expect to hit
+    would return nothing). Predictable is better UX for the demo.
+    """
+    from django.db.models import Q
+
+    query = (request.GET.get("q") or "").strip()
+    qs = ArticlePage.objects.none()
+    if query:
+        qs = (ArticlePage.objects.live().public()
+              .filter(Q(title__icontains=query) | Q(subtitle__icontains=query)
+                      | Q(body__icontains=query) | Q(tags__name__icontains=query))
+              .distinct().order_by("-first_published_at"))
+    page = Paginator(qs, 9).get_page(request.GET.get("page"))
+    return render(request, "lifestyle/search.html", {"query": query, "results": page})
