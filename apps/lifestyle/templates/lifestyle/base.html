@@ -6,6 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}{{ page.title }}{% endblock %} — Pier &amp; Paddock Lifestyle</title>
     {% block meta %}{% endblock %}
+    {% if page %}{% include "lifestyle/includes/_seo.html" %}{% endif %}
+    <link rel="alternate" type="application/rss+xml" title="Pier &amp; Paddock Lifestyle" href="/lifestyle/feed/">
+    {% lifestyle_ga4 %}
     <link rel="shortcut icon" href="{% static 'img/crest.ico' %}" type="image/x-icon">
 
     <!-- Magazine skin (namespaced under /static/lifestyle/) -->
@@ -167,12 +170,12 @@
     {% include "oscar/partials/_footer.html" %}
 
     <!--Javascripts-->
-    <script src="{% static 'lifestyle/js/jquery.min.js' %}"></script>
-    <script src="{% static 'lifestyle/js/bootstrap.min.js' %}"></script>
-    <script src="{% static 'lifestyle/js/jquery.meanmenu.min.js' %}"></script>
-    <script src="{% static 'lifestyle/js/acmeticker.min.js' %}"></script>
-    <script src="{% static 'lifestyle/js/owl.carousel.min.js' %}"></script>
-    <script src="{% static 'lifestyle/js/custom.js' %}"></script>
+    <script defer src="{% static 'lifestyle/js/jquery.min.js' %}"></script>
+    <script defer src="{% static 'lifestyle/js/bootstrap.min.js' %}"></script>
+    <script defer src="{% static 'lifestyle/js/jquery.meanmenu.min.js' %}"></script>
+    <script defer src="{% static 'lifestyle/js/acmeticker.min.js' %}"></script>
+    <script defer src="{% static 'lifestyle/js/owl.carousel.min.js' %}"></script>
+    <script defer src="{% static 'lifestyle/js/custom.js' %}"></script>
     {% block extra_js %}{% endblock %}
 </body>
 </html>

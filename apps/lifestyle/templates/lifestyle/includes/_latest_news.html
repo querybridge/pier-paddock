@@ -6,7 +6,7 @@
         {% for a in articles %}
         <div class="inews-post-item">
             <div class="inews-post-thumb"><a href="{{ a.url }}">
-                {% if a.hero_image %}{% image a.hero_image fill-110x84 alt=a.hero_alt_text %}{% endif %}</a></div>
+                {% if a.hero_image %}{% image a.hero_image fill-110x84 alt=a.hero_alt_text loading="lazy" %}{% endif %}</a></div>
             <div class="inews-post-info">
                 <div class="inews-post-title"><h3><a href="{{ a.url }}">{{ a.title }}</a></h3></div>
                 <div class="inews-post-meta"><span class="inews-post-date"><i class="fas fa-calendar-alt"></i>

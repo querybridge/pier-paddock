@@ -239,3 +239,9 @@ a:hover { color: var(--ppl-gold); }
 .ppl-alert--ok { background:rgba(46,125,82,.12); color:#1f5e3c; border:1px solid rgba(46,125,82,.3);
     border-radius:4px; padding:16px; }
 .ppl-fineprint { font-size:12px; color:#8a847a; }
+
+/* Phase 6 — article/category breadcrumb (also the visual pair to BreadcrumbList JSON-LD). */
+.ppl-breadcrumb { font-size: 12px; letter-spacing: .5px; text-transform: uppercase; color: #8a847a; margin-bottom: 14px; }
+.ppl-breadcrumb a { color: var(--ppl-gold-dark); }
+.ppl-breadcrumb a:hover { color: var(--ppl-gold); }
+.ppl-breadcrumb span[aria-hidden] { margin: 0 6px; color: #c9c2b5; }

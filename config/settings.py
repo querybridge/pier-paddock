@@ -73,6 +73,7 @@ INSTALLED_APPS = [
     "apps.blog.apps.BlogConfig",
     "apps.pages.apps.PagesConfig",
     # ── Pier & Paddock Lifestyle (Wagtail magazine) ──────────────────────
+    "django.contrib.sitemaps",  # /sitemap.xml (wagtail.contrib.sitemaps builds on it)
     "wagtail.contrib.forms",
     "wagtail.contrib.redirects",
     "wagtail.contrib.settings",
@@ -298,6 +299,17 @@ WAGTAILSEARCH_BACKENDS = {
 
 # Analytics / discovery IDs — empty by default; owner (Mike) supplies later.
 GA4_MEASUREMENT_ID = os.environ.get("GA4_MEASUREMENT_ID", "")
+
+# Phase 6 — SEO / AI discovery.
+# Public base URL used to build absolute URLs in feeds/sitemaps/JSON-LD when a
+# request isn't available; falls back to WAGTAILADMIN_BASE_URL.
+LIFESTYLE_BASE_URL = os.environ.get("LIFESTYLE_BASE_URL", WAGTAILADMIN_BASE_URL)
+# Final OpenGraph image fallback (static path or absolute URL). Empty → og:image
+# is simply omitted when a page has no og_image/hero. Owner supplies a 1200×630.
+LIFESTYLE_OG_DEFAULT_IMAGE = os.environ.get("LIFESTYLE_OG_DEFAULT_IMAGE", "")
+# IndexNow key (Bing/Yandex/etc.). Empty → publish pings are skipped. When set,
+# also drop the key verification file at /<key>.txt (served from urls.py).
+INDEXNOW_KEY = os.environ.get("INDEXNOW_KEY", "")
 
 # Ad server + marketing integrations — built with seams, inactive for now.
 REVIVE_ENABLED = _env_bool("REVIVE_ENABLED", False)

@@ -4,12 +4,17 @@
 {% block title %}{{ page.seo_title|default:page.title }}{% endblock %}
 
 {% block article_main %}
+<nav class="ppl-breadcrumb" aria-label="Breadcrumb">
+    <a href="/lifestyle/">Lifestyle</a>
+    {% if page.category %}<span aria-hidden="true">›</span> <a href="{{ page.category.url }}">{{ page.category.title }}</a>{% endif %}
+    <span aria-hidden="true">›</span> <span aria-current="page">{{ page.title }}</span>
+</nav>
 <article class="single-post {% if page.post_type == 'quote' %}quote{% else %}standard{% endif %} ppl-post-{{ page.post_type }}">
 
     {% if page.post_type == 'quote' %}
         {# Quote: the headline leads as a quote, then the image. #}
         <div class="inews-post-title"><h1><q>{{ page.title }}</q></h1></div>
-        {% if page.hero_image %}<div class="inews-post-thumb">{% image page.hero_image width-820 alt=page.hero_alt_text %}</div>{% endif %}
+        {% if page.hero_image %}<div class="inews-post-thumb">{% image page.hero_image width-820 alt=page.hero_alt_text fetchpriority="high" %}</div>{% endif %}
     {% else %}
         {# Lead media by post type. #}
         {% if page.post_type == 'video' and page.lead_video_url %}
@@ -21,7 +26,7 @@
                 {% for g in page.gallery_images.all %}<div class="slide-item">{% image g.image width-820 alt=g.caption|default:page.title %}</div>{% endfor %}
             </div>
         {% elif page.hero_image %}
-            <div class="inews-post-thumb">{% image page.hero_image width-820 alt=page.hero_alt_text %}</div>
+            <div class="inews-post-thumb">{% image page.hero_image width-820 alt=page.hero_alt_text fetchpriority="high" %}</div>
         {% endif %}
         <div class="inews-post-title"><h1>{{ page.title }}</h1></div>
     {% endif %}
@@ -30,8 +35,8 @@
 
     <div class="single-post-meta">
         <div class="inews-post-meta ppl-byline">
-            <span class="inews-post-date"><i class="fas fa-calendar-alt"></i>
-                {{ page.publish_display_date|default:page.first_published_at|date:"F j, Y" }}</span>
+            <time class="inews-post-date" datetime="{{ page.publish_display_date|default:page.first_published_at|date:'c' }}"><i class="fas fa-calendar-alt"></i>
+                {{ page.publish_display_date|default:page.first_published_at|date:"F j, Y" }}</time>
             {% for a in page.authors.all %}<span class="ms-2">· <a href="{{ a.url }}">{{ a.title }}</a></span>{% endfor %}
             <span class="ms-2">· {{ page.reading_time }} min read</span>
             {% if page.category %}<span class="ms-2">· <a href="{{ page.category.url }}">{{ page.category.title }}</a></span>{% endif %}

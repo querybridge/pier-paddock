@@ -1,10 +1,67 @@
-"""Template tags for the Lifestyle magazine: ad zones + data-driven nav."""
+"""Template tags for the Lifestyle magazine: ad zones + data-driven nav + SEO."""
+import json
+
 from django import template
+from django.conf import settings
+from django.templatetags.static import static
+from django.utils.html import format_html
 from django.utils.safestring import mark_safe
 
 from ..models import AdZone
 
 register = template.Library()
+
+
+@register.simple_tag(takes_context=True)
+def lifestyle_jsonld(context):
+    """Render the page's schema.org JSON-LD (Phase 6). Silent on any error so
+    structured data never breaks a page."""
+    page = context.get("page")
+    request = context.get("request")
+    if page is None:
+        return ""
+    try:
+        from ..seo import page_jsonld
+
+        data = page_jsonld(page.specific if hasattr(page, "specific") else page, request)
+        payload = json.dumps(data, ensure_ascii=False, separators=(",", ":"))
+        return format_html('<script type="application/ld+json">{}</script>', mark_safe(payload))
+    except Exception:
+        return ""
+
+
+@register.simple_tag(takes_context=True)
+def seo_og_image(context):
+    """Absolute OpenGraph image URL, fallback chain: og_image → hero → site default."""
+    page = context.get("page")
+    request = context.get("request")
+
+    def absolute(url):
+        if not url:
+            return ""
+        if url.startswith(("http://", "https://")):
+            return url
+        if request is not None:
+            return request.build_absolute_uri(url)
+        return settings.LIFESTYLE_BASE_URL.rstrip("/") + url
+
+    for attr in ("og_image", "hero_image"):
+        image = getattr(page, attr, None)
+        if image:
+            try:
+                return absolute(image.get_rendition("fill-1200x630").url)
+            except Exception:
+                continue
+    default = settings.LIFESTYLE_OG_DEFAULT_IMAGE
+    if default:
+        return absolute(default if default.startswith(("/", "http")) else static(default))
+    return ""
+
+
+@register.inclusion_tag("lifestyle/includes/_ga4.html")
+def lifestyle_ga4():
+    """GA4 snippet + custom event wiring, rendered only when the ID is configured."""
+    return {"ga4_id": settings.GA4_MEASUREMENT_ID}
 
 # The magazine's fixed primary categories (spec Phase 1). Until the Wagtail
 # CategoryPages exist (Phase 2), the nav falls back to these names/slugs.

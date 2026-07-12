@@ -2,7 +2,7 @@
 <div class="inews-post-item mb-4">
     <div class="inews-post-thumb">
         <a href="{{ article.url }}">
-            {% if article.hero_image %}{% image article.hero_image fill-420x260 alt=article.hero_alt_text %}
+            {% if article.hero_image %}{% image article.hero_image fill-420x260 alt=article.hero_alt_text loading="lazy" %}
             {% else %}<span class="ph-thumb" style="display:block;height:200px;background:#e9e4da;"></span>{% endif %}
         </a>
         <span class="ppl-badge">{{ article.post_type_label }}</span>

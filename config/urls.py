@@ -7,9 +7,14 @@ from django.views.generic import RedirectView
 
 from wagtail import urls as wagtail_urls
 from wagtail.admin import urls as wagtailadmin_urls
+from wagtail.contrib.sitemaps.views import sitemap
 from wagtail.documents import urls as wagtaildocs_urls
 
 from apps.core.views import HomeView, OperationsLoginView, operations_logout
+from apps.lifestyle.discovery import indexnow_key, llms_txt, robots_txt
+from apps.lifestyle.feeds import (
+    CategoryFeed, LatestArticlesAtomFeed, LatestArticlesFeed,
+)
 from apps.lifestyle.views import AdvertiseView, subscribe as lifestyle_subscribe
 from apps.loyalty.views import PublicMembershipView
 
@@ -20,6 +25,10 @@ urlpatterns = [
     path("cms-admin/", include(wagtailadmin_urls)),
     path("documents/", include(wagtaildocs_urls)),
     path("i18n/", include("django.conf.urls.i18n")),
+    # Phase 6 — SEO / AI discovery endpoints (root level).
+    path("sitemap.xml", sitemap, name="sitemap"),
+    path("robots.txt", robots_txt, name="robots_txt"),
+    path("llms.txt", llms_txt, name="llms_txt"),
     # Our skinned homepage takes precedence over Oscar's root redirect.
     path("", HomeView.as_view(), name="home"),
     path("shop/", include("apps.shop.urls")),
@@ -51,12 +60,22 @@ urlpatterns = [
     # subscribe path is registered before the Wagtail catch-all include.
     path("advertise/", AdvertiseView.as_view(), name="advertise"),
     path("lifestyle/subscribe/", lifestyle_subscribe, name="lifestyle_subscribe"),
+    # Phase 6 — syndication feeds. Registered BEFORE the Wagtail catch-all so
+    # /lifestyle/feed/ and /lifestyle/<category>/feed/ aren't swallowed by page routing.
+    path("lifestyle/feed/", LatestArticlesFeed(), name="lifestyle_feed"),
+    path("lifestyle/feed/atom/", LatestArticlesAtomFeed(), name="lifestyle_feed_atom"),
+    path("lifestyle/<slug:category>/feed/", CategoryFeed(), name="lifestyle_category_feed"),
     # The Wagtail magazine. All CMS pages live under /lifestyle/.
     path("lifestyle/", include(wagtail_urls)),
     # Everything else (catalogue, basket, checkout, accounts, search,
     # wishlists, dashboard, ...) comes from Oscar.
     path("", include(apps.get_app_config("oscar").urls[0])),
 ]
+
+# IndexNow key verification file at /<key>.txt — only registered when configured.
+if settings.INDEXNOW_KEY:
+    urlpatterns.insert(
+        0, path("%s.txt" % settings.INDEXNOW_KEY, indexnow_key, name="indexnow_key"))
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

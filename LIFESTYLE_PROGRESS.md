@@ -282,6 +282,60 @@ reports pending while disabled. `check` clean.
 
 ---
 
+## Phase 6 — SEO, feeds & AI discovery layer — 2026-07-12 ✅
+
+Pure head/markup/infrastructure — no visual changes to existing content.
+
+- **Structured data (JSON-LD)** — new `apps/lifestyle/seo.py` builds a schema.org
+  `@graph` per page, emitted by the `{% lifestyle_jsonld %}` tag (in `_seo.html`).
+  Every page carries `Organization` + `WebSite` (with `SearchAction`) + `BreadcrumbList`.
+  Articles add a primary node typed by `post_type` (`NewsArticle` for standard/feature/
+  interview/event; `Review` for review; `Article` otherwise) with headline, dates,
+  linked-`Person` authors (with `sameAs` socials + `jobTitle`), publisher, image,
+  `wordCount`, `articleSection`, `keywords`. Video posts add `VideoObject`; any `faq`
+  body blocks add `FAQPage`; shoppable products add `Product` nodes (name/brand/image/url,
+  **no price** per brand rules). Index/category/author pages add `CollectionPage`.
+  Verified valid JSON + correct types across all 11 post types.
+- **Meta layer** (`lifestyle/includes/_seo.html`, included from `base.html` head) —
+  meta description (search_description → subtitle → intro, truncated), `<link rel=canonical>`
+  (respects the `canonical_url` override), `noindex` support, OpenGraph + Twitter (large
+  image) with an og:image fallback chain (`og_image` → `hero_image` fill-1200×630 →
+  `LIFESTYLE_OG_DEFAULT_IMAGE`), and `article:*` tags.
+- **Sitemap** — `wagtail.contrib.sitemaps` at `/sitemap.xml` (added `django.contrib.sitemaps`
+  to INSTALLED_APPS); lists all live magazine pages (26 URLs), referenced from robots.txt.
+- **Feeds** (`apps/lifestyle/feeds.py`) — RSS `/lifestyle/feed/`, Atom `/lifestyle/feed/atom/`,
+  and per-category `/lifestyle/<category>/feed/`, each with author/category/hero-enclosure;
+  absolute URLs built from the request. Registered before the Wagtail catch-all. `<link
+  rel=alternate>` added to the head.
+- **AI discovery** (`apps/lifestyle/discovery.py`) — `robots.txt` (disallows /cms-admin/,
+  /admin/, /dashboard/, /account/, /checkout/, /basket/; explicitly welcomes GPTBot/ClaudeBot/
+  PerplexityBot/etc.; links the sitemap), `llms.txt` (brand summary + section URLs + feeds),
+  and an IndexNow ping on publish (`signals.py`, `page_published`; daemon thread, inert until
+  `INDEXNOW_KEY` set; key file served at `/<key>.txt` only when configured). Semantic HTML:
+  article date is now `<time datetime>`, visible breadcrumb on articles (pairs with the
+  BreadcrumbList schema).
+- **Core Web Vitals** — WebP renditions (already on), `loading="lazy"` on card + sidebar
+  thumbs, `fetchpriority="high"` on the article hero (LCP), `defer` on the JS bundle. Ad
+  zones already reserve width/height (no CLS). Wagtail `{% image %}` emits width/height.
+- **Analytics** — `{% lifestyle_ga4 %}` renders the GA4 snippet only when
+  `GA4_MEASUREMENT_ID` is set (inert otherwise); wires `lifestyle_to_shop` (outbound shop
+  links), `sponsored_click` (rel=sponsored), and `subscribe_submit` events.
+- **Renditions** — the new `fill-1200x630` (og) + `width-1200` (JSON-LD/feed) specs grew the
+  committed rendition set from 47 → 83 files; regenerated cleanly and recommitted with the DB
+  (see [[wagtail-rendition-deploy-hygiene]] convention).
+
+**Deviations / notes:** `/sitemap.xml` covers the **Wagtail magazine only** — the Oscar
+storefront has no sitemap, so robots.txt references just the one (a store sitemap / sitemap
+index is a follow-up). JSON-LD `Review` nodes omit `reviewRating` (no rating field exists), so
+they're valid Review markup but won't earn star rich results. Rich Results / Lighthouse were
+not run headlessly here (no browser in the build env) — JSON-LD validated as well-formed JSON
+with correct `@type`s, and feeds/sitemap validated as well-formed XML.
+
+**Owner placeholders (new):** `GA4_MEASUREMENT_ID`, `INDEXNOW_KEY`, `LIFESTYLE_OG_DEFAULT_IMAGE`
+(1200×630) — all empty/inert by default.
+
+---
+
 ## Ad-hoc / early items
 
 - **2026-07-11 — Storefront primary nav "Blog" → "Lifestyle"** (a Phase 7 item,
@@ -376,4 +430,7 @@ reports pending while disabled. `check` clean.
 | iNews `TEMPLATE_DIR` | ✅ present | `/Users/querybridge/envs/idcwatch/inews_396ccbc46b5d2d6840665ca80b82bc68` — Phase 1 unblocked |
 | `MAILCHIMP_API_KEY` / `MAILCHIMP_LIST_ID` | ⏳ pending | settings constants, empty; subs stored locally (Phase 5) |
 | Revive Adserver endpoint | ⏳ pending | `REVIVE_ENABLED=False`; local placeholder creatives (Phase 1/4) |
-| GA4 / Search Console IDs | ⏳ pending | `GA4_MEASUREMENT_ID` empty (Phase 6) |
+| GA4 / Search Console IDs | ⏳ pending | `GA4_MEASUREMENT_ID` empty; snippet + events wired, inert until set (Phase 6) |
+| IndexNow key | ⏳ pending | `INDEXNOW_KEY` empty; publish-ping + `/<key>.txt` inert until set (Phase 6) |
+| Default OG image (1200×630) | ⏳ pending | `LIFESTYLE_OG_DEFAULT_IMAGE` empty; og:image falls back to og_image→hero only (Phase 6) |
+| Storefront sitemap | ⏳ pending | `/sitemap.xml` covers the Wagtail magazine only; add an Oscar sitemap / index if needed (Phase 6) |

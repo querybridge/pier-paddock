@@ -1,0 +1,27 @@
+{% comment %}Phase 6 — GA4, rendered only when settings.GA4_MEASUREMENT_ID is set
+(owner supplies it later; inert until then). Fires the magazine's custom events:
+lifestyle_to_shop (outbound shop links), sponsored_click (rel=sponsored), and
+subscribe_submit (the Members form).{% endcomment %}
+{% if ga4_id %}
+<script async src="https://www.googletagmanager.com/gtag/js?id={{ ga4_id }}"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', '{{ ga4_id }}');
+  document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('a[href*="/shop/"], a[href^="/catalogue/"]').forEach(function (a) {
+      a.addEventListener('click', function () {
+        var sponsored = a.rel && a.rel.indexOf('sponsored') !== -1;
+        gtag('event', sponsored ? 'sponsored_click' : 'lifestyle_to_shop',
+             { link_url: a.href, link_text: (a.textContent || '').trim().slice(0, 100) });
+      });
+    });
+    document.querySelectorAll('form.ppl-subscribe-form').forEach(function (f) {
+      f.addEventListener('submit', function () {
+        gtag('event', 'subscribe_submit', { source: (f.querySelector('[name=source]') || {}).value || 'magazine' });
+      });
+    });
+  });
+</script>
+{% endif %}
