@@ -66,7 +66,7 @@ def lifestyle_ga4():
 # The magazine's fixed primary categories (spec Phase 1). Until the Wagtail
 # CategoryPages exist (Phase 2), the nav falls back to these names/slugs.
 FIXED_CATEGORIES = [
-    ("Fashion", "fashion"),
+    ("Style", "style"),
     ("Motorsports", "motorsports"),
     ("Watersports", "watersports"),
     ("Business", "business"),

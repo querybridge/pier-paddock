@@ -218,7 +218,7 @@ class LifestyleIndexPage(Page):
 
 
 class CategoryPage(Page):
-    """A topical hub (Fashion, Motorsports, …) — the topical-authority page."""
+    """A topical hub (Style, Motorsports, …) — the topical-authority page."""
 
     intro = RichTextField(
         help_text="150–300 words of editorial positioning for this section.")

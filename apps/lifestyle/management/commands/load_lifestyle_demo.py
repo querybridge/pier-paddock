@@ -34,7 +34,7 @@ AUTHORS = [
 ]
 
 CATEGORIES = [
-    ("Fashion", "fashion", (61, 42, 32)),
+    ("Style", "style", (61, 42, 32)),
     ("Motorsports", "motorsports", (120, 40, 36)),
     ("Watersports", "watersports", (30, 74, 110)),
     ("Business", "business", (40, 58, 45)),
@@ -48,8 +48,8 @@ ARTICLES = [
     ("motorsports", "Le Mans at Dawn: A Photo Essay", "Twenty-four hours through the lens.", "gallery", ["le mans", "endurance"], 1, 9, False),
     ("watersports", "A Collector's Guide to Regatta Season", "What to pack, wear and wind.", "guide", ["sailing", "regatta"], 2, 4, False),
     ("watersports", "Crossing the Atlantic by Sail", "One writer's two-week passage.", "feature", ["sailing", "travel"], 2, 14, False),
-    ("fashion", "Ten Watches That Belong on a Bridge Deck", "Our editors' picks for life afloat.", "list", ["watches", "style"], 0, 1, False),
-    ("fashion", "The Quiet Luxury of the Racing Chronograph", "Why understatement always wins.", "standard", ["style", "chronograph"], 0, 7, False),
+    ("style", "Ten Watches That Belong on a Bridge Deck", "Our editors' picks for life afloat.", "list", ["watches", "style"], 0, 1, False),
+    ("style", "The Quiet Luxury of the Racing Chronograph", "Why understatement always wins.", "standard", ["style", "chronograph"], 0, 7, False),
     ("business", "Inside the Boom in Independent Watchmaking", "The market's most interesting corner.", "standard", ["market", "independents"], 0, 3, False),
     ("business", "Auction Report: A Record Season", "What sold, and what it means.", "review", ["auction", "market"], 0, 11, False),
     ("entertainment", "A Weekend at Goodwood", "Cars, cocktails and the crowd.", "event", ["goodwood", "event"], 1, 5, True),
