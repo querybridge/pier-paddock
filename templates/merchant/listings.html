@@ -1,5 +1,5 @@
 {% extends "merchant/base.html" %}
-{% load pp_tags %}
+{% load pp_tags shop_seo %}
 
 {% block title %}Listings{% endblock %}
 
@@ -22,6 +22,12 @@
         </label>
         <label>Condition
             <select name="condition"><option>Pre-Owned</option><option>Unworn</option><option>New</option><option>Vintage</option></select>
+        </label>
+        <label>Style
+            <select name="style">
+                {% all_watch_styles as styles %}
+                {% for key, label in styles %}<option value="{{ key }}">{{ label }}</option>{% endfor %}
+            </select>
         </label>
         <label>Price (USD)<input type="text" name="price" required placeholder="6500"></label>
         <label>Stock<input type="number" name="stock" value="1" min="0"></label>

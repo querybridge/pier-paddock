@@ -121,26 +121,95 @@ def classify(title):
     return "dress-sport"
 
 
-def style_for_title(title):
-    """(key, label, snippet) for a product title."""
-    key = classify(title)
+# ── Oscar option attribute ("style") — managed in the dashboard / merchant form ──
+STYLE_GROUP_NAME = "Watch Style"
+
+
+def all_styles():
+    """[(key, label)] for all twelve styles — for the add-listing dropdown."""
+    return [(k, l) for k, l, _ in STYLES]
+
+
+def ensure_style_attribute():
+    """Idempotently create the AttributeOptionGroup + options + the 'style' option
+    ProductAttribute on the Watch class. Returns the option group."""
+    from oscar.core.loading import get_model
+
+    ProductClass = get_model("catalogue", "ProductClass")
+    ProductAttribute = get_model("catalogue", "ProductAttribute")
+    AttributeOptionGroup = get_model("catalogue", "AttributeOptionGroup")
+    AttributeOption = get_model("catalogue", "AttributeOption")
+
+    group, _ = AttributeOptionGroup.objects.get_or_create(name=STYLE_GROUP_NAME)
+    for key, label, _ in STYLES:
+        AttributeOption.objects.update_or_create(
+            group=group, code=key, defaults={"option": label})
+
+    pc = ProductClass.objects.get(name="Watch")
+    attr, _ = ProductAttribute.objects.get_or_create(
+        product_class=pc, code="style",
+        defaults={"name": "Style", "type": "option",
+                  "option_group": group, "required": False})
+    if attr.type != "option" or attr.option_group_id != group.id:
+        attr.name, attr.type, attr.option_group, attr.required = "Style", "option", group, False
+        attr.save()
+    return group
+
+
+def _option_for_key(key):
+    from oscar.core.loading import get_model
+
+    AttributeOption = get_model("catalogue", "AttributeOption")
+    return AttributeOption.objects.filter(group__name=STYLE_GROUP_NAME, code=key).first()
+
+
+def set_product_style(product, key):
+    """Set the product's style option (creates the attribute infra if missing)."""
+    opt = _option_for_key(key) or (ensure_style_attribute() and _option_for_key(key))
+    if opt is not None:
+        product.attr.style = opt
+        product.attr.save()
+
+
+def product_style(product):
+    """(key, label, snippet) from the stored `style` option; classify() as fallback."""
+    key = None
+    try:
+        opt = product.attr.style
+        key = getattr(opt, "code", None)
+    except Exception:
+        key = None
+    if not key or key not in STYLE_SNIPPET:
+        key = classify(product.title)
     return key, STYLE_LABEL[key], STYLE_SNIPPET[key]
 
 
 def styles_present():
-    """Ordered [(key, label)] for styles that have at least one browsable product."""
+    """Ordered [(key, label)] for styles with ≥1 browsable product (stored value;
+    classify() fallback before the attribute is populated)."""
     from oscar.core.loading import get_model
 
     Product = get_model("catalogue", "Product")
-    present = {classify(title) for title in
-               Product.objects.browsable().values_list("title", flat=True)}
-    return [(k, STYLE_LABEL[k]) for k in STYLE_ORDER if k in present]
+    PAV = get_model("catalogue", "ProductAttributeValue")
+    codes = {c for c in PAV.objects.filter(
+        attribute__code="style", product__in=Product.objects.browsable()
+    ).values_list("value_option__code", flat=True) if c}
+    if not codes:
+        codes = {classify(t) for t in
+                 Product.objects.browsable().values_list("title", flat=True)}
+    return [(k, STYLE_LABEL[k]) for k in STYLE_ORDER if k in codes]
 
 
 def ids_for_style(style_key):
-    """Product IDs whose title classifies to `style_key` (for the browse filter)."""
+    """Browsable product IDs with the given style (stored value; classify() fallback)."""
     from oscar.core.loading import get_model
 
+    PAV = get_model("catalogue", "ProductAttributeValue")
+    ids = list(PAV.objects.filter(
+        attribute__code="style", value_option__code=style_key
+    ).values_list("product_id", flat=True))
+    if ids:
+        return ids
     Product = get_model("catalogue", "Product")
     return [pid for pid, title in
             Product.objects.browsable().values_list("id", "title")

@@ -115,14 +115,15 @@ class ListingsView(MerchantPortalMixin, TemplateView):
         try:
             self._create_listing(brand, model, ref, price, int(stock),
                                   condition=(request.POST.get("condition") or "Pre-Owned"),
-                                  material=(request.POST.get("material") or "Stainless Steel"))
+                                  material=(request.POST.get("material") or "Stainless Steel"),
+                                  style=(request.POST.get("style") or ""))
         except Exception as e:  # keep the demo resilient
             messages.error(request, "Could not create listing: %s" % e)
             return redirect("merchant:listings")
         messages.success(request, "Listing added — %s %s is now live on the storefront." % (brand, model))
         return redirect("merchant:listings")
 
-    def _create_listing(self, brand, model, ref, price, stock, condition, material):
+    def _create_listing(self, brand, model, ref, price, stock, condition, material, style=""):
         from django.core.files.base import ContentFile
         from apps.core import watch_images
 
@@ -141,6 +142,10 @@ class ListingsView(MerchantPortalMixin, TemplateView):
         product.attr.case_material = material
         product.attr.condition = condition
         product.attr.save()
+
+        # House style — the merchant's selection, or auto-classified from the title.
+        from apps.shop.watch_styles import STYLE_LABEL, classify, set_product_style
+        set_product_style(product, style if style in STYLE_LABEL else classify(title))
 
         # File it under the matching brand category if one exists.
         cat = Category.objects.filter(name__iexact=brand).first()

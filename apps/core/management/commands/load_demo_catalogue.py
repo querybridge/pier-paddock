@@ -153,6 +153,9 @@ class Command(BaseCommand):
         for code, name, typ in ATTRIBUTES:
             ProductAttribute.objects.create(
                 product_class=pc, name=name, code=code, type=typ, required=False)
+        # House style — an Oscar option attribute (dropdown of the 12 guide styles).
+        from apps.shop.watch_styles import ensure_style_attribute
+        ensure_style_attribute()
         return pc
 
     def _create_categories(self):
@@ -187,6 +190,10 @@ class Command(BaseCommand):
         product.attr.year = int(d["year"])
         product.attr.box_papers = d["box_papers"]
         product.attr.save()
+
+        # House style (option attribute) — explicit override or auto-classify by title.
+        from apps.shop.watch_styles import classify, set_product_style
+        set_product_style(product, d.get("style") or classify(title))
 
         # Categories: brand + each collection
         product.categories.add(brand_cats[d["brand"]])

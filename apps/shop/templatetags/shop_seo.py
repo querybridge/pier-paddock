@@ -44,10 +44,10 @@ def brand_story(brand):
 
 @register.simple_tag
 def watch_style(product):
-    """{'key', 'label', 'snippet'} — the product's house style (WATCH_STYLE_GUIDE.md)."""
-    from ..watch_styles import style_for_title
+    """{'key', 'label', 'snippet'} — the product's house style (from the stored attribute)."""
+    from ..watch_styles import product_style
 
-    key, label, snippet = style_for_title(product.title)
+    key, label, snippet = product_style(product)
     return {"key": key, "label": label, "snippet": snippet}
 
 
@@ -57,6 +57,14 @@ def nav_styles():
     from ..watch_styles import styles_present
 
     return styles_present()
+
+
+@register.simple_tag
+def all_watch_styles():
+    """[(key, label)] of all twelve styles — for the add-listing dropdown."""
+    from ..watch_styles import all_styles
+
+    return all_styles()
 
 
 @register.simple_tag(takes_context=True)
