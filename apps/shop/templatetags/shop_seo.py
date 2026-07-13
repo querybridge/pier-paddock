@@ -34,6 +34,14 @@ def product_jsonld_script(context):
         return ""
 
 
+@register.simple_tag
+def brand_story(brand):
+    """{'brand', 'text'} for a product's brand, or None."""
+    from ..brand_stories import get_brand_story
+
+    return get_brand_story(brand)
+
+
 @register.simple_tag(takes_context=True)
 def product_og_image(context):
     """Absolute URL of the product's primary image for OpenGraph/Twitter."""

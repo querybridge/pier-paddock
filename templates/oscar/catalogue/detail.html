@@ -3,6 +3,7 @@
 {% load i18n %}
 {% load thumbnail %}
 {% load purchase_info_tags %}
+{% load shop_seo %}
 
 {% block title %}{{ product.title }} — {{ BRAND_NAME }}{% endblock %}
 {# Demo mode: PDPs inherit the site-wide noindex. In production, override the robots block here #}
@@ -105,6 +106,11 @@
         {% if product.description %}
         <h4 style="font-family:Georgia,serif;">About this piece</h4>
         <p class="pp-muted">{{ product.description }}</p>
+        {% endif %}
+        {% brand_story product|attr:"brand" as story %}
+        {% if story %}
+        <h4 class="pp-brand-story-title" style="font-family:Georgia,serif;margin-top:26px;">{{ story.brand }}</h4>
+        <p class="pp-muted">{{ story.text }}</p>
         {% endif %}
     </div>
 </div>

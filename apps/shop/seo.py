@@ -158,13 +158,21 @@ def product_jsonld(product, request):
     sr = _stockrecord(product)
     cond_url = CONDITION_SCHEMA.get(_attr(product, "condition").lower())
 
+    brand_node = None
+    if brand:
+        brand_node = {"@type": "Brand", "name": brand}
+        from .brand_stories import get_brand_story
+        story = get_brand_story(brand)
+        if story:
+            brand_node["description"] = story["text"]
+
     node = {
         "@type": "Product",
         "@id": url + "#product",
         "name": product.title,
         "description": (product.description or "").strip(),
         "url": url,
-        "brand": {"@type": "Brand", "name": brand} if brand else None,
+        "brand": brand_node,
         "sku": product.upc or _attr(product, "reference"),
         "mpn": _attr(product, "reference"),
         "category": ", ".join(c.name for c in product.categories.all()) or None,
