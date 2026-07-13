@@ -1,0 +1,23 @@
+{% load shop_seo %}{% comment %}
+PDP AI-discovery head: canonical, OpenGraph (product), Twitter card, price/availability
+tags, and the Product + Offer + FAQPage + BreadcrumbList JSON-LD graph.
+{% endcomment %}
+<link rel="canonical" href="{{ request.scheme }}://{{ request.get_host }}{{ product.get_absolute_url }}">
+<meta property="og:type" content="product">
+<meta property="og:site_name" content="{{ BRAND_NAME }}">
+<meta property="og:title" content="{{ product.title }}">
+<meta property="og:description" content="{{ product.description|striptags|truncatewords:35 }}">
+<meta property="og:url" content="{{ request.scheme }}://{{ request.get_host }}{{ product.get_absolute_url }}">
+{% product_og_image as og_img %}
+{% if og_img %}<meta property="og:image" content="{{ og_img }}">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="{{ og_img }}">
+{% else %}<meta name="twitter:card" content="summary">{% endif %}
+<meta name="twitter:title" content="{{ product.title }}">
+<meta name="twitter:description" content="{{ product.description|striptags|truncatewords:35 }}">
+{% with sr=product.stockrecords.first %}{% if sr %}
+<meta property="product:price:amount" content="{{ sr.price }}">
+<meta property="product:price:currency" content="{{ sr.price_currency }}">
+<meta property="product:availability" content="{% if sr.num_in_stock %}in stock{% else %}out of stock{% endif %}">
+{% endif %}{% endwith %}
+{% product_jsonld_script %}

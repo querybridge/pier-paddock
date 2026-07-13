@@ -1,0 +1,21 @@
+{% load shop_seo %}{% comment %}
+Visible PDP FAQ section (below "You May Also Like"). Native <details> accordion — no
+JS, fully in the DOM so answer engines can extract it; paired with FAQPage JSON-LD.
+{% endcomment %}
+{% product_faqs product as faqs %}
+{% if faqs %}
+<section class="pp-pdp-faq" aria-labelledby="pp-faq-heading">
+    <div class="pp-section-title">
+        <span>Good to know</span>
+        <h2 id="pp-faq-heading">Frequently Asked Questions</h2>
+    </div>
+    <div class="pp-faq-list">
+        {% for f in faqs %}
+        <details class="pp-faq-item"{% if forloop.first %} open{% endif %}>
+            <summary>{{ f.q }}</summary>
+            <div class="pp-faq-answer">{{ f.a }}</div>
+        </details>
+        {% endfor %}
+    </div>
+</section>
+{% endif %}

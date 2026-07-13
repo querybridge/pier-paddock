@@ -5,6 +5,10 @@
 {% load purchase_info_tags %}
 
 {% block title %}{{ product.title }} — {{ BRAND_NAME }}{% endblock %}
+{# AI-discovery: PDPs are indexable (the rest of the demo stays noindex). #}
+{% block robots %}<meta name="robots" content="index, follow, max-image-preview:large">{% endblock %}
+{% block description %}{{ product.description|striptags|truncatewords:35 }}{% endblock %}
+{% block extrahead %}{% include "partials/_pdp_seo.html" %}{% endblock %}
 {% block banner_title %}{{ product|attr:"brand" }}{% endblock %}
 {% block breadcrumbs %}
     <li><a href="{% url 'shop:browse' %}">Shop</a></li>
@@ -142,4 +146,7 @@
 {% endif %}
 {% endwith %}
 {% endwith %}
+
+{# ------------- FAQ (AI-discovery; below "You May Also Like") ------------- #}
+{% include "partials/_pdp_faq.html" %}
 {% endblock %}

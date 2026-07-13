@@ -6,7 +6,7 @@
         <meta charset="utf-8">
         <meta http-equiv="x-ua-compatible" content="ie=edge">
         <title>{% block title %}{{ BRAND_NAME }} — {{ BRAND_TAGLINE }}{% endblock %}</title>
-        <meta name="robots" content="noindex, follow">
+        {% block robots %}<meta name="robots" content="noindex, follow">{% endblock %}
         <meta name="description" content="{% block description %}{{ BRAND_NAME }} — luxury timepieces, authenticated and insured.{% endblock %}">
         <meta name="viewport" content="{% block viewport %}width=device-width, initial-scale=1, shrink-to-fit=no{% endblock %}">
 
