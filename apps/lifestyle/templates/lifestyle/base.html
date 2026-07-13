@@ -1,4 +1,4 @@
-{% load static wagtailcore_tags lifestyle_tags %}
+{% load static wagtailcore_tags lifestyle_tags shop_seo %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -85,8 +85,9 @@
                                     <li class="has-submenu"><a href="{% url 'shop:browse' %}">Shop</a>
                                         <ul class="submenu">
                                             <li><a href="{% url 'shop:browse' %}">All Watches</a></li>
-                                            {% for c in nav_collections %}
-                                            <li><a href="{% url 'shop:browse' %}?collection={{ c.slug }}">{{ c.name }}</a></li>
+                                            {% nav_styles as styles %}
+                                            {% for key, label in styles %}
+                                            <li><a href="{% url 'shop:browse' %}?style={{ key }}">{{ label }}</a></li>
                                             {% endfor %}
                                         </ul>
                                     </li>

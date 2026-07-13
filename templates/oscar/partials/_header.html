@@ -1,4 +1,4 @@
-{% load i18n %}
+{% load i18n shop_seo %}
 <header class="header-area header-03">
     <div class="header-large-device">
         <div class="header-top section-padding-2 bg-main2">
@@ -61,8 +61,9 @@
                                         <li><a href="{% url 'shop:browse' %}">Shop<i class="fa fa-caret-down" aria-hidden="true"></i></a>
                                             <ul class="sub-menu-width">
                                                 <li><a href="{% url 'shop:browse' %}">All Watches</a></li>
-                                                {% for c in nav_collections %}
-                                                <li><a href="{% url 'shop:browse' %}?collection={{ c.slug }}">{{ c.name }}</a></li>
+                                                {% nav_styles as styles %}
+                                                {% for key, label in styles %}
+                                                <li><a href="{% url 'shop:browse' %}?style={{ key }}">{{ label }}</a></li>
                                                 {% endfor %}
                                             </ul>
                                         </li>
@@ -167,8 +168,9 @@
                         <li class="has-sub-menu"><a href="{% url 'shop:browse' %}">Shop</a>
                             <ul class="sub-menu-2">
                                 <li><a href="{% url 'shop:browse' %}">All Watches</a></li>
-                                {% for c in nav_collections %}
-                                <li><a href="{% url 'shop:browse' %}?collection={{ c.slug }}">{{ c.name }}</a></li>
+                                {% nav_styles as styles %}
+                                {% for key, label in styles %}
+                                <li><a href="{% url 'shop:browse' %}?style={{ key }}">{{ label }}</a></li>
                                 {% endfor %}
                             </ul>
                         </li>

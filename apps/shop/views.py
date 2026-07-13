@@ -52,6 +52,12 @@ class ShopView(ListView):
         if collection_slug:
             qs = qs.filter(categories__slug=collection_slug)
 
+        # House style (WATCH_STYLE_GUIDE.md) — derived from the title, so filter by id.
+        style = p.get("style")
+        if style:
+            from .watch_styles import ids_for_style
+            qs = qs.filter(id__in=ids_for_style(style))
+
         material = p.get("material")
         if material:
             qs = qs.filter(

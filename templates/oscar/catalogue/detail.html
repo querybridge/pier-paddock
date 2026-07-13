@@ -112,6 +112,12 @@
         <h4 class="pp-brand-story-title" style="font-family:Georgia,serif;margin-top:26px;">{{ story.brand }}</h4>
         <p class="pp-muted">{{ story.text }}</p>
         {% endif %}
+        {% watch_style product as style %}
+        {% if style.snippet %}
+        <h4 class="pp-styling-title" style="font-family:Georgia,serif;margin-top:26px;">Pier &amp; Paddock Styling</h4>
+        <div class="pp-styling-style">{{ style.label }}</div>
+        <p class="pp-muted">{{ style.snippet }}</p>
+        {% endif %}
     </div>
 </div>
 

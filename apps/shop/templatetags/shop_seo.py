@@ -42,6 +42,23 @@ def brand_story(brand):
     return get_brand_story(brand)
 
 
+@register.simple_tag
+def watch_style(product):
+    """{'key', 'label', 'snippet'} — the product's house style (WATCH_STYLE_GUIDE.md)."""
+    from ..watch_styles import style_for_title
+
+    key, label, snippet = style_for_title(product.title)
+    return {"key": key, "label": label, "snippet": snippet}
+
+
+@register.simple_tag
+def nav_styles():
+    """Ordered [(key, label)] of house styles that have products — for the Shop nav."""
+    from ..watch_styles import styles_present
+
+    return styles_present()
+
+
 @register.simple_tag(takes_context=True)
 def product_og_image(context):
     """Absolute URL of the product's primary image for OpenGraph/Twitter."""

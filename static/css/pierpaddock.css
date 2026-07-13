@@ -516,3 +516,6 @@ a:hover { color: var(--pp-gold); }
 .pp-faq-item > summary::after { content: "+"; position: absolute; right: 6px; top: 14px; font-size: 20px; color: var(--pp-gold-dark); }
 .pp-faq-item[open] > summary::after { content: "\2013"; }
 .pp-faq-answer { padding: 0 2px 18px; color: #5b554c; line-height: 1.75; max-width: 780px; }
+
+/* PDP "Pier & Paddock Styling" snippet (WATCH_STYLE_GUIDE). */
+.pp-styling-style { color: var(--pp-gold-dark); font-size: 12px; letter-spacing: 2px; text-transform: uppercase; margin: 2px 0 6px; }
