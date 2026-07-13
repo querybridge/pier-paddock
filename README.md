@@ -309,6 +309,70 @@ BRAND_NAME = "Pier & Paddock"           # ← change me to re-brand everywhere
 BRAND_TAGLINE = "Time, well spent."
 ```
 
+
+
+---
+
+## Magazine Ad Inventory Positioning
+
+**Pier & Paddock is a marketplace and media destination for the harbor-and-grid set:
+collectors who acquire rather than shop. We put our partners on our shelves and in our
+pages.**
+
+That sentence is the merchant pitch, and it is also the spec for the advertising layer.
+Two revenue paths, one audience:
+
+- **The shelves** — the commission-only marketplace. Merchant-fulfilled inventory, no
+  listing fees, P&P owns the customer relationship, CRM, and marketing.
+- **The pages** — the Lifestyle magazine (`/lifestyle/`). Ad zones, banners, and
+  sponsored products, sold to the same partner merchants and to adjacent luxury brands.
+
+The magazine is not a content-marketing appendage to the shop. It is the acquisition
+engine *and* an inventory of its own: it gathers the audience, and then it sells access
+to that audience alongside the products in the shop.
+
+### What partners are buying
+
+Access to a curated audience — not reach, not impressions at a competitive CPM. The
+audience is the moat. Do not build, name, or sell any placement in a way that implies
+P&P competes on cost against performance channels. P&P is not the cheaper way to reach
+collectors. It is the only way.
+
+**Never in partner-facing copy, ad-product names, or the media kit:** discount framing,
+CPM/CPC comparisons, "affordable," "cost-effective," "cheaper than," "efficient spend,"
+"prohibitively expensive elsewhere." Price is a second-conversation topic, never a
+first-slide one.
+
+### What this means for the Revive Ad Server integration
+
+- **Placements are editorial, not interruptive.** Ad zones sit within the reading
+  experience of the magazine at a density that a luxury reader tolerates. If a zone
+  makes `/lifestyle/` feel like an ad-supported content farm, it is the wrong zone,
+  regardless of what it earns.
+- **Name zones for the room, not the pixel dimensions.** Partner-facing zone names
+  should read as placements in a magazine (e.g. *Feature Lead*, *Section Sponsor*,
+  *Between the Lines*, *Back Page*), even where the internal Revive zone IDs are
+  conventional IAB sizes. The internal implementation can be standard; the sold product
+  should not sound standard.
+- **Every advertiser is a partner or a peer.** No remnant inventory, no ad networks, no
+  programmatic backfill. An unsold zone renders as house inventory promoting P&P shop
+  products, Crest membership, or an editorial feature — never as a filler ad from an
+  exchange. An empty zone is better than an off-brand one.
+- **Sponsored products connect the two paths.** Sponsored placements in the magazine
+  should link into the shop where the merchant has listed inventory, so an editorial
+  read converts into an acquisition without leaving the property.
+- **Frequency and targeting serve the reader.** Revive's targeting exists here to make
+  a placement more relevant to a collector, not to maximize impressions per session.
+
+### Brand voice guardrails (applies to all ad and editorial copy)
+
+- Pillar line: *Curation · Provenance · Signature Service*
+- Taglines: *Time, well spent.* · *Purveyors of the exceptional.* · *From the harbor to
+  the grid.*
+- Approved register: *"Some things are not bought. They are acquired."*
+- Rejected register: anything price-adjacent, discount-framing, or aspirational in a
+  mass-market way.
+
 ---
 
 ## Out of scope (by design)
