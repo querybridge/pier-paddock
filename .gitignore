@@ -26,8 +26,11 @@ db.sqlite3-wal
 db.sqlite3-shm
 
 # ─── Regenerated / derivative images ──────────────────────────
-# sorl-thumbnail cache — derivative images rebuilt on demand.
-/media/cache/
+# sorl-thumbnail cache (media/cache/) IS committed so shop/magazine product thumbnails
+# render on deploy without regeneration. INVARIANT: the committed db's sorl KVStore must
+# stay EMPTY (run `manage.py clean_thumbnails` before committing db.sqlite3) — sorl only
+# serves a stale pointer when a KVStore row exists; with an empty KVStore it disk-checks
+# and reuses the committed cache file (or regenerates a missing one). See DEMO_TO_PRODUCTION.md.
 # Wagtail image renditions under media/images/ ARE committed (alongside the DB's
 # matching wagtailimages_rendition rows) so the magazine renders on deploy WITHOUT
 # regenerating — important on hosts where the media dir isn't writable (e.g.

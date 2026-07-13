@@ -83,4 +83,9 @@ _Newest first. Each entry: what's demo-only, and the switch to review at launch.
 - **(baseline) — Whole storefront `noindex`** (`oscar/base.html` robots block). (§1)
 - **(baseline) — Checkout disabled** at place-order (`apps/checkout` fork). (§2)
 - **(baseline) — SendGrid / Mailchimp / Revive** integrations inactive. (§3)
+- **2026-07-13 — Committed sorl thumbnail cache (`media/cache/`) + empty-KVStore invariant.**
+  Shop/magazine product thumbnails are committed so they render on deploy without regeneration.
+  The committed db's sorl **KVStore must stay empty** — run `manage.py clean_thumbnails` before
+  `git add db.sqlite3` (a populated KVStore ships stale cache pointers → broken images). Prod:
+  regenerate on real storage/CDN. (§5)
 - **(baseline) — Committed SQLite + committed Wagtail renditions + seeded demo accounts.** (§5)
