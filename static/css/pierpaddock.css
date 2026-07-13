@@ -508,7 +508,7 @@ a:hover { color: var(--pp-gold); }
 
 /* PDP FAQ accordion — AI-discovery section, below "You May Also Like". */
 .pp-pdp-faq { margin-top: 60px; }
-.pp-faq-list { max-width: 860px; }
+.pp-faq-list { max-width: 860px; margin: 0 auto; }
 .pp-faq-item { border-bottom: 1px solid #e6ded0; }
 .pp-faq-item > summary { list-style: none; cursor: pointer; padding: 16px 30px 16px 2px; position: relative;
     font-family: Georgia, 'Times New Roman', serif; font-size: 17px; color: #1a1a1a; }
