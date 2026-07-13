@@ -234,6 +234,15 @@ class GrailEntry(models.Model):
     def __str__(self):
         return "%s %s (%s)" % (self.brand, self.model, self.get_status_display())
 
+    def matched_product(self):
+        """Resolve this grail to a live catalogue product (matched by model name in
+        the product title) so 'View now' deep-links to the product detail page rather
+        than a search. Returns None when no product exists yet."""
+        from oscar.core.loading import get_model
+
+        Product = get_model("catalogue", "Product")
+        return Product.objects.browsable().filter(title__icontains=self.model).first()
+
 
 class EarlyAccessListing(models.Model):
     """Flags a product as members-only 'first look' for a minimum crest level

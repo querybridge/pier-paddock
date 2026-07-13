@@ -35,7 +35,7 @@
                         </td>
                         <td class="text-right">{% if e.target_price %}{{ e.target_price|money }}{% else %}<span class="pp-muted">—</span>{% endif %}</td>
                         <td class="text-center">
-                            {% if e.status == 'matched' %}<a class="pp-pill pp-pill--gold pp-pill--link" href="{% url 'shop:browse' %}?q={{ e.brand|urlencode }}+{{ e.model|urlencode }}">View now <i class="fa fa-arrow-right"></i></a>
+                            {% if e.status == 'matched' %}{% with p=e.matched_product %}<a class="pp-pill pp-pill--gold pp-pill--link" href="{% if p %}{{ p.get_absolute_url }}{% else %}{% url 'shop:browse' %}?q={{ e.brand|urlencode }}+{{ e.model|urlencode }}{% endif %}">View now <i class="fa fa-arrow-right"></i></a>{% endwith %}
                             {% else %}<span class="pp-pill">Watching</span>{% endif %}
                         </td>
                         <td class="text-right">

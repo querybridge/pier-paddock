@@ -298,6 +298,15 @@ WATCHES = [
          collections=["Sports", "Chronographs"], stock=1,
          # Primary + on-rollover product photos.
          images=["product/daytona-126500ln-1.jpg", "product/daytona-126500ln-2.jpg"]),
+    # F.P. Journe — an independent grail (also the Steward's matched grail piece).
+    dict(brand="F.P. Journe", model="Chronomètre Bleu", ref="CB", price=55000,
+         material="Tantalum", size="39 mm", movement="Manual wind, Cal. 1304",
+         dial="Chrome Blue", bracelet="Alligator Leather", water="30 m",
+         condition="Pre-Owned Excellent", year=2022, box_papers="Full Set",
+         collections=["Dress"], stock=1,
+         reviews=[
+             ("The independent grail", "The chrome-blue dial is mesmerising in the metal, and the tantalum case has a depth stainless never will. Worth every year on the waitlist.", 5, "Henry S."),
+         ]),
 ]
 
 

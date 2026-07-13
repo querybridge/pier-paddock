@@ -36,7 +36,7 @@
 <div class="pp-flash pp-flash--gold">
     <i class="fa fa-bullseye"></i>
     {% for g in matched_grails %}<strong>Grail match:</strong> {{ g.brand }} {{ g.model }}
-        <a class="pp-pill pp-pill--gold pp-pill--link" href="{% url 'shop:browse' %}?q={{ g.brand|urlencode }}+{{ g.model|urlencode }}">View now <i class="fa fa-arrow-right"></i></a>{% if not forloop.last %} &nbsp; {% endif %}{% endfor %}
+        {% with p=g.matched_product %}<a class="pp-pill pp-pill--gold pp-pill--link" href="{% if p %}{{ p.get_absolute_url }}{% else %}{% url 'shop:browse' %}?q={{ g.brand|urlencode }}+{{ g.model|urlencode }}{% endif %}">View now <i class="fa fa-arrow-right"></i></a>{% endwith %}{% if not forloop.last %} &nbsp; {% endif %}{% endfor %}
 </div>
 {% endif %}
 
